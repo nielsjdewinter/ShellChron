@@ -129,7 +129,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         dplyr::summarize(
             mean.day = mean(Day, na.rm = TRUE),  # Calculate means per sample
             sd.day = sd.wt(Day, weights, na.rm = TRUE),  # Calculate stdevs per sample
-            N = n_distinct(Day, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
+            N = dplyr::n_distinct(Day, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
             se.day = sd.day / sqrt(N), # Calculate the standard error
             CL95.day = qt(0.95, N) * se.day # Calculate the 95% confidence level
         )
@@ -143,7 +143,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         dplyr::summarize(
             mean.d18O_mod = mean(d18O_mod, na.rm = TRUE),  # Calculate means per sample
             sd.d18O_mod = sd.wt(d18O_mod, weights, na.rm = TRUE),  # Calculate stdevs per sample
-            N = n_distinct(d18O_mod, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
+            N = dplyr::n_distinct(d18O_mod, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
             se.d18O_mod = sd.d18O_mod / sqrt(N), # Calculate the standard error
             CL95.d18O_mod = qt(0.95, N) * se.d18O_mod # Calculate the 95% confidence level
         )
@@ -157,7 +157,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         dplyr::summarize(
             mean.GR = mean(GR[GR>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where growth rate is near-zero
             sd.GR = sd.wt(GR[GR>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where growth rate is near-zero
-            N = n_distinct(GR[GR>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where growth rate is near-zero
+            N = dplyr::n_distinct(GR[GR>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where growth rate is near-zero
             se.GR = sd.GR / sqrt(N), # Calculate the standard error
             CL95.GR = qt(0.95, N) * se.GR # Calculate the 95% confidence level
         )
@@ -171,7 +171,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         dplyr::summarize(
             mean.SST = weighted.mean(SST[SST>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where SSTowth rate is near-zero
             sd.SST = sd.wt(SST[SST>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where SSTowth rate is near-zero
-            N = n_distinct(SST[SST>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where SSTowth rate is near-zero
+            N = dplyr::n_distinct(SST[SST>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where SSTowth rate is near-zero
             se.SST = sd.SST / sqrt(N), # Calculate the standard error
             CL95.SST = qt(0.95, N) * se.SST # Calculate the 95% confidence level
         )
@@ -186,9 +186,9 @@ Export_results <- function(dat, # Rearrange and export results of the model
         dplyr::summarize(
             means = mean(par_value), # Calculate means per parameter
             stdev = sd(par_value), # Calculate standard deviation per parameter
-            N = n(), # Count number of modelled values per parameter (= equal to number of windows)
-            sterr = stdev / sqrt(N), # Calculate standard error
-            CL95 = qt(0.95, N) * sterr
+            N = dplyr::n(), # Count number of modelled values per parameter (= equal to number of windows)
+            se.pars = stdev / sqrt(N), # Calculate standard error
+            CL95 = qt(0.95, N) * se.pars
         )
     
     if(MC > 0){
@@ -206,7 +206,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.d18O = weighted.mean(d18O_mod, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
-            pooled.sd.d18O = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
+            pooled.sd.d18O = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - dplyr::n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
         )
 
         # Aggregate propagated errors into statistics matrices
@@ -227,7 +227,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.day = weighted.mean(Day, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
-            pooled.sd.day = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
+            pooled.sd.day = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - dplyr::n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
         )
 
         # Aggregate propagated errors into statistics matrices
@@ -248,7 +248,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.GR = weighted.mean(GR, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
-            pooled.sd.GR = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
+            pooled.sd.GR = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - dplyr::n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
         )
 
         # Aggregate propagated errors into statistics matrices
@@ -269,7 +269,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.SST = weighted.mean(SST, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
-            pooled.sd.SST = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
+            pooled.sd.SST = sqrt(sum(SD ^ 2 * (N - 1) * weights, na.rm = TRUE) / ((sum(N, na.rm = TRUE) - dplyr::n()) * mean(weights))) # Calculate pooled standard deviation resulting from error propagations and the weighted mean of the variances taking weights derived from position in the window into account
         )
 
         # AgTegate propagated errors into statistics matrices
