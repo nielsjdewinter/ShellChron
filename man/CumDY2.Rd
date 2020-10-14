@@ -30,9 +30,9 @@ from one year to the next occur and adding full years
 }
 \examples{
 testarray <- array(NA, dim = c(40, 36, 9)) # Create empty array
-with correct third dimension
+# with correct third dimension
 windowfill <- seq(50, 500, 50) \%\% 365 # Create dummy simulation data 
-(ages) to copy through the array
+# (ages) to copy through the array
 for(i in 6:length(testarray[1, , 1])){
     testarray[, i, 3] <- c(windowfill, rep(NA, length(testarray[, 1, 3]) - length(windowfill)))
     windowfill <- c(NA, (windowfill + 51) \%\% 365)

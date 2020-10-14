@@ -16,9 +16,9 @@
 #' @references package dependencies: ggplot2 3.2.1
 #' @examples
 #' testarray <- array(NA, dim = c(20, 16, 9)) # Create empty array
-#' with correct third dimension
+#' # with correct third dimension
 #' windowfill <- seq(10, 100, 10) # Create dummy simulation data 
-#' (ages) to copy through the array
+#' # (ages) to copy through the array
 #' for(i in 6:length(testarray[1, , 1])){
 #'     testarray[, i, 3] <- c(windowfill, rep(NA, length(testarray[, 1, 3]) - length(windowfill)))
 #'     windowfill <- c(NA, windowfill + 31)
@@ -39,7 +39,7 @@ AgeCorr <- function(resultarray, T_per, plot, agecorrection){
         ggplot2::geom_line() +
         ggplot2::geom_point() +
         ggplot2::ggtitle("Plot of average ages of modelling windows") +
-        xlab("Window #") +
+        ggplot2::xlab("Window #") +
         ggplot2::scale_y_continuous("Age (days)", seq(0, 365 * ceiling(max(unname(colMeans(resultarray[, (length(dat[1, ])):length(resultarray[1,,1]),3], na.rm = TRUE)), na.rm = TRUE) / 365), 365))
     plot(ageplot)
 
@@ -65,7 +65,7 @@ AgeCorr <- function(resultarray, T_per, plot, agecorrection){
             ggplot2::geom_line() +
             ggplot2::geom_point() +
             ggplot2::ggtitle("Plot of average ages of modelling windows") +
-            xlab("Window #") +
+            ggplot2::xlab("Window #") +
             ggplot2::scale_y_continuous("Age (days)", seq(0, 365 * ceiling(max(unname(colMeans(resultarray[, (length(dat[1, ])):length(resultarray[1,,1]),3], na.rm = TRUE)), na.rm = TRUE) / 365), 365)) +
             ggplot2::geom_line(ggplot2::aes(window, Age_corr), col = "red") # Add corrected window age to plot
             plot(ageplot)

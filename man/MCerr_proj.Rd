@@ -9,9 +9,11 @@ MCerr_proj(x, x_err, y, y_err, X, Y, MC)
 \arguments{
 \item{x}{Vector of \code{x} values of input data}
 
-\item{x_err}{Vector of uncertainties on \code{y} values}
+\item{x_err}{Vector of uncertainties on \code{x} values}
 
 \item{y}{Vector of \code{y} values of input data}
+
+\item{y_err}{Vector of uncertainties on \code{y} values}
 
 \item{X}{Vector of modelled \code{X} values on which the uncertainty is
 to be projected}

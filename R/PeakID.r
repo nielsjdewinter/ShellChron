@@ -4,6 +4,7 @@
 #' @param x Vector of \code{x} values of input data
 #' @param y Vector of \code{y} values of input data
 #' @param w Window size for smoothing data
+#' @param ... Additional arguments to be passed into LOESS function
 #' @return A vector listing the standard deviations of propagated errors 
 #' propagated on all \code{X} values.
 #' @seealso https://rpubs.com/mengxu/peak_detection

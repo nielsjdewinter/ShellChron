@@ -26,7 +26,7 @@
 #' results before being merged into tidy tables? \code{TRUE/FALSE}
 #' @return CSV tables of model results in the current working
 #' directory + optional plots in PDF format
-#' @references package dependencies: tidyverse 1.3.0; ggpubr 0.4.0  
+#' @references package dependencies: tidyverse 1.3.0; ggpubr 0.4.0; magrittr  
 #' function dependencies: sd.wt
 #' @examples
 #' # Create dummy input data column by column
@@ -74,16 +74,17 @@
 #' testarray[, , 9] <- tab # dummy temperature SD
 #' darray <- array(rep(as.matrix(dat), 9), dim = c(40, 5, 9))
 #' testarray[, 1:5, ] <- darray
-#' dimnames(testarray) <- list(
-#'     paste("sample", 1:length(testarray[, 1, 3])),
-#'     c(colnames(dat), paste("window", 1:length(dynwindow$x))),
-#'     c("Modelled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled temperature", "Modelled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modelled_temperature_SD")
-#' )
 #' 
 #' # Create dummy dynwindow data
 #' dynwindow <- as.data.frame(seq(1, 31, 1))
 #' colnames(dynwindow) <- "x"
 #' dynwindow$y <- rep(10, 31)
+#' 
+#' dimnames(testarray) <- list(
+#'     paste("sample", 1:length(testarray[, 1, 3])),
+#'     c(colnames(dat), paste("window", 1:length(dynwindow$x))),
+#'     c("Modelled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled temperature", "Modelled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modelled_temperature_SD")
+#' )
 #' 
 #' # Set parameters
 #' G_amp <- 20

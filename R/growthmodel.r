@@ -6,6 +6,8 @@
 #' routine, this function is optimized using the SCEUA algorithm
 #' and applied on sliding windows through the dataset to estimate
 #' the age of each datapoint
+#' @param pars List of parameters for temperature and growth rate sinusoids
+#' \code{pars <- c(T_amp, T_pha, T_av, G_amp, G_pha, G_av, G_skw)}
 #' @param T_per Period of SST sinusoid (in days; default = 365)
 #' @param G_per Period of growth rate sinusoid (in days; default = 365)
 #' @param years Number of years to be modelled (default = 1)

@@ -100,16 +100,17 @@ tab[which(!is.na(tab))] <- 1
 testarray[, , 9] <- tab # dummy temperature SD
 darray <- array(rep(as.matrix(dat), 9), dim = c(40, 5, 9))
 testarray[, 1:5, ] <- darray
-dimnames(testarray) <- list(
-    paste("sample", 1:length(testarray[, 1, 3])),
-    c(colnames(dat), paste("window", 1:length(dynwindow$x))),
-    c("Modelled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled temperature", "Modelled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modelled_temperature_SD")
-)
 
 # Create dummy dynwindow data
 dynwindow <- as.data.frame(seq(1, 31, 1))
 colnames(dynwindow) <- "x"
 dynwindow$y <- rep(10, 31)
+
+dimnames(testarray) <- list(
+    paste("sample", 1:length(testarray[, 1, 3])),
+    c(colnames(dat), paste("window", 1:length(dynwindow$x))),
+    c("Modelled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled temperature", "Modelled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modelled_temperature_SD")
+)
 
 # Set parameters
 G_amp <- 20
@@ -129,6 +130,6 @@ rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av", "G_skw
 test <- Export_results(dat, testarray, parmat, MC = 1000, dynwindow, plot = FALSE, plot_export = FALSE, export_raw = FALSE)
 }
 \references{
-package dependencies: tidyverse 1.3.0; ggpubr 0.4.0
+package dependencies: tidyverse 1.3.0; ggpubr 0.4.0; magrittr
 function dependencies: sd.wt
 }

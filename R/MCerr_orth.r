@@ -7,7 +7,7 @@
 #' @param x Vector of \code{x} values of input data
 #' @param x_err Vector of uncertainties on \code{x} values
 #' @param y Vector of \code{y} values of input data
-#' @param x_err Vector of uncertainties on \code{y} values
+#' @param y_err Vector of uncertainties on \code{y} values
 #' @param X Vector of modelled \code{X} values on which the uncertainty is
 #' to be projected
 #' @param Y Matrix of modelled x and \code{Y} values

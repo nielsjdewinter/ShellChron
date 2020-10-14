@@ -23,6 +23,9 @@ growthmodel(
 )
 }
 \arguments{
+\item{pars}{List of parameters for temperature and growth rate sinusoids
+\code{pars <- c(T_amp, T_pha, T_av, G_amp, G_pha, G_av, G_skw)}}
+
 \item{T_per}{Period of SST sinusoid (in days; default = 365)}
 
 \item{G_per}{Period of growth rate sinusoid (in days; default = 365)}

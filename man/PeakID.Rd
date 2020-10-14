@@ -12,6 +12,8 @@ PeakID(x, y, w = 1, ...)
 \item{y}{Vector of \code{y} values of input data}
 
 \item{w}{Window size for smoothing data}
+
+\item{...}{Additional arguments to be passed into LOESS function}
 }
 \value{
 A vector listing the standard deviations of propagated errors
