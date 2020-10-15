@@ -152,7 +152,8 @@ growthmodel <- function(pars, # Growth model function to optimize using sceua
                 O_err = rep(0, length(Osam))
             }
             # Propagate the combined effect of error on D and d18Oc on the model fit
-            D_err_comb <- MCerr_orth(Dsam, D_err, Osam, O_err, D, d18Oc, MC) # Combine error on D and d18Oc on the depth domain through orthogonal projection on the modelled D-d18Oc curve
+            Proj_err <- MCerr_orth(Dsam, D_err, Osam, O_err, D, d18Oc, MC) # Combine error on D and d18Oc through orthogonal projection on the modelled D-d18Oc curve
+            D_err_comb <- Proj_err$X_err # Isolate uncertainty in X-domain for further processing
 
             Drange <- cbind((Dsam - D_err_comb) %% D[length(D)], (Dsam + D_err_comb) %% D[length(D)]) # Find upper and lower boundaries of D error (1 SD)
             Drange_pos <- apply(abs(outer(Drange, D, FUN = "-")), c(1, 2), which.min) # Find positions of D ranges

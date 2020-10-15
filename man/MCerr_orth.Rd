@@ -18,7 +18,7 @@ MCerr_orth(x, x_err, y, y_err, X, Y, MC)
 \item{X}{Vector of modelled \code{X} values on which the uncertainty is
 to be projected}
 
-\item{Y}{Matrix of modelled x and \code{Y} values}
+\item{Y}{Matrix of modelled \code{X} and \code{Y} values}
 
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}

@@ -289,7 +289,7 @@ Export_results <- function(dat, # Rearrange and export results of the model
             ggplot2::geom_line(data = JDstats, ggplot2::aes(D, mean.day + CL95.day), size = 1, alpha = 0.5) +
             ggplot2::geom_line(data = JDstats, ggplot2::aes(D, mean.day - CL95.day), size = 1, alpha = 0.5) +
             ggplot2::ggtitle("Plot of Height vs. Time") +
-            xlab("Record length") +
+            ggplot2::xlab("Record length") +
             ggplot2::scale_y_continuous("Age (days)", seq(0, 365 * ceiling(max(JDstats$mean.day + JDstats$CL95.day, na.rm = TRUE) / 365), 365))
 
         # Create d18O plot
@@ -299,8 +299,8 @@ Export_results <- function(dat, # Rearrange and export results of the model
             ggplot2::geom_line(data = d18Ostats, ggplot2::aes(D, mean.d18O_mod + CL95.d18O_mod, alpha = 0.5, col = "darkblue"), size = 1) +
             ggplot2::geom_line(data = d18Ostats, ggplot2::aes(D, mean.d18O_mod - CL95.d18O_mod, alpha = 0.5, col = "darkred"), size = 1) +
             ggplot2::ggtitle("Plot of measured and modelled d18O vs. Record Length") +
-            xlab("Record length") +
-            ylab("d18O_carbonate") +
+            ggplot2::xlab("Record length") +
+            ggplot2::ylab("d18O_carbonate") +
             ggplot2::theme(legend.position = "none") # Remove legend
 
         # Create growth rate plot
@@ -312,8 +312,8 @@ Export_results <- function(dat, # Rearrange and export results of the model
             ggplot2::geom_line(data = GRstats, ggplot2::aes(D, mean.GR + CL95.GR, alpha = 0.5), size = 1) +
             ggplot2::geom_line(data = GRstats, ggplot2::aes(D, mean.GR - CL95.GR, alpha = 0.5), size = 1) +
             ggplot2::ggtitle("Plot of modelled growth rate vs Record Length") +
-            xlab("Record length") +
-            ylab("Growth rate") +
+            ggplot2::xlab("Record length") +
+            ggplot2::ylab("Growth rate") +
             ggplot2::theme(legend.position = "none") # Remove legend
 
         Combined_plots <- ggpubr::ggarrange(Dtplot, d18Oplot, GRplot, labels = c("A", "B", "C"), ncol = 3, nrow = 1) # Combine plots

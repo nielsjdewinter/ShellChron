@@ -10,7 +10,7 @@
 #' @param y_err Vector of uncertainties on \code{y} values
 #' @param X Vector of modelled \code{X} values on which the uncertainty is
 #' to be projected
-#' @param Y Matrix of modelled x and \code{Y} values
+#' @param Y Matrix of modelled \code{X} and \code{Y} values
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
 #' Default = 1000
 #' @return A vector listing the standard deviations of propagated errors 
@@ -34,7 +34,25 @@ MCerr_orth <- function(x, x_err, y, y_err, X, Y, MC){ # Function to propagate co
         ((outer(ymat, Y[, 2], FUN = "-") - mean(outer(ymat, Y[, 2], FUN = "-"))) / sd(outer(ymat, Y[, 2], FUN = "-"))) ^ 2 # Square of the normalized difference between MC-simulated y values and modelled Y values
     )
     posmat <- apply(Xarray, c(1,2), which.min) # For each MC-simulated x-y pair, find the position of the closest model value
+    
     Xsimmat <- matrix(X[posmat], nrow = length(x)) # Find the X value that belongs to each position in posmat
+    X_comb <- apply(Xsimmat, 1, mean) # calculate the mean value in X domain resulting from orthogonal projection of errors on X and Y from variability within the X values
+    Ysimmat <- matrix(Y[posmat, 2], nrow = length(y)) # Find the Y value that belongs to each position in posmat
+    Y_comb <- approx( # Interpolate modelled temperature values to positions along the record.
+            x = X,
+            y = Y[, 2],
+            xout = X_comb,
+            method = "linear",
+            rule = 2
+        )
+    #Y_comb <- apply(Ysimmat, 1, mean) # calculate the mean value in Y domain resulting from orthogonal projection of errors on X and Y from variability within the X values
     X_err_comb <- apply(Xsimmat, 1, sd) # calculate the standard deviation in X domain resulting from orthogonal projection of errors on X and Y from variability within the X values
-    return(X_err_comb)
+    Y_err_comb <- apply(Ysimmat, 1, sd) # calculate the standard deviation in Y domain resulting from orthogonal projection of errors on X and Y from variability within the X values
+    result <- data.frame(
+        X = X_comb,
+        X_err = X_err_comb,
+        Y = Y_comb$y,
+        Y_err = Y_err_comb
+    )
+    return(result)
 }
