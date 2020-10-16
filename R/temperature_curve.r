@@ -21,9 +21,9 @@
 #' T_pha <- 150
 #' T_av <- 15
 #' T_par <- c(T_amp, T_per, T_pha, T_av)
-#' SST <- SSTcurve(T_par, 1, 1) # Run the function
+#' SST <- temperature_curve(T_par, 1, 1) # Run the function
 #' @export
-SSTcurve <- function(T_par, # Function to create temperature as function of time based on sinusoidal parameters
+temperature_curve <- function(T_par, # Function to create temperature as function of time based on sinusoidal parameters
     years = 1, # Default number of years of the record = 1
     t_int = 1 #  Default time interval = 1 day
     ){

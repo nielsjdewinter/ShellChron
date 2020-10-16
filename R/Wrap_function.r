@@ -33,14 +33,14 @@
 #' @return CSV tables of model results in the current working
 #' directory, optional plots in PDF format and list object of
 #' model results for further processing in the R workspace.
-#' @references function dependencies: data_import, Run_model, CumDY2, Export_results
+#' @references function dependencies: data_import, run_model, cumulative_day, export_results
 #' @examples
 #' # find attached dummy data
 #' system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
 #' path <- getwd()
-#' example <- Wrap_function(path, "Virtual_shell.csv", "calcite", 1, 365, d18Ow = 0, t_maxtemp = 182.5, MC = 1000, plot = FALSE, plot_export = FALSE, export_raw = FALSE) # Run function
+#' example <- wrap_function(path, "Virtual_shell.csv", "calcite", 1, 365, d18Ow = 0, t_maxtemp = 182.5, MC = 1000, plot = FALSE, plot_export = FALSE, export_raw = FALSE) # Run function
 #' @export
-Wrap_function <- function(path, # Wrapping function for the entire model package
+wrap_function <- function(path, # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)
     mineral = "calcite", # Set mineralogy of the record, default is calcite. Aragonite is also supported
     t_int = 1, # Set time interval in days
@@ -61,15 +61,15 @@ Wrap_function <- function(path, # Wrapping function for the entire model package
     G_per <- T_per # Period of growth rate sinusoid should equal that of the temperature sinusoid (which is given)
 
     # STEP 2: Run the model
-    resultlist <- Run_model(dat, dynwindow, mineral, d18Ow, T_per, G_per, t_int, t_maxtemp, MC, agecorrection, plot = TRUE)
+    resultlist <- run_model(dat, dynwindow, mineral, d18Ow, T_per, G_per, t_int, t_maxtemp, MC, agecorrection, plot = TRUE)
     resultarray <- resultlist[[1]]
     parmat <- resultlist[[2]]
     
     # STEP 3: Align model results to cumulative timescale
     print("Calculating cumulative day of the year results...")
-    suppressWarnings(resultarray[, , 3] <- CumDY2(resultarray, TRUE, TRUE)) # Calculate cumulative day of the year for all model runs and replace matrix in result array
+    suppressWarnings(resultarray[, , 3] <- cumulative_day(resultarray, TRUE, TRUE)) # Calculate cumulative day of the year for all model runs and replace matrix in result array
     
     # STEP 4: Order and export results and statistics
-    Export_results(dat, resultarray, parmat, MC, dynwindow, plot, plot_export, export_raw) # Export results of model
+    export_results(dat, resultarray, parmat, MC, dynwindow, plot, plot_export, export_raw) # Export results of model
     return(resultlist)
 }

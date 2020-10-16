@@ -23,6 +23,6 @@ growth for modelling.
 }
 \examples{
 # find attached dummy data
-system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
-data_import("Virtual_shell.csv") # Run function
+file <- system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
+importlist <- data_import(file) # Run function
 }

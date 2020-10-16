@@ -13,14 +13,15 @@
 #' # Create dummy data
 #' x <- seq(1, 10, 0.5)
 #' w <- c(seq(0.1, 1, 0.1), seq(0.9, 0.1, -0.1))
-#' SDw <- sd.wt(x, w, na.rm = TRUE) # Run the function
+#' SDw <- sd_wt(x, w, na.rm = TRUE) # Run the function
 #' @export
-sd.wt<-function(x, w, na.rm = FALSE){ # Formula for weighted standard deviation
+sd_wt<-function(x, w, na.rm = FALSE){ # Formula for weighted standard deviation
     if(na.rm == TRUE){ # Remove NA containing x/w pairs
         x<-x[!(is.na(x) | is.na(w))]
         w<-w[!(is.na(x) | is.na(w))]
     }
     mean.wt <- mean(x * w, na.rm = TRUE) / mean(w) # Calculate weighted mean
-    stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) * sum(w)))
+    stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) *
+        sum(w)))
     return(stdev)
 }

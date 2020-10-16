@@ -1,7 +1,7 @@
 #' Function that optimizes sinusoid parameters to fit d18O data
 #' 
 #' The second core function of the ShellChron growth model. Loops
-#' through all data windows and uses the \code{growthmodel} function
+#' through all data windows and uses the \code{growth_model} function
 #' to create d18O series that match the input data. This step is
 #' iterated and optimized (minimizing the Sum of Squared Residuals)
 #' through the SCEUA algorithm (by Duan et al., 1992) which finds
@@ -34,7 +34,7 @@
 #' efficient global optimization for conceptual rainfall‐runoff models." Water
 #' resources research 28.4 (1992): 1015-1031. https://doi.org/10.1029/91WR02985
 #' @references package dependencies: ggplot2 3.2.1; rtop 0.5.14
-#' Function dependencies: sinreg, growthmodel
+#' Function dependencies: sinreg, growth_model
 #' @examples
 #' # Create dummy input data column by column
 #' dat <- as.data.frame(seq(1000, 40000, 1000))
@@ -48,9 +48,9 @@
 #' colnames(dynwindow) <- "x"
 #' dynwindow$y <- rep(12, 15)
 #' # Run model function
-#' resultlist <- Run_model(dat, dynwindow, "calcite", d18Ow = 0, T_per = 365, G_per = 365, t_int = 1, t_maxtemp = 182.5, MC = 1000, agecorrection = FALSE, plot = FALSE)
+#' resultlist <- run_model(dat, dynwindow, "calcite", d18Ow = 0, T_per = 365, G_per = 365, t_int = 1, t_maxtemp = 182.5, MC = 1000, agecorrection = FALSE, plot = FALSE)
 #' @export
-Run_model <- function(dat, # Master function to run the entire model on the data (dat)
+run_model <- function(dat, # Master function to run the entire model on the data (dat)
     dynwindow, # The window vetor resulting from reading in the data 
     mineral = "calcite",
     d18Ow = "default",
@@ -177,7 +177,7 @@ Run_model <- function(dat, # Master function to run the entire model on the data
         )
 
         invisible(capture.output( # Suppress the details on converging SCEUA
-            sceua_list <- rtop::sceua(growthmodel,
+            sceua_list <- rtop::sceua(growth_model,
                 par0,
                 T_per = T_per,
                 G_per = G_per,
@@ -203,7 +203,7 @@ Run_model <- function(dat, # Master function to run the entire model on the data
         par1 <- sceua_list[[1]] # Eport parameters of final model
         names(par1) <- names(par0)
 
-        result <- growthmodel(par1, T_per, G_per, years, t_int, mineral, d18Ow, Dsam, Osam, t_maxtemp, plot = FALSE, MC, D_err, O_err, return = "result") # Calculate the end result of the best fit
+        result <- growth_model(par1, T_per, G_per, years, t_int, mineral, d18Ow, Dsam, Osam, t_maxtemp, plot = FALSE, MC, D_err, O_err, return = "result") # Calculate the end result of the best fit
         
         if(plot == TRUE){
             fitplot <- fitplot + # Add the new model fit to the plot to track progress of the model

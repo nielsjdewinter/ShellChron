@@ -13,14 +13,15 @@
 #' # Create dummy periodic data
 #' x <- seq(1, 100, 1)
 #' y <- sin((2 * pi * (seq(1, 100, 1) - 8 + 20 / 4)) / 20)
-#' # Run peakID function
-#' result <- PeakID(x, y, w = 20)
+#' # Run peakid function
+#' result <- peakid(x, y, w = 20)
 #' @export
-PeakID <- function(x, y, w=1, ...) { # Algorhythm for peak identification by William A. Huber (https://rpubs.com/mengxu/peak_detection)
+peakid <- function(x, y, w=1, ...) { # Algorhythm for peak identification by
+# William A. Huber (https://rpubs.com/mengxu/peak_detection)
   n <- length(y)
   y.smooth <- loess(y ~ x, ...)$fitted
-  y.max <- zoo::rollapply(zoo::zoo(y.smooth), 2*w+1, max, align="center")
-  delta <- y.max - y.smooth[-c(1:w, n+1-1:w)]
+  y.max <- zoo::rollapply(zoo::zoo(y.smooth), 2 * w + 1, max, align = "center")
+  delta <- y.max - y.smooth[-c(1:w, n + 1 - 1:w)]
   i.max <- which(delta <= 0) + w
-  list(x=x[i.max], i=i.max, y.hat=y.smooth)
+  list(x = x[i.max], i = i.max, y.hat = y.smooth)
 }
