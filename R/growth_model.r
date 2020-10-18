@@ -66,25 +66,16 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
     G_per = 365, # Period of growth sinusoid (default = 365 days)
     years = 1, # Default year = 1
     t_int = 1, # Time interval, default = 1 day
-    mineral = "calcite", # Mineralogy of the material (calcite and aragonite
-    # supported, default = calcite)
+    mineral = "calcite", # Mineralogy of the material (calcite and aragonite supported, default = calcite)
     d18Ow = "default", # d18Ow vector, default = constant at 0 permille VSMOW
     Dsam, # Depth data
     Osam, # d18O data
-    t_maxtemp = 182.5, # Time (day) at which maximum temperature is reached.
-    # Default is 182.5 (exactly halfway through the year, or 1st of June)
+    t_maxtemp = 182.5, # Time (day) at which maximum temperature is reached. Default is 182.5 (exactly halfway through the year, or 1st of June)
     plot = FALSE, # Plot results?
-    MC = 1000, # Number of MC simulations to include measurement error into
-    # error analysis. Default = 1000 (error on D and d18O measurements not
-    # considered)
-    D_err = NULL, # Optional: include standard deviation of uncertainty on
-    # depth measurements, default = empty (no error incorporated in the
-    # calculation, same effect as MC = 0)
-    O_err = NULL, # Optional: include standard deviation of uncertainty on d18O
-    # measurements, default = empty (no error incorporated in the calculation,
-    # same effect as MC = 0)
-    return = "SSR" # What to return? Default = the total sum of squares to be
-    # minimized by the SCEUA algorithm
+    MC = 1000, # Number of MC simulations to include measurement error into error analysis. Default = 1000 (error on D and d18O measurements not considered)
+    D_err = NULL, # Optional: include standard deviation of uncertainty on depth measurements, default = empty (no error incorporated in the calculation, same effect as MC = 0)
+    O_err = NULL, # Optional: include standard deviation of uncertainty on d18O measurements, default = empty (no error incorporated in the calculation, same effect as MC = 0)
+    return = "SSR" # What to return? Default = the total sum of squares to be minimized by the SCEUA algorithm
     ){
 
     # Extract variables
@@ -109,8 +100,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
     D <- cumsum(GR[,2]) + Dsam[1]
 
     # Compare model result with data
-    Omod <- approx( # Interpolate modelled d18Oc values to positions along the
-    # record.
+    Omod <- approx( # Interpolate modelled d18Oc values to positions along the record.
         x = D,
         y = d18Oc[,2],
         xout = Dsam,
@@ -125,8 +115,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
         return(SSR)
     }else{
         # Compare model result with data
-        t <- approx( # Interpolate modelled time values to positions along the
-        # record.
+        t <- approx( # Interpolate modelled time values to positions along the record.
             x = D,
             y = d18Oc[,1],
             xout = Dsam,
@@ -134,8 +123,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
             rule = 2
         )
 
-        gr <- approx( # Interpolate modelled growth rate values to positions
-        # along the record.
+        gr <- approx( # Interpolate modelled growth rate values to positions along the record.
             x = D,
             y = GR[,2],
             xout = Dsam,
@@ -143,8 +131,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
             rule = 2
         )
 
-        Tmod <- approx( # Interpolate modelled temperature values to positions
-        # along the record.
+        Tmod <- approx( # Interpolate modelled temperature values to positions along the record.
             x = D,
             y = SST[,2],
             xout = Dsam,
@@ -152,88 +139,50 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
             rule = 2
         )
 
-        TY <- (t$y - T_pha + t_maxtemp) %% 365 # Calculate time of year relative
-        # to the first T maximum in the record (T_pha) and the assumed day of
-        # the year when it occurs (default = 182.5)
+        TY <- (t$y - T_pha + t_maxtemp) %% 365 # Calculate time of year relative to the first T maximum in the record (T_pha) and the assumed day of the year when it occurs (default = 182.5)
 
         # Prepare export matrix
-        resmat <- cbind(Dsam, Osam, Omod$y, residuals, TY, gr$y, Tmod$y)
-        # Calculate matrix of end results
-        colnames(resmat) <- c("Dsam", "Osam", "Omod", "Residuals",
-            "Time_of_year", "Instantaneous_growth_rate", "Modelled_temperature")
+        resmat <- cbind(Dsam, Osam, Omod$y, residuals, TY, gr$y, Tmod$y) # Calculate matrix of end results
+        colnames(resmat) <- c("Dsam", "Osam", "Omod", "Residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled_temperature")
         
         # Optional: Incorporate measurement errors on D and d18O
         if(MC > 0){
             print("Propagating measurement uncertainties")
-            if(is.null(D_err)){ # If no error on D is given, but error analysis
-            # is asked (MC > 0), then D_err is zero for all samples
+            if(is.null(D_err)){ # If no error on D is given, but error analysis is asked (MC > 0), then D_err is zero for all samples
                 D_err <- rep(0, length(Dsam))
             }
-            if(is.null(O_err)){ # If no error on d18Oc is given, but error
-            # analysis is asked (MC > 0), then O_err is zero for all samples
+            if(is.null(O_err)){ # If no error on d18Oc is given, but error analysis is asked (MC > 0), then O_err is zero for all samples
                 O_err = rep(0, length(Osam))
             }
-            # Propagate the combined effect of error on D and d18Oc on the
-            # model fit
-            Proj_err <- mc_err_orth(Dsam, D_err, Osam, O_err, D, d18Oc, MC)
-            # Combine error on D and d18Oc through orthogonal projection on the
-            # modelled D-d18Oc curve
-            D_err_comb <- Proj_err$X_err # Isolate uncertainty in X-domain for
-            # further processing
+            # Propagate the combined effect of error on D and d18Oc on the model fit
+            Proj_err <- mc_err_orth(Dsam, D_err, Osam, O_err, D, d18Oc, MC) # Combine error on D and d18Oc through orthogonal projection on the modelled D-d18Oc curve
+            D_err_comb <- Proj_err$X_err # Isolate uncertainty in X-domain for further processing
 
-            Drange <- cbind((Dsam - D_err_comb) %% D[length(D)],
-                (Dsam + D_err_comb) %% D[length(D)]) # Find upper and lower
-                # boundaries of D error (1 SD)
-            Drange_pos <- apply(abs(outer(Drange, D, FUN = "-")), c(1, 2),
-                which.min) # Find positions of D ranges
+            Drange <- cbind((Dsam - D_err_comb) %% D[length(D)], (Dsam + D_err_comb) %% D[length(D)]) # Find upper and lower boundaries of D error (1 SD)
+            Drange_pos <- apply(abs(outer(Drange, D, FUN = "-")), c(1, 2), which.min) # Find positions of D ranges
 
-            # Approximate SDs of d18Oc, t, gr and Tmod from range of D values
-            # within +/- 1 SD
+            # Approximate SDs of d18Oc, t, gr and Tmod from range of D values within +/- 1 SD
             Omod_SD <- vector(length = length(Drange_pos[,1]))
             t_SD <- vector(length = length(Drange_pos[,1]))
             gr_SD <- vector(length = length(Drange_pos[,1]))
             Tmod_SD <- vector(length = length(Drange_pos[,1]))
-            for(j in 1:length(Drange_pos[,1])){ # Loop through all positions in
-            # the window and propagate the D error onto the results
-                if(Drange_pos[j, 2] < Drange_pos[j, 1]){ # If the D range
-                # contains the year edge, incorporate the outer edges of the
-                # year.
-                # Find the range of modelled values contained in the 1 SD range
-                # of D error and approximate SD of modelled values from in and
-                # max values
-                    Omod_SD[j] <- (max(d18Oc[c(Drange_pos[j, 1]:length(
-                        d18Oc[, 1]), 1:Drange_pos[j, 2]), 2]) -
-                        min(d18Oc[c(Drange_pos[j, 1]:length(d18Oc[, 1]),
-                            1:Drange_pos[j, 2]), 2])) / 2
-                    t_SD[j] <- length(c(Drange_pos[j, 1]:length(d18Oc[, 1]),
-                        1:Drange_pos[j, 2])) / 2
-                    gr_SD[j] <- (max(GR[c(Drange_pos[j, 1]:length(GR[, 1]),
-                        1:Drange_pos[j, 2]), 2]) - min(GR[c(
-                            Drange_pos[j, 1]:length(GR[, 1]),
-                            1:Drange_pos[j, 2]), 2])) / 2
-                    Tmod_SD[j] <- (max(SST[c(Drange_pos[j, 1]:length(SST[, 1]),
-                        1:Drange_pos[j, 2]), 2]) - min(SST[c(
-                            Drange_pos[j, 1]:length(SST[, 1]),
-                            1:Drange_pos[j, 2]), 2])) / 2
-                }else{ # If the D range is contained within one year, range of
-                # d18Oc values is located between the lower and upper boundaries
-                # of D (+/- 1 SD)
-                    Omod_SD[j] <- (max(d18Oc[Drange_pos[j, 1]:Drange_pos[
-                        j, 2], 2]) - min(d18Oc[Drange_pos[j, 1]:Drange_pos[
-                            j, 2], 2])) / 2
+            for(j in 1:length(Drange_pos[,1])){ # Loop through all positions in the window and propagate the D error onto the results
+                if(Drange_pos[j, 2] < Drange_pos[j, 1]){ # If the D range contains the year edge, incorporate the outer edges of the year.
+                # Find the range of modelled values contained in the 1 SD range of D error and approximate SD of modelled values from in and max values
+                    Omod_SD[j] <- (max(d18Oc[c(Drange_pos[j, 1]:length(d18Oc[, 1]), 1:Drange_pos[j, 2]), 2]) - min(d18Oc[c(Drange_pos[j, 1]:length(d18Oc[, 1]), 1:Drange_pos[j, 2]), 2])) / 2
+                    t_SD[j] <- length(c(Drange_pos[j, 1]:length(d18Oc[, 1]), 1:Drange_pos[j, 2])) / 2
+                    gr_SD[j] <- (max(GR[c(Drange_pos[j, 1]:length(GR[, 1]), 1:Drange_pos[j, 2]), 2]) - min(GR[c(Drange_pos[j, 1]:length(GR[, 1]), 1:Drange_pos[j, 2]), 2])) / 2
+                    Tmod_SD[j] <- (max(SST[c(Drange_pos[j, 1]:length(SST[, 1]), 1:Drange_pos[j, 2]), 2]) - min(SST[c(Drange_pos[j, 1]:length(SST[, 1]), 1:Drange_pos[j, 2]), 2])) / 2
+                }else{ # If the D range is contained within one year, range of d18Oc values is located between the lower and upper boundaries of D (+/- 1 SD)
+                    Omod_SD[j] <- (max(d18Oc[Drange_pos[j, 1]:Drange_pos[j, 2], 2]) - min(d18Oc[Drange_pos[j, 1]:Drange_pos[j, 2], 2])) / 2
                     t_SD[j] <- length(Drange_pos[j, 1]:Drange_pos[j, 2]) / 2
-                    gr_SD[j] <- (max(GR[Drange_pos[j, 1]:Drange_pos[j, 2], 2]) -
-                        min(GR[Drange_pos[j, 1]:Drange_pos[j, 2], 2])) / 2
-                    Tmod_SD[j] <- (max(SST[Drange_pos[j, 1]:Drange_pos[
-                        j, 2], 2]) - min(SST[Drange_pos[j, 1]:Drange_pos[
-                            j, 2], 2])) / 2
+                    gr_SD[j] <- (max(GR[Drange_pos[j, 1]:Drange_pos[j, 2], 2]) - min(GR[Drange_pos[j, 1]:Drange_pos[j, 2], 2])) / 2
+                    Tmod_SD[j] <- (max(SST[Drange_pos[j, 1]:Drange_pos[j, 2], 2]) - min(SST[Drange_pos[j, 1]:Drange_pos[j, 2], 2])) / 2
                 }
             }
             resmat <- cbind(resmat, Omod_SD, t_SD, gr_SD, Tmod_SD)
         }else{
-            resmat <- cbind(resmat, matrix(rep(NA, 4 * length(resmat[,1])),
-                ncol = 4)) # Add NA-filled columns if no MC error propagation
-                # is done
+            resmat <- cbind(resmat, matrix(rep(NA, 4 * length(resmat[,1])), ncol = 4)) # Add NA-filled columns if no MC error propagation is done
         }
         colnames(resmat) <- c("Dsam",
             "Osam",
@@ -252,8 +201,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
             dev.new()
             ggplot2::ggplot(plotdf, ggplot2::aes(x = Dsam, y = Osam)) +
                 ggplot2::geom_point() + # Plot original data
-                ggplot2::geom_errorbar(ggplot2::aes(ymin = Osam - O_err, # Add
-                # error bars on measurement (1 SD)
+                ggplot2::geom_errorbar(ggplot2::aes(ymin = Osam - O_err, # Add error bars on measurement (1 SD)
                     ymax = Osam + O_err),
                     width = 100,
                     col = "black") +
@@ -261,10 +209,8 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
                     xmax = Dsam + D_err),
                     height = 0.05,
                     col = "black") +
-                ggplot2::geom_point(ggplot2::aes(Dsam, Omod), col="red") +
-                # Plot modelled d18Oc on top of data
-                ggplot2::geom_errorbar(ggplot2::aes(ymin = Omod - Omod_SD,
-                # Add error bars on model result (1 SD)
+                ggplot2::geom_point(ggplot2::aes(Dsam, Omod), col="red") + # Plot modelled d18Oc on top of data
+                ggplot2::geom_errorbar(ggplot2::aes(ymin = Omod - Omod_SD, # Add error bars on model result (1 SD)
                     ymax = Omod + Omod_SD),
                     width = 100,
                     col = "red") +

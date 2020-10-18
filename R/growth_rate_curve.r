@@ -29,8 +29,7 @@
 #' # Run GR model function
 #' GR <- growth_rate_curve(G_par, 1, 1)
 #' @export
-growth_rate_curve <- function(G_par, # Function to create growth rate as
-    # function of time based on parameters
+growth_rate_curve <- function(G_par, # Function to create growth rate as function of time based on parameters
     years = 1, # Default number of years of the record = 1
     t_int = 1 # Default time interval = 1 day
     ){
@@ -41,55 +40,30 @@ growth_rate_curve <- function(G_par, # Function to create growth rate as
     G_av <- G_par[4] # Annual average growth rate (um/d)
     G_skw <- G_par[5] # Skewness factor in growth rate sinusoid (-)
 
-    t <- seq(0, G_per, t_int) # Define time axis based on the number of days in
-    # a year and the time interval
+    t <- seq(0, G_per, t_int) # Define time axis based on the number of days in a year and the time interval
 
     GR <- rep(NA, length(t)) # Create empty growth rate vector
     # Build GR vector piece by piece based on parameters
-    # Check if t is between the time of maximum growth and the subsequent time
-    # of minimum growth but before the peak, add one period's length if it is
-    if(length(t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) &
-        (t < G_pha)]) > 0){ # Catch "replacement has length zero" errors
-        GR[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) &
-            (t < G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %%
-                G_per) < (G_per * (100 - G_skw) / 100)) & (t < G_pha)] +
-                G_per - G_pha + (G_per * (100 - G_skw) / 50) / 4) /
-                (G_per * (100 - G_skw) / 50))
+    # Check if t is between the time of maximum growth and the subsequent time of minimum growth but before the peak, add one period's length if it is
+    if(length(t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t < G_pha)]) > 0){ # Catch "replacement has length zero" errors
+        GR[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t < G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t < G_pha)] + G_per - G_pha + (G_per * (100 - G_skw) / 50)/4) / (G_per * (100 - G_skw) / 50))
     }
-    # Check if t is between the time of maximum growth and the subsequent time
-    # of minimum growth but still after the peak
-    if(length(t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) &
-        (t >= G_pha)]) > 0){ # Catch "replacement has length zero" errors
-        GR[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) &
-            (t >= G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %%
-                G_per) < (G_per * (100 - G_skw) / 100)) & (t >= G_pha)] -
-                G_pha + (G_per * (100 - G_skw) / 50) / 4) / (G_per *
-                (100 - G_skw) / 50))
+    # Check if t is between the time of maximum growth and the subsequent time of minimum growth but still after the peak
+    if(length(t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t >= G_pha)]) > 0){ # Catch "replacement has length zero" errors
+        GR[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t >= G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %% G_per) < (G_per * (100 - G_skw) / 100)) & (t >= G_pha)] - G_pha + (G_per * (100 - G_skw) / 50)/4) / (G_per * (100 - G_skw) / 50))
     }
-    # Check if t is between the time of maximum growth and the previous time of
-    # minimum growth but still before the peak, subtract one period's length if
-    # it is
-    if(length(t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) &
-        (t > G_pha)]) > 0){
-        GR[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) &
-            (t > G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %%
-                G_per) >= (G_per * (100 - G_skw) / 100)) & (t > G_pha)] -
-                G_per - G_pha + (G_per * G_skw / 50) / 4) /
-                (G_per * G_skw / 50))
+    # Check if t is between the time of maximum growth and the previous time of minimum growth but still before the peak, subtract one period's length if it is
+    if(length(t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t > G_pha)]) > 0){
+        GR[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t > G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t > G_pha)] - G_per - G_pha + (G_per * G_skw / 50)/4) / (G_per * G_skw / 50))
     }
-    if(length(t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) &
-        (t <= G_pha)]) > 0){
-        GR[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) &
-            (t <= G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %%
-                G_per) >= (G_per * (100 - G_skw) / 100)) & (t <= G_pha)] -
-                G_pha + (G_per * G_skw / 50) / 4) / (G_per * G_skw / 50))
+    if(length(t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t <= G_pha)]) > 0){
+        GR[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t <= G_pha)] <- G_av + G_amp/2 * sin(2 * pi * (t[(((t - G_pha) %% G_per) >= (G_per * (100 - G_skw) / 100)) & (t <= G_pha)] - G_pha + (G_per * G_skw / 50)/4) / (G_per * G_skw / 50))
     }
     # Replace negative growth rates with zeroes
     GR[GR < 0] <- 0
     # Multiply t and GR with number of years
     if(years > 1){
-        t <- c(t, rep(t[-1], years - 1) + rep(seq(365, 365 * (years - 1), 365),
-            each = 365))
+        t <- c(t, rep(t[-1], years - 1) + rep(seq(365, 365 * (years - 1), 365), each = 365))
         GR <- c(GR, rep(GR[-1], years - 1))
     }
     # Collate results and export

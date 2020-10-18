@@ -21,7 +21,6 @@ sd_wt<-function(x, w, na.rm = FALSE){ # Formula for weighted standard deviation
         w<-w[!(is.na(x) | is.na(w))]
     }
     mean.wt <- mean(x * w, na.rm = TRUE) / mean(w) # Calculate weighted mean
-    stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) *
-        sum(w)))
+    stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) * sum(w)))
     return(stdev)
 }

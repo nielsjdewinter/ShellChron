@@ -49,5 +49,5 @@ testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE))
 }
 \references{
 package dependencies: zoo 1.8.7; scales 1.1.0
-function dependencies:
+function dependencies: peakid
 }

@@ -48,7 +48,17 @@
 #' colnames(dynwindow) <- "x"
 #' dynwindow$y <- rep(12, 15)
 #' # Run model function
-#' resultlist <- run_model(dat, dynwindow, "calcite", d18Ow = 0, T_per = 365, G_per = 365, t_int = 1, t_maxtemp = 182.5, MC = 1000, agecorrection = FALSE, plot = FALSE)
+#' resultlist <- run_model(dat,
+#'     dynwindow,
+#'     "calcite",
+#'     d18Ow = 0,
+#'     T_per = 365,
+#'     G_per = 365,
+#'     t_int = 1,
+#'     t_maxtemp = 182.5,
+#'     MC = 1000,
+#'     agecorrection = FALSE,
+#'     plot = FALSE)
 #' @export
 run_model <- function(dat, # Master function to run the entire model on the data (dat)
     dynwindow, # The window vetor resulting from reading in the data 

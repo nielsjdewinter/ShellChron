@@ -25,41 +25,32 @@
 #' y <- sin((2 * pi * (seq(1, 11, 1) - 8 + 7 / 4)) / 7)
 #' sinlist <- sinreg(x, y, plot = FALSE) # Run the function
 #' @export
-sinreg <- function(x, # Function to perform sinusoid regression meant to
-# estimate the starting parameters for fitting growth and temperature sinusoids
+sinreg <- function(x, # Function to perform sinusoid regression meant to estimate the starting parameters for fitting growth and temperature sinusoids
     y,
     plot = FALSE # Plot results?
     ){
 
     Ots <- ts(y) # Turn y into a time series
     ssp <- spectrum(Ots, plot = FALSE) # Create periodogram of y
-    Nper <- 1 / ssp$freq[ssp$spec == max(ssp$spec)] # Estimate period in terms
-    # of sample number
-    Dper <- Nper * diff(range(x)) / length(x) # Convert period to depth domain
+    Nper <- 1/ssp$freq[ssp$spec==max(ssp$spec)] # Estimate period in terms of sample number
+    Dper <- Nper * diff(range(x))/length(x) # Convert period to depth domain
 
-    sinlm <- lm(y ~ sin(2 * pi / Dper * x) + cos(2 * pi / Dper * x)) # Run
-    # linear model, cutting up d18O = Asin(2 * pi * D) into
-    # d18O = asin(D) + bcos(D)
-    sinm <- sinlm$fitted # Extract model result
+    sinlm <- lm(y ~ sin(2*pi/Dper*x)+cos(2*pi/Dper*x)) # Run linear model, cutting up d18O = Asin(2*pi*D) into d18O = asin(D)+bcos(D)
+    sinm<-sinlm$fitted # Extract model result
     if(plot == TRUE){
         dev.new()
         plot(x, y); lines(x, sinm, col = "red")
     }
 
-    coeff <- summary(sinlm)[["coefficients"]] # Extract a, b and intercept +
-    # uncertainties
+    coeff<-summary(sinlm)[["coefficients"]] # Extract a, b and intercept + uncertainties
 
-    # Calculate coefficients of the form d18O = I + Asin(2 * pi * D + p)
-    I <- coeff[1, 1] # Intercept (mean annual value)
-    A <- sqrt(coeff[2, 1] ^ 2 + coeff[3, 1] ^ 2) # Amplitude of seasonality
-    phase <- -acos(coeff[2, 1] / A) # Phase of sinusoid
-    peak <- (0.25 + (phase / (2 * pi))) * Dper # timing of seasonal peak
-    R2adj <- summary(sinlm)$adj.r.squared # Goodness of model fit (adjusted R2)
-    p <- as.numeric(pf(summary(sinlm)$fstatistic[1],
-        summary(sinlm)$fstatistic[2],
-        summary(sinlm)$fstatistic[3],
-        lower.tail = F)) # p-value of model
+    # Calculate coefficients of the form d18O = I + Asin(2*pi*D + p)
+    I<-coeff[1,1] # Intercept (mean annual value)
+    A<-sqrt(coeff[2,1]^2+coeff[3,1]^2) # Amplitude of seasonality
+    phase<--acos(coeff[2,1]/A) # Phase of sinusoid
+    peak<-(0.25+(phase/(2*pi))) * Dper # timing of seasonal peak
+    R2adj<-summary(sinlm)$adj.r.squared # Goodness of model fit (adjusted R2)
+    p <- as.numeric(pf(summary(sinlm)$fstatistic[1],summary(sinlm)$fstatistic[2],summary(sinlm)$fstatistic[3],lower.tail=F)) # p-value of model
 
-    return(list(c(I, A, Dper, peak, R2adj, p), sinm)) # Return results of
-    # regression
+    return(list(c(I,A,Dper,peak,R2adj,p),sinm)) # Return results of regression
 }

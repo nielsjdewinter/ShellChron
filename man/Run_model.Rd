@@ -77,7 +77,17 @@ dynwindow <- as.data.frame(seq(1, 29, 2))
 colnames(dynwindow) <- "x"
 dynwindow$y <- rep(12, 15)
 # Run model function
-resultlist <- run_model(dat, dynwindow, "calcite", d18Ow = 0, T_per = 365, G_per = 365, t_int = 1, t_maxtemp = 182.5, MC = 1000, agecorrection = FALSE, plot = FALSE)
+resultlist <- run_model(dat,
+    dynwindow,
+    "calcite",
+    d18Ow = 0,
+    T_per = 365,
+    G_per = 365,
+    t_int = 1,
+    t_maxtemp = 182.5,
+    MC = 1000,
+    agecorrection = FALSE,
+    plot = FALSE)
 }
 \references{
 package dependencies: ggplot2 3.2.1; rtop 0.5.14

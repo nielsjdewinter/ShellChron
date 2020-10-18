@@ -33,12 +33,28 @@
 #' @return CSV tables of model results in the current working
 #' directory, optional plots in PDF format and list object of
 #' model results for further processing in the R workspace.
-#' @references function dependencies: data_import, run_model, cumulative_day, export_results
+#' @references function dependencies: data_import, run_model, cumulative_day,
+#' export_results
+#' @importFrom grDevices dev.new dev.off pdf
+#' @importFrom graphics lines points
+#' @importFrom stats D approx lm loess pf qt rnorm sd spectrum ts weighted.mean
+#'     window
+#' @importFrom utils capture.output head read.csv tail write.csv
 #' @examples
 #' # find attached dummy data
 #' system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
 #' path <- getwd()
-#' example <- wrap_function(path, "Virtual_shell.csv", "calcite", 1, 365, d18Ow = 0, t_maxtemp = 182.5, MC = 1000, plot = FALSE, plot_export = FALSE, export_raw = FALSE) # Run function
+#' example <- wrap_function(path,
+#'     system.file("extdata", "Virtual_shell.csv", package = "ShellChron"),
+#'     "calcite",
+#'     1,
+#'     365,
+#'     d18Ow = 0,
+#'     t_maxtemp = 182.5,
+#'     MC = 1000,
+#'     plot = FALSE,
+#'     plot_export = FALSE,
+#'     export_raw = FALSE) # Run function
 #' @export
 wrap_function <- function(path, # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)

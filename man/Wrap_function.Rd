@@ -71,8 +71,19 @@ formulae.
 # find attached dummy data
 system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
 path <- getwd()
-example <- wrap_function(path, "Virtual_shell.csv", "calcite", 1, 365, d18Ow = 0, t_maxtemp = 182.5, MC = 1000, plot = FALSE, plot_export = FALSE, export_raw = FALSE) # Run function
+example <- wrap_function(path,
+    system.file("extdata", "Virtual_shell.csv", package = "ShellChron"),
+    "calcite",
+    1,
+    365,
+    d18Ow = 0,
+    t_maxtemp = 182.5,
+    MC = 1000,
+    plot = FALSE,
+    plot_export = FALSE,
+    export_raw = FALSE) # Run function
 }
 \references{
-function dependencies: data_import, run_model, cumulative_day, export_results
+function dependencies: data_import, run_model, cumulative_day,
+export_results
 }
