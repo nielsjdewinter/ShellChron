@@ -118,7 +118,7 @@ run_model <- function(dat, # Master function to run the entire model on the data
     paru <- c(
         T_amp = 15, # Maximum T amplitude in degrees C
         T_pha = 365, # Maximum phase in days
-        T_av = 30, # Maximum average T in degrees C
+        T_av = 60, # Maximum average T in degrees C
         G_amp = 2 * GRavmax, # Maximum seasonal GR range in um/d
         G_pha = 365, # Maximum GR phase in days
         G_av = GRavmax, # Maximum average GR in um/d (based on conservative boundaries of YEARMARKER indicators)
