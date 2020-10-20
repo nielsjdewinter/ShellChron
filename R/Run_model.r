@@ -103,6 +103,18 @@ run_model <- function(dat, # Master function to run the entire model on the data
     # Estimate growth rate variability and round up to nearest multiple of 100 for conservative boundary
     GRavmax <- ceiling(max(diff(dat[dat$YEARMARKER == 1,1])) / 365 / 100) * 100
 
+    # Find tailored range of temperatures from data
+    d18Oc_range <- range(dat$d18Oc) # Find d18Oc range in data
+    if(mineral == "calcite"){ # Find temperature range (to be superseded with inverse d18O_model function in later updates)
+        T_range <- 18.03 * 1000 / (log((d18Oc_range - (0.97002 * d18Ow - 29.98)) / 1000 + 1) * 1000 + 32.42) - 273.15 # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+    }else if(mineral == "aragonite"){
+        T_range <-  20.6 - 4.34 * (d18Oc_range - d18Ow - 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
+    }else{
+        print("ERROR: Supplied mineralogy is not recognized")
+    }
+    T_max <- max(T_range)
+    T_amp_max <- 2 * abs(diff(T_range))
+
     # Collate lower boundaries of parameters
     parl <- c(
         T_amp = 0, # Minimum T amplitude in degrees C
@@ -116,9 +128,9 @@ run_model <- function(dat, # Master function to run the entire model on the data
 
     # Collate upper boundaries of parameters
     paru <- c(
-        T_amp = 15, # Maximum T amplitude in degrees C
+        T_amp = round(T_amp_max + 0.5, 0), # Maximum T amplitude in degrees C
         T_pha = 365, # Maximum phase in days
-        T_av = 60, # Maximum average T in degrees C
+        T_av = round(T_max + 0.5, 0), # Maximum average T in degrees C
         G_amp = 2 * GRavmax, # Maximum seasonal GR range in um/d
         G_pha = 365, # Maximum GR phase in days
         G_av = GRavmax, # Maximum average GR in um/d (based on conservative boundaries of YEARMARKER indicators)
