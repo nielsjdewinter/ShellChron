@@ -38,7 +38,8 @@ for(i in 6:length(testarray[1, , 1])){
         rep(NA, length(testarray[, 1, 3]) - length(windowfill)))
     windowfill <- c(NA, windowfill + 31)
 }
-testarray2 <- age_corr(testarray, 365, FALSE, FALSE) # Apply function on array
+testarray2 <- age_corr(testarray, 365, FALSE, FALSE) # Apply function on 
+array
 }
 \references{
 package dependencies: ggplot2 3.2.1

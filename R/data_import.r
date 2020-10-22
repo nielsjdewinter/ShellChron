@@ -11,9 +11,9 @@
 #' @return A list containing an object with the original data and details on
 #' the position and length of modelling windows
 #' @examples
-#' # find attached dummy data
-#' file <- system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
-#' importlist <- data_import(file) # Run function
+#' importlist <- data_import(file_name = system.file("extdata",
+#'     "Virtual_shell.csv", package = "ShellChron")) # Run function on attached
+#'     # dummy data
 #' @export
 data_import <- function(file_name){
     dat <- read.csv(file_name, header = T) # Read in data file

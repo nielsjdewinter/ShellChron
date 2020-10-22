@@ -24,9 +24,11 @@
 #'         rep(NA, length(testarray[, 1, 3]) - length(windowfill)))
 #'     windowfill <- c(NA, windowfill + 31)
 #' }
-#' testarray2 <- age_corr(testarray, 365, FALSE, FALSE) # Apply function on array
+#' testarray2 <- age_corr(testarray, 365, FALSE, FALSE) # Apply function on 
+#' array
 #' @export
 age_corr <- function(resultarray, T_per, plot, agecorrection){
+    Age <- Age_corr <- NULL # Predefine variables to circumvent global variable binding error
     # Check on glitches where consecutive windows are placed (almost) 1 year apart.
     # These are repaired by adding one T_per to the cumulative Day values of those windows in
     # resultarray[, , 3]
@@ -43,7 +45,7 @@ age_corr <- function(resultarray, T_per, plot, agecorrection){
         ggplot2::ggtitle("Plot of average ages of modelling windows") +
         ggplot2::xlab("Window #") +
         ggplot2::scale_y_continuous("Age (days)", seq(0, 365 * ceiling(max(unname(colMeans(
-            resultarray[, (length(dat[1, ])):length(resultarray[1,,1]),3], na.rm = TRUE)),
+            resultarray[, 6:length(resultarray[1,,1]),3], na.rm = TRUE)),
             na.rm = TRUE) / 365), 365))
     plot(ageplot)
 
@@ -78,7 +80,7 @@ age_corr <- function(resultarray, T_per, plot, agecorrection){
             ggplot2::ggtitle("Plot of average ages of modelling windows") +
             ggplot2::xlab("Window #") +
             ggplot2::scale_y_continuous("Age (days)", seq(0, 365 * ceiling(max(unname(colMeans(
-                resultarray[, (length(dat[1, ])):length(resultarray[1,,1]),3], na.rm = TRUE)),
+                resultarray[, 6:length(resultarray[1,,1]),3], na.rm = TRUE)),
                 na.rm = TRUE) / 365), 365)) +
             ggplot2::geom_line(ggplot2::aes(window, Age_corr), col = "red") # Add corrected window
             # age to plot

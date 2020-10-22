@@ -22,7 +22,7 @@ that windows are not too short and by default contain at least one year of
 growth for modelling.
 }
 \examples{
-# find attached dummy data
-file <- system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
-importlist <- data_import(file) # Run function
+importlist <- data_import(file_name = system.file("extdata",
+    "Virtual_shell.csv", package = "ShellChron")) # Run function on attached
+    # dummy data
 }

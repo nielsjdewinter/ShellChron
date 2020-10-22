@@ -22,9 +22,6 @@
 #' default = 182.5, or May 26th halfway through the year)
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
 #' Default = 1000
-#' @param agecorrection Should the result be corrected for large jumps in time due to
-#' incorrect cumulative day assignment by \code{CumDY} function? \code{TRUE/FALSE}
-#' (calls the \code{AgeCorr} function)
 #' @param plot Should results of modelling be plotted? \code{TRUE/FALSE}
 #' @return A list containing the \code{resultarray} which contains the full
 #' result of all simulations on each data window and the \code{parmat} listing
@@ -34,7 +31,7 @@
 #' efficient global optimization for conceptual rainfall‐runoff models." Water
 #' resources research 28.4 (1992): 1015-1031. https://doi.org/10.1029/91WR02985
 #' @references package dependencies: ggplot2 3.2.1; rtop 0.5.14
-#' Function dependencies: sinreg, growth_model
+#' Function dependencies: sinreg, d18O_model, growth_model
 #' @examples
 #' # Create dummy input data column by column
 #' dat <- as.data.frame(seq(1000, 40000, 1000))
@@ -57,7 +54,6 @@
 #'     t_int = 1,
 #'     t_maxtemp = 182.5,
 #'     MC = 1000,
-#'     agecorrection = FALSE,
 #'     plot = FALSE)
 #' @export
 run_model <- function(dat, # Master function to run the entire model on the data (dat)
@@ -69,9 +65,10 @@ run_model <- function(dat, # Master function to run the entire model on the data
     t_int = 1, # Default time interval = 1 day
     t_maxtemp = 182.5, # Default time (day) at which maximum temperature is reached is 182.5 (exactly halfway through the year, or 1st of June)
     MC = 1000, # If errors = TRUE, give the number of iterations for Monte Carlo simulation used in error propagation (default = 1000, if MC = 0 no eror propagation is done)
-    agecorrection = FALSE, # Select if a correction should be done for jumps in the years between windows. This is generally only needed for low resolution (<10 pts/yr) datasets.
     plot = FALSE # Should the progress of model fitting be plotted?
     ){
+
+    d18Oc <- d18Oc_err <- Omod <- NULL # Predefine variables to circumvent global variable binding error
 
     # Prepare data arrays for storage of modelling results
     resultarray <- array( # Create array to contain all modelling results of overlapping windows

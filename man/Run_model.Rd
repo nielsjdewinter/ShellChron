@@ -14,7 +14,6 @@ run_model(
   t_int = 1,
   t_maxtemp = 182.5,
   MC = 1000,
-  agecorrection = FALSE,
   plot = FALSE
 )
 }
@@ -42,10 +41,6 @@ default = 182.5, or May 26th halfway through the year)}
 
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}
-
-\item{agecorrection}{Should the result be corrected for large jumps in time due to
-incorrect cumulative day assignment by \code{CumDY} function? \code{TRUE/FALSE}
-(calls the \code{AgeCorr} function)}
 
 \item{plot}{Should results of modelling be plotted? \code{TRUE/FALSE}}
 }
@@ -86,12 +81,11 @@ resultlist <- run_model(dat,
     t_int = 1,
     t_maxtemp = 182.5,
     MC = 1000,
-    agecorrection = FALSE,
     plot = FALSE)
 }
 \references{
 package dependencies: ggplot2 3.2.1; rtop 0.5.14
-Function dependencies: sinreg, growth_model
+Function dependencies: sinreg, d18O_model, growth_model
 }
 \seealso{
 Duan, Qingyun, Soroosh Sorooshian, and Vijai Gupta. "Effective and

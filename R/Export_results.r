@@ -135,6 +135,11 @@ export_results <- function(dat, # Rearrange and export results of the model
     export_raw = FALSE # Export all the raw results of the model (of individual windows)?
     ){
     
+    Day <- sd.day <- N <- se.day <- d18O_mod <- sd.d18O_mod <- se.d18O_mod <-
+        GR <- sd.GR <- se.GR <- SST <- sd.SST <- se.SST <- parameter <- 
+        par_value <- stdev <- se.pars <- SD <- d18Oc <- mean.day <- CL95.day <-
+        mean.d18O_mod <- CL95.d18O_mod <- mean.GR <- CL95.GR <- NULL # Predefine variables to circumvent global variable binding error
+    
     # Define weights to give more priority to datapoints in the center of the modelling window than those on the edge
     weights <- matrix(NA, ncol = length(dynwindow$x), nrow = length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1) # Create template matrix
     for(i in 1:length(dynwindow$x)){ # Loop through matrix and add weights for each position in the resultarray that contains a value

@@ -42,10 +42,9 @@
 #' @importFrom utils capture.output head read.csv tail write.csv
 #' @examples
 #' # find attached dummy data
-#' system.file("extdata", "Virtual_shell.csv", package = "ShellChron")
-#' path <- getwd()
 #' example <- wrap_function(path,
-#'     system.file("extdata", "Virtual_shell.csv", package = "ShellChron"),
+#'     file_name = system.file("extdata", "Virtual_shell.csv",
+#'     package = "ShellChron"),
 #'     "calcite",
 #'     1,
 #'     365,
@@ -77,7 +76,7 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     G_per <- T_per # Period of growth rate sinusoid should equal that of the temperature sinusoid (which is given)
 
     # STEP 2: Run the model
-    resultlist <- run_model(dat, dynwindow, mineral, d18Ow, T_per, G_per, t_int, t_maxtemp, MC, agecorrection, plot = TRUE)
+    resultlist <- run_model(dat, dynwindow, mineral, d18Ow, T_per, G_per, t_int, t_maxtemp, MC, plot = TRUE)
     resultarray <- resultlist[[1]]
     parmat <- resultlist[[2]]
     
