@@ -56,7 +56,7 @@
 #'     MC = 1000,
 #'     plot = FALSE)
 #' @export
-run_model <- function(dat, # Master function to run the entire model on the data (dat)
+run_model <- function(dat, # Core function to run the entire model on the data (dat)
     dynwindow, # The window vetor resulting from reading in the data 
     mineral = "calcite",
     d18Ow = "default",
