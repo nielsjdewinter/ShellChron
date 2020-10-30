@@ -103,9 +103,9 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     # Find tailored range of temperatures from data
     d18Oc_range <- range(dat$d18Oc) # Find d18Oc range in data
     if(mineral == "calcite"){ # Find temperature range (to be superseded with inverse d18O_model function in later updates)
-        T_range <- 18.03 * 1000 / (log((d18Oc_range - (0.97002 * d18Ow - 29.98)) / 1000 + 1) * 1000 + 32.42) - 273.15 # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+        T_range <- 18.03 * 1000 / (log((d18Oc_range - (0.97002 * rev(range(d18Ow)) - 29.98)) / 1000 + 1) * 1000 + 32.42) - 273.15 # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
     }else if(mineral == "aragonite"){
-        T_range <-  20.6 - 4.34 * (d18Oc_range - d18Ow - 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
+        T_range <-  20.6 - 4.34 * (d18Oc_range - rev(range(d18Ow)) - 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
     }else{
         print("ERROR: Supplied mineralogy is not recognized")
     }
