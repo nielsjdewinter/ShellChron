@@ -69,7 +69,7 @@ formulae.
 }
 \examples{
 # find attached dummy data
-example <- wrap_function(path,
+example <- wrap_function(path = getwd(),
     file_name = system.file("extdata", "Virtual_shell.csv",
     package = "ShellChron"),
     "calcite",
