@@ -55,7 +55,7 @@
 #'     plot = FALSE,
 #'     plot_export = FALSE,
 #'     export_raw = FALSE,
-#'     export_path = tempfile()) # Run function
+#'     export_path = tempdir()) # Run function
 #' @export
 wrap_function <- function(path, # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)
@@ -68,7 +68,7 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     plot = TRUE, # Should intermediate plots be given to track progress? WARNING: plotting makes the script much slower, especially for long datasets.
     plot_export = TRUE, # Should a plot of the results be saved as PDF?
     export_raw = FALSE, # Should the results of all individual model runs be exported as CSV files?
-    export_path
+    export_path # Path where result files are exported
     ){
 
     # STEP 1: Import data
@@ -85,9 +85,9 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     
     # STEP 3: Align model results to cumulative timescale
     print("Calculating cumulative day of the year results...")
-    suppressWarnings(resultarray[, , 3] <- cumulative_day(resultarray, TRUE, TRUE)) # Calculate cumulative day of the year for all model runs and replace matrix in result array
+    suppressWarnings(resultarray[, , 3] <- cumulative_day(resultarray, TRUE, TRUE, export_path)) # Calculate cumulative day of the year for all model runs and replace matrix in result array
     
     # STEP 4: Order and export results and statistics
-    export_results(dat, resultarray, parmat, MC, dynwindow, plot, plot_export, export_raw) # Export results of model
+    export_results(export_path, dat, resultarray, parmat, MC, dynwindow, plot, plot_export, export_raw) # Export results of model
     return(resultlist)
 }

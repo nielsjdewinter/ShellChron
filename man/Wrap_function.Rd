@@ -84,7 +84,7 @@ example <- wrap_function(path = getwd(),
     plot = FALSE,
     plot_export = FALSE,
     export_raw = FALSE,
-    export_path = tempfile()) # Run function
+    export_path = tempdir()) # Run function
 }
 \references{
 function dependencies: data_import, run_model, cumulative_day,

@@ -116,7 +116,7 @@
 #' rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av",
 #'     "G_skw")
 #' # Run export function
-#' test <- export_results(path = tempfile(),
+#' test <- export_results(path = tempdir(),
 #'     dat,
 #'     testarray,
 #'     parmat,
@@ -361,22 +361,37 @@ export_results <- function(path, # Path where result files are exported
     print("Start exporting files to directory")
     if(export_raw == TRUE){
     # Write away all raw results of modelling
-        write.csv(resultarray[, , 1], file.path(path, "modelled_d18O_raw.csv"))
-        write.csv(resultarray[, , 2], file.path(path, "residuals_raw.csv"))
-        write.csv(resultarray[, , 3], file.path(path, "Day_of_year_raw.csv"))
-        write.csv(resultarray[, , 4], file.path(path, "Instantaneous_growth_rate_raw.csv"))
-        write.csv(resultarray[, , 5], file.path(path, "SST_raw.csv"))
-        write.csv(resultarray[, , 6], file.path(path, "Modelled_d18O_SD_raw.csv"))
-        write.csv(resultarray[, , 7], file.path(path, "Day_of_Year_SD_raw.csv"))
-        write.csv(resultarray[, , 8], file.path(path, "Instantaneous_growth_rate_SD_raw.csv"))
-        write.csv(resultarray[, , 9], file.path(path, "SST_SD_raw.csv"))
-        write.csv(parmat, file.path(path, "modelled_parameters_raw.csv"))
+        d18Oraw_p <- file.path(path, "modelled_d18O_raw.csv")
+        write.csv(resultarray[, , 1], d18Oraw_p)
+        resraw_p <- file.path(path, "residuals_raw.csv")
+        write.csv(resultarray[, , 2], resraw_p)
+        JDraw_p <- file.path(path, "Day_of_year_raw.csv")
+        write.csv(resultarray[, , 3], JDraw_p)
+        IGRraw_p <- file.path(path, "Instantaneous_growth_rate_raw.csv")
+        write.csv(resultarray[, , 4], IGRraw_p)
+        SSTraw_p <- file.path(path, "SST_raw.csv")
+        write.csv(resultarray[, , 5], SSTraw_p)
+        d18OSDraw_p <- file.path(path, "Modelled_d18O_SD_raw.csv")
+        write.csv(resultarray[, , 6], d18OSDraw_p)
+        JDSDraw_p <- file.path(path, "Day_of_Year_SD_raw.csv")
+        write.csv(resultarray[, , 7], JDSDraw_p)
+        IGRSDraw_p <- file.path(path, "Instantaneous_growth_rate_SD_raw.csv")
+        write.csv(resultarray[, , 8], IGRSDraw_p)
+        SSTSDraw_p <- file.path(path, "SST_SD_raw.csv")
+        write.csv(resultarray[, , 9], SSTSDraw_p)
+        parraw_p <- file.path(path, "modelled_parameters_raw.csv")
+        write.csv(parmat, parraw_p)
     }
 
     # Write avay summary statistics of modelling
-    write.csv(JDstats, file.path(path, "Age_model_results.csv"))
-    write.csv(d18Ostats, file.path(path, "d18O_model_results.csv"))
-    write.csv(GRstats, file.path(path, "Growth_rate_results.csv"))
-    write.csv(Tstats, file.path(path, "SST_results.csv"))
-    write.csv(parstats, file.path(path, "Model_parameter_results.csv"))
+    AMR_p <- file.path(path, "Age_model_results.csv")
+    write.csv(JDstats, AMR_p)
+    d18OR_p <- file.path(path, "d18O_model_results.csv")
+    write.csv(d18Ostats, d18OR_p)
+    GRR_p <- file.path(path, "Growth_rate_results.csv")
+    write.csv(GRstats, GRR_p)
+    SSTR_p <- file.path(path, "SST_results.csv")
+    write.csv(Tstats, SSTR_p)
+    parR_p <- file.path(path, "Model_parameter_results.csv")
+    write.csv(parstats, parR_p)
     print("DONE!")}

@@ -144,7 +144,7 @@ parmat <- matrix(rnorm(length(pars) * length(dynwindow$x)), nrow =
 rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av",
     "G_skw")
 # Run export function
-test <- export_results(path,
+test <- export_results(path = tempdir(),
     dat,
     testarray,
     parmat,

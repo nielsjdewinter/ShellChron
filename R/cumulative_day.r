@@ -11,6 +11,7 @@
 #' transitions be plotted? \code{TRUE/FALSE}
 #' @param export_peakid Should the result of peak identification
 #' be plotted? \code{TRUE/FALSE}
+#' @param path Export path (defaults to tempdir())
 #' @return A new version of the Julian Day tab of the resultarray 
 #' with Julian Day model estimates replaced by estimates of 
 #' cumulative age of the record in days.
@@ -32,12 +33,13 @@
 #' testarray[, 3, 3] <- c(0, rep(c(0, 0, 0, 0, 0, 0, 1), 5), 0, 0, 0, 0)
 #' # Add dummy d18Oc column
 #' testarray[, 2, 3] <- sin((2 * pi * (testarray[, 1, 3] - 8 + 7 / 4)) / 7)
-#' testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE))
+#' testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE, tempdir()))
 #' # Apply function on array
 #' @export
 cumulative_day <- function(resultarray, # Align Day of year results from modelling in different windows to a common time axis
     plotyearmarkers, # Plot peak fitting?
-    export_peakid # Export data on how the boundaries between years were found?
+    export_peakid, # Export data on how the boundaries between years were found?
+    path = tempdir()
     ){
     
     dat <- resultarray[, 1:5, 3] # isolate original data
@@ -129,7 +131,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
     }
 
     if(export_peakid == TRUE){
-        write.csv(JDends, "peakid.csv")
+        write.csv(JDends, file.path(path, "peakid.csv"))
     }
 
     # Apply calculation of years in the model on the simulation results
