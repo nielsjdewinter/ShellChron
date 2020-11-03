@@ -26,8 +26,8 @@ As a result, the timing of each datapoint with reference to the seasonal
 cycle is exported, from which an age model for the entire record can be
 constructed.
 
-![Figure 1: Temperature sinusoid](README-SSTcurve.png) ![Figure 2:
-Growth rate sinusoid](README-GRcurve.png)
+![Figure 1: Temperature sinusoid](SSTcurve.png) ![Figure 2: Growth rate
+sinusoid](GRcurve.png)
 
 The model builds on previous work by [Judd et
 al. 2018](https://doi.org/10.1016/j.palaeo.2017.09.034) and expands on
@@ -59,7 +59,7 @@ this previous model in several key ways:
     while retaining competitive processing time (see Figure 3).
 
 ![Figure 3: Timing of whole model run at various data
-resolutions](README-Timing.png)
+resolutions](Timing.png)
 
 ## Installation
 

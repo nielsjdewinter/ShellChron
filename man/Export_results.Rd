@@ -5,6 +5,7 @@
 \title{Function to merge and export the results of the ShellChron model}
 \usage{
 export_results(
+  path,
   dat,
   resultarray,
   parmat,
@@ -16,6 +17,8 @@ export_results(
 )
 }
 \arguments{
+\item{path}{Path where result files are exported}
+
 \item{dat}{Matrix containing the input data}
 
 \item{resultarray}{Array containing the full results of
@@ -141,7 +144,8 @@ parmat <- matrix(rnorm(length(pars) * length(dynwindow$x)), nrow =
 rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av",
     "G_skw")
 # Run export function
-\dontrun{test <- export_results(dat,
+test <- export_results(path,
+    dat,
     testarray,
     parmat,
     MC = 1000,
@@ -149,7 +153,6 @@ rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av",
     plot = FALSE,
     plot_export = FALSE,
     export_raw = FALSE)
-    }
 }
 \references{
 package dependencies: tidyverse 1.3.0; ggpubr 0.4.0; magrittr

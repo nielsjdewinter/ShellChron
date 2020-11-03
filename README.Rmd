@@ -26,8 +26,8 @@ In short, ShellChron feeds a temperature sinusoid (Figure 1; see details in "tem
 The resulting modelled d18O is then compared with the user-provided d18O data and the parameters of the temperature and growth rate functions are optimized using the SCEUA algorithm (see [Duan et al., 1992](https://doi.org/10.1029/91WR02985)) to match the d18O data.
 As a result, the timing of each datapoint with reference to the seasonal cycle is exported, from which an age model for the entire record can be constructed.
 
-![Figure 1: Temperature sinusoid](README-SSTcurve.png)
-![Figure 2: Growth rate sinusoid](README-GRcurve.png)
+![Figure 1: Temperature sinusoid](SSTcurve.png)
+![Figure 2: Growth rate sinusoid](GRcurve.png)
 
 The model builds on previous work by [Judd et al. 2018](https://doi.org/10.1016/j.palaeo.2017.09.034) and expands on this previous model in several key ways:
 
@@ -37,7 +37,7 @@ The model builds on previous work by [Judd et al. 2018](https://doi.org/10.1016/
 4. ShellChron offers more dynamic input options for data on the variable that is not modelled (usually d18O of precipitation fluid), circumventing the (often false) assumption that this variable remains constant throughout the year and preventing fixed values for this variable hardcoded in the model.
 5. ShellChron achieves more efficient SCEUA modelling by pre-guessing the parameters of temperature and growth rate sinusoids using a sinusoidal regression (see "sinreg()" formula). This is an essential feature that allows ShellChron to process more optimization windows while retaining competitive processing time (see Figure 3).
 
-![Figure 3: Timing of whole model run at various data resolutions](README-Timing.png)
+![Figure 3: Timing of whole model run at various data resolutions](Timing.png)
 
 ## Installation
 

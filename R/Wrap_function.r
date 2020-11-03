@@ -30,6 +30,7 @@
 #' a PDF file? \code{TRUE/FALSE}
 #' @param export_raw Export tables containing all raw model
 #' results before being merged into tidy tables? \code{TRUE/FALSE}
+#' @param export_path Path where result files are exported
 #' @return CSV tables of model results in the current working
 #' directory, optional plots in PDF format and list object of
 #' model results for further processing in the R workspace.
@@ -53,7 +54,8 @@
 #'     MC = 1000,
 #'     plot = FALSE,
 #'     plot_export = FALSE,
-#'     export_raw = FALSE) # Run function
+#'     export_raw = FALSE,
+#'     export_path = tempfile()) # Run function
 #' @export
 wrap_function <- function(path, # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)
@@ -65,7 +67,8 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     MC = 1000, # Number of MC simulations to include measurement error into error analysis. Default = 1000 (if MC = 0, error on D and d18O measurements not considered)
     plot = TRUE, # Should intermediate plots be given to track progress? WARNING: plotting makes the script much slower, especially for long datasets.
     plot_export = TRUE, # Should a plot of the results be saved as PDF?
-    export_raw = FALSE # Should the results of all individual model runs be exported as CSV files?
+    export_raw = FALSE, # Should the results of all individual model runs be exported as CSV files?
+    export_path
     ){
 
     # STEP 1: Import data

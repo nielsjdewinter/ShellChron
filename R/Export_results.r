@@ -8,6 +8,7 @@
 #' (provided by the user) and uncertainties of the model
 #' (from overlapping modelling windows).
 #' Includes some optional plotting options.
+#' @param path Path where result files are exported
 #' @param dat Matrix containing the input data
 #' @param resultarray Array containing the full results of
 #' the optimized growth model
@@ -115,7 +116,8 @@
 #' rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av",
 #'     "G_skw")
 #' # Run export function
-#' \dontrun{test <- export_results(dat,
+#' test <- export_results(path = tempfile(),
+#'     dat,
 #'     testarray,
 #'     parmat,
 #'     MC = 1000,
@@ -123,9 +125,9 @@
 #'     plot = FALSE,
 #'     plot_export = FALSE,
 #'     export_raw = FALSE)
-#'     }
 #' @export
-export_results <- function(dat, # Rearrange and export results of the model
+export_results <- function(path, # Path where result files are exported
+    dat, # raw data
     resultarray, # Array containing all model results 
     parmat, # matrix of parameters per window
     MC, # Include number of simulations just for error verification (if MC > 0, errors are included in the export)
@@ -359,23 +361,22 @@ export_results <- function(dat, # Rearrange and export results of the model
     print("Start exporting files to directory")
     if(export_raw == TRUE){
     # Write away all raw results of modelling
-        write.csv(resultarray[, , 1], "modelled_d18O_raw.csv")
-        write.csv(resultarray[, , 2], "residuals_raw.csv")
-        write.csv(resultarray[, , 3], "Day_of_year_raw.csv")
-        write.csv(resultarray[, , 4], "Instantaneous_growth_rate_raw.csv")
-        write.csv(resultarray[, , 5], "SST_raw.csv")
-        write.csv(resultarray[, , 6], "Modelled_d18O_SD_raw.csv")
-        write.csv(resultarray[, , 7], "Day_of_Year_SD_raw.csv")
-        write.csv(resultarray[, , 8], "Instantaneous_growth_rate_SD_raw.csv")
-        write.csv(resultarray[, , 9], "SST_SD_raw.csv")
-        write.csv(parmat, "modelled_parameters_raw.csv")
+        write.csv(resultarray[, , 1], file.path(path, "modelled_d18O_raw.csv"))
+        write.csv(resultarray[, , 2], file.path(path, "residuals_raw.csv"))
+        write.csv(resultarray[, , 3], file.path(path, "Day_of_year_raw.csv"))
+        write.csv(resultarray[, , 4], file.path(path, "Instantaneous_growth_rate_raw.csv"))
+        write.csv(resultarray[, , 5], file.path(path, "SST_raw.csv"))
+        write.csv(resultarray[, , 6], file.path(path, "Modelled_d18O_SD_raw.csv"))
+        write.csv(resultarray[, , 7], file.path(path, "Day_of_Year_SD_raw.csv"))
+        write.csv(resultarray[, , 8], file.path(path, "Instantaneous_growth_rate_SD_raw.csv"))
+        write.csv(resultarray[, , 9], file.path(path, "SST_SD_raw.csv"))
+        write.csv(parmat, file.path(path, "modelled_parameters_raw.csv"))
     }
 
     # Write avay summary statistics of modelling
-    write.csv(JDstats, "Age_model_results.csv")
-    write.csv(d18Ostats, "d18O_model_results.csv")
-    write.csv(GRstats, "Growth_rate_results.csv")
-    write.csv(Tstats, "SST_results.csv")
-    write.csv(parstats, "Model_parameter_results.csv")
-    print("DONE!")
-}
+    write.csv(JDstats, file.path(path, "Age_model_results.csv"))
+    write.csv(d18Ostats, file.path(path, "d18O_model_results.csv"))
+    write.csv(GRstats, file.path(path, "Growth_rate_results.csv"))
+    write.csv(Tstats, file.path(path, "SST_results.csv"))
+    write.csv(parstats, file.path(path, "Model_parameter_results.csv"))
+    print("DONE!")}

@@ -15,7 +15,8 @@ wrap_function(
   MC = 1000,
   plot = TRUE,
   plot_export = TRUE,
-  export_raw = FALSE
+  export_raw = FALSE,
+  export_path
 )
 }
 \arguments{
@@ -54,6 +55,8 @@ a PDF file? \code{TRUE/FALSE}}
 
 \item{export_raw}{Export tables containing all raw model
 results before being merged into tidy tables? \code{TRUE/FALSE}}
+
+\item{export_path}{Path where result files are exported}
 }
 \value{
 CSV tables of model results in the current working
@@ -80,7 +83,8 @@ example <- wrap_function(path = getwd(),
     MC = 1000,
     plot = FALSE,
     plot_export = FALSE,
-    export_raw = FALSE) # Run function
+    export_raw = FALSE,
+    export_path = tempfile()) # Run function
 }
 \references{
 function dependencies: data_import, run_model, cumulative_day,
