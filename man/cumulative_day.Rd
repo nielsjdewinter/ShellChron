@@ -4,7 +4,7 @@
 \alias{cumulative_day}
 \title{Function to detect year transitions and calculate cumulative age of model results}
 \usage{
-cumulative_day(resultarray, plotyearmarkers, export_peakid)
+cumulative_day(resultarray, plotyearmarkers, export_peakid, path = tempdir())
 }
 \arguments{
 \item{resultarray}{Array containing the full results of
@@ -15,6 +15,8 @@ transitions be plotted? \code{TRUE/FALSE}}
 
 \item{export_peakid}{Should the result of peak identification
 be plotted? \code{TRUE/FALSE}}
+
+\item{path}{Export path (defaults to tempdir())}
 }
 \value{
 A new version of the Julian Day tab of the resultarray
@@ -44,7 +46,7 @@ testarray[, 1, 3] <- seq(1, length(testarray[, 1, 3]), 1)
 testarray[, 3, 3] <- c(0, rep(c(0, 0, 0, 0, 0, 0, 1), 5), 0, 0, 0, 0)
 # Add dummy d18Oc column
 testarray[, 2, 3] <- sin((2 * pi * (testarray[, 1, 3] - 8 + 7 / 4)) / 7)
-testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE))
+testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE, tempdir()))
 # Apply function on array
 }
 \references{
