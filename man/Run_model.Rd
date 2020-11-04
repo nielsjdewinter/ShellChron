@@ -72,7 +72,7 @@ dynwindow <- as.data.frame(seq(1, 29, 2))
 colnames(dynwindow) <- "x"
 dynwindow$y <- rep(12, 15)
 # Run model function
-resultlist <- run_model(dat,
+\donttest{resultlist <- run_model(dat,
     dynwindow,
     "calcite",
     d18Ow = 0,
@@ -81,7 +81,7 @@ resultlist <- run_model(dat,
     t_int = 1,
     t_maxtemp = 182.5,
     MC = 1000,
-    plot = FALSE)
+    plot = FALSE)}
 }
 \references{
 package dependencies: ggplot2 3.2.1; rtop 0.5.14

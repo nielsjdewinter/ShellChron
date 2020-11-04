@@ -43,7 +43,7 @@
 #' @importFrom utils capture.output head read.csv tail write.csv
 #' @examples
 #' # find attached dummy data
-#' example <- wrap_function(path = getwd(),
+#' \donttest{example <- wrap_function(path = getwd(),
 #'     file_name = system.file("extdata", "Virtual_shell.csv",
 #'     package = "ShellChron"),
 #'     "calcite",
@@ -55,7 +55,7 @@
 #'     plot = FALSE,
 #'     plot_export = FALSE,
 #'     export_raw = FALSE,
-#'     export_path = tempdir()) # Run function
+#'     export_path = tempdir())} # Run function
 #' @export
 wrap_function <- function(path, # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)

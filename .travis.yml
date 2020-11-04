@@ -8,3 +8,4 @@ cache: packages
 os:
   - linux
   - osx
+install: travis_wait 60 mvn install

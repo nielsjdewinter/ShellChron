@@ -72,7 +72,7 @@ formulae.
 }
 \examples{
 # find attached dummy data
-example <- wrap_function(path = getwd(),
+\donttest{example <- wrap_function(path = getwd(),
     file_name = system.file("extdata", "Virtual_shell.csv",
     package = "ShellChron"),
     "calcite",
@@ -84,7 +84,7 @@ example <- wrap_function(path = getwd(),
     plot = FALSE,
     plot_export = FALSE,
     export_raw = FALSE,
-    export_path = tempdir()) # Run function
+    export_path = tempdir())} # Run function
 }
 \references{
 function dependencies: data_import, run_model, cumulative_day,
