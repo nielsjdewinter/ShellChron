@@ -11,7 +11,7 @@
 #' @param y Vector of \code{y} values of input data
 #' @param plot Should the fitting result be plotted? \code{TRUE/FALSE}
 #' @return A list containing a vector of parameters of the fitted sinusoid
-#' and the fitted values beloging to each \code{x} value.
+#' and the fitted values belonging to each \code{x} value.
 #' Fitting parameters:
 #' \code{I} = the mean annual value of the sinusoid (height)
 #' \code{A} = the amplitude of the sinusoid

@@ -11,7 +11,7 @@ status](https://travis-ci.com/nielsjdewinter/ShellChron.svg?branch=master)](http
 
 The ShellChron package contains all formulae and documentation required
 to run the ShellChron model. The ShellChron model uses stable oxygen
-isotope records (d18O) from seasonal paleo-arhives to create an age
+isotope records (d18O) from seasonal paleo-archives to create an age
 model for the archive.
 
 In short, ShellChron feeds a temperature sinusoid (Figure 1; see details
@@ -26,8 +26,8 @@ As a result, the timing of each datapoint with reference to the seasonal
 cycle is exported, from which an age model for the entire record can be
 constructed.
 
-![Figure 1: Temperature sinusoid](SSTcurve.png) ![Figure 2: Growth rate
-sinusoid](GRcurve.png)
+![Figure 1: Temperature sinusoid](man/figures/README-SSTcurve.png)
+![Figure 2: Growth rate sinusoid](man/figures/README-GRcurve.png)
 
 The model builds on previous work by [Judd et
 al. 2018](https://doi.org/10.1016/j.palaeo.2017.09.034) and expands on
@@ -59,7 +59,7 @@ this previous model in several key ways:
     while retaining competitive processing time (see Figure 3).
 
 ![Figure 3: Timing of whole model run at various data
-resolutions](Timing.png)
+resolutions](man/figures/README-Timing.png)
 
 ## Installation
 
