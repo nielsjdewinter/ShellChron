@@ -21,7 +21,7 @@ only for starting time (/code{FALSE})}
 An updated and corrected version of \code{resultarray}
 }
 \description{
-Some occurrences in the model results can lead the CumDY functon
+Some occurrences in the model results can lead the CumDY function
 to detect extra year transitions, resulting in sudden jumps in
 the shell chronology or a start of the chronology at an age
 beyond 1 year. This function removes these sharp transitions

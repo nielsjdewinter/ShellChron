@@ -24,14 +24,14 @@ The ShellChron model uses stable oxygen isotope records (d18O) from seasonal pal
 
 In short, ShellChron feeds a temperature sinusoid (Figure 1; see details in "temperature_curve()" function) and a skewed growth rate sinusoid (Figure 2; see details in "growth_rate_curve()" function) to a d18O model (see details in "d18O_model()" function).
 The resulting modelled d18O is then compared with the user-provided d18O data and the parameters of the temperature and growth rate functions are optimized using the SCEUA algorithm (see [Duan et al., 1992](https://doi.org/10.1029/91WR02985)) to match the d18O data.
-As a result, the timing of each datapoint with reference to the seasonal cycle is exported, from which an age model for the entire record can be constructed.
+As a result, the timing of each data point with reference to the seasonal cycle is exported, from which an age model for the entire record can be constructed.
 
 ![Figure 1: Temperature sinusoid](man/figures/README-SSTcurve.png)
 ![Figure 2: Growth rate sinusoid](man/figures/README-GRcurve.png)
 
 The model builds on previous work by [Judd et al. 2018](https://doi.org/10.1016/j.palaeo.2017.09.034) and expands on this previous model in several key ways:
 
-1. ShellChron allows SCEUA optimization to be carried out in a sliding window through the data and recognizes year transitions (see "cumulative_day()" formula) to produce seemless age models through multiple years. Overlapping windows are used to estimate the reproducibility of model results.
+1. ShellChron allows SCEUA optimization to be carried out in a sliding window through the data and recognizes year transitions (see "cumulative_day()" formula) to produce seamless age models through multiple years. Overlapping windows are used to estimate the reproducibility of model results.
 2. ShellChron provides the option to take uncertainties on the input data ("D_err" and "d18Oc_err") into account in error estimation (see "mc_err_orth()" and "export_results() functions), providing realistic errors on the age estimation which were previously unsupported.
 3. ShellChron supports different empirical formulae for converting temperature and d18O of the precipitation fluid into d18O records, providing compatibility with records consisting of various mineralogies (e.g. calcite and aragonite).
 4. ShellChron offers more dynamic input options for data on the variable that is not modelled (usually d18O of precipitation fluid), circumventing the (often false) assumption that this variable remains constant throughout the year and preventing fixed values for this variable hardcoded in the model.
