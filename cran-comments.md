@@ -4,7 +4,10 @@
 * OS X 10.13 (on travis ci) R 4.0.3
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs 
+There were no ERRORs, WARNINGs or NOTEs
+
+## R-hub Builder results
+There were no ERRORs, WARNINGs or NOTEs
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
