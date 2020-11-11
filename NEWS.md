@@ -1,3 +1,6 @@
 # ShellChron 0.2.5
 
-First version of the ShellChron package, no new features included
+## 0.2.7
+Removed characters that caused problems with building PDF manual
+Minor spelling checks
+Updated some formulae to make checking run more smoothly
