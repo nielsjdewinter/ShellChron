@@ -50,6 +50,6 @@ testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE, tempdir()
 # Apply function on array
 }
 \references{
-package dependencies: zoo 1.8.7; scales 1.1.0
+package dependencies: zoo 1.8.7; scales 1.1.0; graphics
 function dependencies: peakid
 }
