@@ -1,6 +1,6 @@
 Package: ShellChron
 Title: Builds Chronologies from Oxygen Isotope Profiles in Shells
-Version: 0.2.5
+Version: 0.2.7
 Authors@R: 
     person(given = "Niels",
            family = "de Winter",
@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1453-5407"))
 Description: Takes as input a stable oxygen isotope (d18O) profile measured in growth direction (D)
 	through a shell + uncertainties in both variables (d18O_err & D_err). It then models the seasonality
-	in the d18O record by fitting a combination of a growth and temperature sinusoid to year-length chunks of
+	in the d18O record by fitting a combination of a growth and temperature sine wave to year-length chunks of
 	the data. This modelling is carried out along a sliding window through the data and yields estimates of
 	the day of the year (Julian Day) and local growth rate for each data point. Uncertainties in both modelling
 	routine and the data itself are propagated and pooled to obtain a confidence envelope around the age of
@@ -35,7 +35,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 Suggests: 
     knitr,
     rmarkdown

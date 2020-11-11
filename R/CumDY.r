@@ -16,6 +16,7 @@
 #' estimates replaced by estimates of cumulative age of the record
 #' in days.
 #' @references package dependencies: zoo 1.8.7
+#' @importFrom graphics plot
 #' @examples
 #' testarray <- array(NA, dim = c(20, 16, 9)) # Create empty array
 #' # with correct third dimension

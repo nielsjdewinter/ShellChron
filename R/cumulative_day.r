@@ -17,6 +17,7 @@
 #' cumulative age of the record in days.
 #' @references package dependencies: zoo 1.8.7; scales 1.1.0; graphics
 #' function dependencies: peakid
+#' @importFrom graphics plot
 #' @examples
 #' testarray <- array(NA, dim = c(40, 36, 9)) # Create empty array
 #' # with correct third dimension
