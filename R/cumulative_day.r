@@ -15,7 +15,7 @@
 #' @return A new version of the Julian Day tab of the resultarray 
 #' with Julian Day model estimates replaced by estimates of 
 #' cumulative age of the record in days.
-#' @references package dependencies: zoo 1.8.7; scales 1.1.0
+#' @references package dependencies: zoo 1.8.7; scales 1.1.0; graphics
 #' function dependencies: peakid
 #' @examples
 #' testarray <- array(NA, dim = c(40, 36, 9)) # Create empty array
@@ -121,7 +121,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
 
     if(plotyearmarkers == TRUE){
         dev.new()
-        plot(JDends$Depth,
+        graphics::plot(JDends$Depth,
             JDends$YEcombined,
             type = "l",
             main = "Peak fitting results",
