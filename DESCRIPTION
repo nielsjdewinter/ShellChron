@@ -1,6 +1,6 @@
 Package: ShellChron
 Title: Builds Chronologies from Oxygen Isotope Profiles in Shells
-Version: 0.2.7
+Version: 0.2.8
 Authors@R: 
     person(given = "Niels",
            family = "de Winter",
@@ -10,7 +10,7 @@ Authors@R:
 Description: Takes as input a stable oxygen isotope (d18O) profile measured in growth direction (D)
 	through a shell + uncertainties in both variables (d18O_err & D_err). It then models the seasonality
 	in the d18O record by fitting a combination of a growth and temperature sine wave to year-length chunks of
-	the data. This modelling is carried out along a sliding window through the data and yields estimates of
+	the data (see Judd et al., (2018) <doi:10.1016/j.palaeo.2017.09.034>). This modelling is carried out along a sliding window through the data and yields estimates of
 	the day of the year (Julian Day) and local growth rate for each data point. Uncertainties in both modelling
 	routine and the data itself are propagated and pooled to obtain a confidence envelope around the age of
 	each data point in the shell. The end result is a shell chronology consisting of estimated ages of shell

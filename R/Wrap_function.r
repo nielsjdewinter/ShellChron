@@ -71,6 +71,9 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     export_path # Path where result files are exported
     ){
 
+    oldwd <- getwd()
+    on.exit(setwd(oldwd))
+    
     # STEP 1: Import data
     setwd(path)
     importlist <- data_import(file_name)
