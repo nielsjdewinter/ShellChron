@@ -4,7 +4,7 @@
 \alias{d18O_model}
 \title{Function to convert SST data to d18O}
 \usage{
-d18O_model(SST, d18Ow = 0, mineral = "calcite")
+d18O_model(SST, d18Ow = 0, transfer_function = "KimONeil97")
 }
 \arguments{
 \item{SST}{Matrix with a time column (values in days) and an SST column
@@ -15,8 +15,9 @@ equal to the period in SST data (365 days by default) containing information
 about seasonality in d18Ow. Defaults to constant d18Ow of 0 permille VSMOW
 (the modern mean ocean value)}
 
-\item{mineral}{String containing the name of the mineralogy (either
-\code{"calcite"} or \code{"aragonite"}). Defaults to calcite.}
+\item{transfer_function}{String containing the name of the transfer function
+(for example: \code{"KimONeil97"} or \code{"GrossmanKu86"}). Defaults to
+Kim and O'Neil (1997).}
 }
 \value{
 A vector containing d18O values for each SST value in \code{"SST"}
@@ -24,9 +25,9 @@ A vector containing d18O values for each SST value in \code{"SST"}
 \description{
 Takes a matrix of SST data (in degrees C) against time (in days), information
 about the d18O value (in permille VSMOW) of the water and how it changes
-through the year and the mineralogy of the record (calcite or aragonite).
-Converts the SST data to d18O data using an empirical transfer function
-(in function of the mineralogy)
+through the year and the transfer function used for of the record (e.g.
+Kim and O'Neil, 1997 or Grossman and Ku, 1986). Converts the SST data to d18O
+data using the supplied empirical transfer function.
 }
 \examples{
 # Create dummy SST data
@@ -34,5 +35,5 @@ t <- seq(1, 40, 1)
 T <- sin((2 * pi * (seq(1, 40, 1) - 8 + 10 / 4)) / 10)
 SST <- cbind(t, T)
 # Run d18O model function
-d18O <- d18O_model(SST, 0, "calcite")
+d18O <- d18O_model(SST, 0, "KimONeil97")
 }

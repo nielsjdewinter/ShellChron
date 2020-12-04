@@ -25,4 +25,8 @@ growth for modelling.
 importlist <- data_import(file_name = system.file("extdata",
     "Virtual_shell.csv", package = "ShellChron")) # Run function on attached
     # dummy data
+
+# Bad data file lacking YEARMARKER column
+\dontrun{importlist <- data_import(file_name = system.file("extdata",
+    "Bad_data.csv", package = "ShellChron"))}
 }

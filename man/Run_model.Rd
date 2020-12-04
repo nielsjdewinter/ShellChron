@@ -7,10 +7,10 @@
 run_model(
   dat,
   dynwindow,
-  mineral = "calcite",
-  d18Ow = "default",
-  T_per,
-  G_per,
+  transfer_function = "KimONeil97",
+  d18Ow = 0,
+  T_per = 365,
+  G_per = 365,
   t_int = 1,
   t_maxtemp = 182.5,
   MC = 1000,
@@ -23,7 +23,8 @@ run_model(
 \item{dynwindow}{Information on the position and length of modelling
 windows}
 
-\item{mineral}{Mineralogy of record (default = "calcite")}
+\item{transfer_function}{Transfer function used to convert d18Oc to temperature
+data.}
 
 \item{d18Ow}{Either a single value (constant d18Ow) or a vector of length
 equal to the period in SST data (365 days by default) containing information
@@ -74,7 +75,7 @@ dynwindow$y <- rep(12, 15)
 # Run model function
 \donttest{resultlist <- run_model(dat,
     dynwindow,
-    "calcite",
+    "KimONeil97",
     d18Ow = 0,
     T_per = 365,
     G_per = 365,

@@ -1,6 +1,6 @@
 Package: ShellChron
 Title: Builds Chronologies from Oxygen Isotope Profiles in Shells
-Version: 0.2.8
+Version: 0.2.9.9000
 Authors@R: 
     person(given = "Niels",
            family = "de Winter",

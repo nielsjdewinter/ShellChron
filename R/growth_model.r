@@ -12,7 +12,8 @@
 #' @param G_per Period of growth rate sinusoid (in days; default = 365)
 #' @param years Number of years to be modelled (default = 1)
 #' @param t_int Time interval (in days; default = 1)
-#' @param mineral Mineralogy of record (default = "calcite")
+#' @param transfer_function Transfer function used to convert d18Oc to temperature
+#' data.
 #' @param d18Ow Either a single value (constant d18Ow) or a vector of length
 #' equal to the period in SST data (365 days by default) containing information
 #' about seasonality in d18Ow. Defaults to constant d18Ow of 0 permille VSMOW
@@ -66,7 +67,7 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
     G_per = 365, # Period of growth sinusoid (default = 365 days)
     years = 1, # Default year = 1
     t_int = 1, # Time interval, default = 1 day
-    mineral = "calcite", # Mineralogy of the material (calcite and aragonite supported, default = calcite)
+    transfer_function = "KimONeil97", # Transfer function used to convert d18Oc values of the material into temperature (default = "KimONeil97"; Kim and O'Neil, 1997)
     d18Ow = "default", # d18Ow vector, default = constant at 0 permille VSMOW
     Dsam, # Depth data
     Osam, # d18O data
@@ -93,7 +94,10 @@ growth_model <- function(pars, # Growth model function to optimize using sceua
 
     # Run functions for SST and GR
     SST <- temperature_curve(T_par, years, t_int)
-    d18Oc <- d18O_model(SST, d18Ow, mineral)
+    d18Oc <- d18O_model(SST, d18Ow, transfer_function)
+    if(length(d18Oc) == 1){ # Catch errors in d18O model
+        return("ERROR: Supplied transfer function is not recognized")
+    }
     GR <- growth_rate_curve(G_par, years, t_int)
 
     # Create distance (D) vector from GR

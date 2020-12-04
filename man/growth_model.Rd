@@ -10,7 +10,7 @@ growth_model(
   G_per = 365,
   years = 1,
   t_int = 1,
-  mineral = "calcite",
+  transfer_function = "KimONeil97",
   d18Ow = "default",
   Dsam,
   Osam,
@@ -34,7 +34,8 @@ growth_model(
 
 \item{t_int}{Time interval (in days; default = 1)}
 
-\item{mineral}{Mineralogy of record (default = "calcite")}
+\item{transfer_function}{Transfer function used to convert d18Oc to temperature
+data.}
 
 \item{d18Ow}{Either a single value (constant d18Ow) or a vector of length
 equal to the period in SST data (365 days by default) containing information

@@ -7,10 +7,10 @@
 wrap_function(
   path,
   file_name,
-  mineral = "calcite",
+  transfer_function = "KimONeil97",
   t_int = 1,
   T_per = 365,
-  d18Ow = "default",
+  d18Ow = 0,
   t_maxtemp = 182.5,
   MC = 1000,
   plot = TRUE,
@@ -25,9 +25,8 @@ that contains the input data.}
 
 \item{file_name}{Name of the file that contains d18O data}
 
-\item{mineral}{String containing the name of the
-mineralogy (either \code{"calcite"} or \code{"aragonite"})
-Defaults to calcite.}
+\item{transfer_function}{String containing the name of the
+transfer function. Defaults to Kim and O'Neil, 997.}
 
 \item{t_int}{Time interval (in days; default = 1)}
 
@@ -75,7 +74,7 @@ formulae.
 \donttest{example <- wrap_function(path = getwd(),
     file_name = system.file("extdata", "Virtual_shell.csv",
     package = "ShellChron"),
-    "calcite",
+    "KimONeil97",
     1,
     365,
     d18Ow = 0,

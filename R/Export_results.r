@@ -240,7 +240,7 @@ export_results <- function(path, # Path where result files are exported
 
         # Aggregate propagated errors into statistics matrices
         d18Ostats$mean.d18O_mod <- d18Ostats2$weighted.mean.d18O # Replace means by weighed means, taking into account the propagated error on individual estimates
-        d18Ostats$sd.d18O_mod <- sqrt(d18Ostats$sd.d18O_mod ^ 2 + d18Ostats2$pooled.sd.d18O ^2) # Combine errors from the model and the errors on input
+        d18Ostats$sd.d18O_mod <- sqrt(d18Ostats$sd.d18O_mod ^ 2 + d18Ostats2$pooled.sd.d18O ^ 2) # Combine errors from the model and the errors on input
         d18Ostats$se.d18O_mod <- d18Ostats$sd.d18O_mod / sqrt(d18Ostats$N) # Propagate new errors onto standard error
         d18Ostats$CL95.d18O_mod <- qt(0.95, d18Ostats$N) * d18Ostats$se.d18O_mod # Propagate new errors onto confidence interval
 

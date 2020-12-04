@@ -10,7 +10,8 @@
 #' @param dat Matrix containing the input data
 #' @param dynwindow Information on the position and length of modelling
 #' windows
-#' @param mineral Mineralogy of record (default = "calcite")
+#' @param transfer_function Transfer function used to convert d18Oc to temperature
+#' data.
 #' @param d18Ow Either a single value (constant d18Ow) or a vector of length
 #' equal to the period in SST data (365 days by default) containing information
 #' about seasonality in d18Ow. Defaults to constant d18Ow of 0 permille VSMOW
@@ -47,7 +48,7 @@
 #' # Run model function
 #' \donttest{resultlist <- run_model(dat,
 #'     dynwindow,
-#'     "calcite",
+#'     "KimONeil97",
 #'     d18Ow = 0,
 #'     T_per = 365,
 #'     G_per = 365,
@@ -58,10 +59,10 @@
 #' @export
 run_model <- function(dat, # Core function to run the entire model on the data (dat)
     dynwindow, # The window vetor resulting from reading in the data 
-    mineral = "calcite",
-    d18Ow = "default",
-    T_per, # Temperature sinusoid parameters
-    G_per, # Growth sinusoid parameters
+    transfer_function = "KimONeil97",
+    d18Ow = 0,
+    T_per = 365, # Temperature sinusoid parameters
+    G_per = 365, # Growth sinusoid parameters
     t_int = 1, # Default time interval = 1 day
     t_maxtemp = 182.5, # Default time (day) at which maximum temperature is reached is 182.5 (exactly halfway through the year, or 1st of June)
     MC = 1000, # If errors = TRUE, give the number of iterations for Monte Carlo simulation used in error propagation (default = 1000, if MC = 0 no eror propagation is done)
@@ -102,12 +103,12 @@ run_model <- function(dat, # Core function to run the entire model on the data (
 
     # Find tailored range of temperatures from data
     d18Oc_range <- range(dat$d18Oc) # Find d18Oc range in data
-    if(mineral == "calcite"){ # Find temperature range (to be superseded with inverse d18O_model function in later updates)
+    if(transfer_function == "KimONeil97"){ # Find temperature range (to be superseded with inverse d18O_model function in later updates)
         T_range <- 18.03 * 1000 / (log((d18Oc_range - (0.97002 * rev(range(d18Ow)) - 29.98)) / 1000 + 1) * 1000 + 32.42) - 273.15 # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
-    }else if(mineral == "aragonite"){
+    }else if(transfer_function == "GrossmanKu86"){
         T_range <-  20.6 - 4.34 * (d18Oc_range - rev(range(d18Ow)) - 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
     }else{
-        print("ERROR: Supplied mineralogy is not recognized")
+        print("ERROR: Supplied transfer function is not recognized")
     }
     T_max <- max(T_range)
     T_amp_max <- 2 * abs(diff(T_range))
@@ -165,14 +166,14 @@ run_model <- function(dat, # Core function to run the entire model on the data (
         O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
         O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
 
-        if(mineral == "calcite"){
+        if(transfer_function == "KimONeil97"){
             T_av_start <- 18.03 * 1000 / (1000 * log((O_av_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15  # Estimate mean temperature. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
             T_amp_start <- 18.03 * 1000 / (1000 * log((O_av_start - O_amp_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15 - T_av_start # Estimate temperature amplitude. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
-        }else if(mineral == "aragonite"){
+        }else if(transfer_function == "GrossmanKu86"){
             T_av_start <- 20.6 - 4.34 * (O_av_start - mean(d18Ow) - 0.2) # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
             T_amp_start <- 20.6 - 4.34 * (O_av_start - O_amp_start - mean(d18Ow) - 0.2) - T_av_start # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
         }else{
-            print("ERROR: Supplied mineralogy is not recognized")
+            print("ERROR: Supplied transfer function is not recognized")
         }
 
         O_pha_start <- sinlist[[1]][4] %% sinlist[[1]][3] # Estimate position (in depth of the first peak in d18O)
@@ -202,7 +203,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
                 G_per = G_per,
                 years = years,
                 t_int = t_int,
-                mineral = mineral,
+                transfer_function = transfer_function,
                 d18Ow = d18Ow,
                 Dsam = Dsam,
                 Osam = Osam,
@@ -222,7 +223,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
         par1 <- sceua_list[[1]] # Eport parameters of final model
         names(par1) <- names(par0)
 
-        result <- growth_model(par1, T_per, G_per, years, t_int, mineral, d18Ow, Dsam, Osam, t_maxtemp, plot = FALSE, MC, D_err, O_err, return = "result") # Calculate the end result of the best fit
+        result <- growth_model(par1, T_per, G_per, years, t_int, transfer_function, d18Ow, Dsam, Osam, t_maxtemp, plot = FALSE, MC, D_err, O_err, return = "result") # Calculate the end result of the best fit
         
         if(plot == TRUE){
             fitplot <- fitplot + # Add the new model fit to the plot to track progress of the model
