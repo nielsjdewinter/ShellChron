@@ -56,7 +56,7 @@
 #'     export_raw = FALSE,
 #'     export_path = tempdir())} # Run function
 #' @export
-wrap_function <- function(path, # Wrapping function for the entire model package
+wrap_function <- function(path = getwd(), # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)
     transfer_function = "KimONeil97", # Set transfer function of the record, default is Kim and O'Neil 1997.
     t_int = 1, # Set time interval in days
@@ -67,7 +67,7 @@ wrap_function <- function(path, # Wrapping function for the entire model package
     plot = TRUE, # Should intermediate plots be given to track progress? WARNING: plotting makes the script much slower, especially for long datasets.
     plot_export = TRUE, # Should a plot of the results be saved as PDF?
     export_raw = FALSE, # Should the results of all individual model runs be exported as CSV files?
-    export_path # Path where result files are exported
+    export_path = getwd() # Path where result files are exported
     ){
 
     oldwd <- getwd()

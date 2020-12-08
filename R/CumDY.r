@@ -33,7 +33,7 @@
 #' @export
 cumdy <- function(resultarray, # Align Day of year results from modelling in different windows to a common time axis
     threshold = 5, # Threshold for separating peaks in year changes for marking the transitions between years
-    plotyearmarkers
+    plotyearmarkers = TRUE
     ){ 
     
     dat <- resultarray[, 1:5, 3]

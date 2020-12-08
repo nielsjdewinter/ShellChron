@@ -27,7 +27,11 @@
 #' testarray2 <- age_corr(testarray, 365, FALSE, FALSE) # Apply function on 
 #' array
 #' @export
-age_corr <- function(resultarray, T_per, plot, agecorrection){
+age_corr <- function(resultarray,
+    T_per = 365,
+    plot = TRUE,
+    agecorrection = TRUE
+    ){
     Age <- Age_corr <- NULL # Predefine variables to circumvent global variable binding error
     # Check on glitches where consecutive windows are placed (almost) 1 year apart.
     # These are repaired by adding one T_per to the cumulative Day values of those windows in

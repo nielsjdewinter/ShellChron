@@ -38,8 +38,8 @@
 #' # Apply function on array
 #' @export
 cumulative_day <- function(resultarray, # Align Day of year results from modelling in different windows to a common time axis
-    plotyearmarkers, # Plot peak fitting?
-    export_peakid, # Export data on how the boundaries between years were found?
+    plotyearmarkers = TRUE, # Plot peak fitting?
+    export_peakid = TRUE, # Export data on how the boundaries between years were found?
     path = tempdir()
     ){
     

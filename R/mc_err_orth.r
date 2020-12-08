@@ -27,7 +27,14 @@
 #' # Run function
 #' result <- mc_err_orth(x, x_err, y, y_err, X, Y, 1000)
 #' @export
-mc_err_orth <- function(x, x_err, y, y_err, X, Y, MC){ # Function to propagate combined errors on x and y on the modelled X and Y values by means of orthogonal projection of x and y uncertainty on the model curve
+mc_err_orth <- function(x,
+    x_err,
+    y,
+    y_err,
+    X,
+    Y,
+    MC = 1000){ # Function to propagate combined errors on x and y on the modelled X and Y values by means of orthogonal projection of x and y uncertainty on the model curve
+
     xmat <- matrix(rnorm(MC * length(x)), nrow = length(x)) * x_err + matrix(rep(x, MC), nrow = length(x)) # Create matrix of simulated X values
     ymat <- matrix(rnorm(MC * length(y)), nrow = length(y)) * y_err + matrix(rep(y, MC), nrow = length(y)) # Create matrix of simulated Y values
     Xarray <- sqrt( # create array of the length of vectors connecting each MC simulated x-y pair and each modelled X-Y pair.

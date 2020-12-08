@@ -30,7 +30,14 @@
 #' # Run function
 #' result <- mc_err_form(x, x_err, y, y_err, X, Y, 1000)
 #' @export
-mc_err_form <- function(x, x_err, y, y_err, X, Y, MC){
+mc_err_form <- function(x,
+    x_err,
+    y,
+    y_err,
+    X,
+    Y,
+    MC = 1000){
+    
     xmat <- matrix(rnorm(MC * length(x)), nrow = length(x)) * x_err + matrix(rep(x, MC), nrow = length(x)) # Create matrix of simulated X values
     Xpos <- apply(abs(outer(xmat, X, FUN = "-")), c(1,2), which.min) # find closest position in X vector (day) for each simulated X value
     Xpos_stat <- cbind(rowMeans(Xpos), apply(Xpos, 1, sd)) # Find mean and standard deviation of positions in X vector (day) for each sample

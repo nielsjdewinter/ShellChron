@@ -30,7 +30,14 @@
 #' # Run function
 #' result <- mc_err_proj(x, x_err, y, y_err, X, Y, 1000)
 #' @export
-mc_err_proj <- function(x, x_err, y, y_err, X, Y, MC){ # Function to propagate combined errors on x and y on the modelled X and Y values by means of local projection of y uncertainty on x and subsequent combination of uncertainties in X domain
+mc_err_proj <- function(x,
+    x_err,
+    y,
+    y_err,
+    X,
+    Y,
+    MC = 1000){ # Function to propagate combined errors on x and y on the modelled X and Y values by means of local projection of y uncertainty on x and subsequent combination of uncertainties in X domain
+    
     dYdX <- diff(Y[, 2]) / diff(X) # Create first derivative of Y by X
     dYdX[which(abs(dYdX) <= 10 ^ (floor(log(mean(abs(dYdX)), 10)) - 1))] <- sign(dYdX[which(abs(dYdX) <= 10 ^ (floor(log(mean(abs(dYdX)), 10)) - 1))]) * 10 ^ (floor(log(mean(abs(dYdX)), 10)) - 1) # Remove small absolute values (more than one order of magnitude smaller than the mean), preserving their sign
     dYdX <- append(dYdX, dYdX[length(dYdX)]) # repeat last value to increase the length of the vector to match X/Y (366 days)

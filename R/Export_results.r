@@ -126,11 +126,11 @@
 #'     plot_export = FALSE,
 #'     export_raw = FALSE)
 #' @export
-export_results <- function(path, # Path where result files are exported
+export_results <- function(path = getwd(), # Path where result files are exported
     dat, # raw data
     resultarray, # Array containing all model results 
     parmat, # matrix of parameters per window
-    MC, # Include number of simulations just for error verification (if MC > 0, errors are included in the export)
+    MC = 1000, # Include number of simulations just for error verification (if MC > 0, errors are included in the export)
     dynwindow, # Include the size of the windows for pooling standard deviations AND FOR ADDING WEIGHINGS TO STATISTICS BASED ON PLACE IN WINDOW
     plot = FALSE, # Create a result plot?
     plot_export = TRUE, # Export a result plot?
