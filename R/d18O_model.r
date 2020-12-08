@@ -16,6 +16,13 @@
 #' (for example: \code{"KimONeil97"} or \code{"GrossmanKu86"}). Defaults to
 #' Kim and O'Neil (1997).
 #' @return A vector containing d18O values for each SST value in \code{"SST"}
+#' @references Kim, S., O'Niel, J.R., Equilibrium and nonequilibrium oxygen
+#' isotope effects in synthetic carbonates, _Geochimica et Cosmochimica Acta_
+#' **1997**, _61.16_, 3461-3475.
+#'    \url{http://dx.doi.org/10.1016/S0016-7037(97)00169-5}
+#' Grossman, E.L., Ku, T., Oxygen and carbon isotope fractionation in biogenic
+#' aragonite: temperature effects, _Chemical Geology_ **1986**, _59.1_, 59-74.
+#'    \url{http://dx.doi.org/10.1016/0168-9622(86)90057-6}
 #' @examples
 #' # Create dummy SST data
 #' t <- seq(1, 40, 1)

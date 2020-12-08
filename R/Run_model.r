@@ -33,6 +33,11 @@
 #' resources research 28.4 (1992): 1015-1031. https://doi.org/10.1029/91WR02985
 #' @references package dependencies: ggplot2 3.2.1; rtop 0.5.14
 #' Function dependencies: sinreg, d18O_model, growth_model
+#' 
+#' Duan, Q., Sorooshian, S., Gupta, V. Effective and efficient global
+#' optimization for conceptual rainfall‐runoff models, _Water Resources
+#' Research_ **1992**, _28.4_, 1015-1031.
+#'   \url{http://dx.doi.org/10.1029/91WR02985}
 #' @examples
 #' # Create dummy input data column by column
 #' dat <- as.data.frame(seq(1000, 40000, 1000))

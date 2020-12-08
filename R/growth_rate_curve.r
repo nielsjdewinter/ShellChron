@@ -18,6 +18,11 @@
 #' @param t_int Time interval of sinusoidal record (in days)
 #' @return A matrix containing columns for time (in days) and GR
 #' (in micrometer/day)
+#' @references Judd, E.J., Wilkinson, B.H., Ivany, L.C. The life and time of
+#' clams: Derivation of intra-annual growth rates from high-resolution oxygen
+#' isotope profiles, _Palaeogeography, Palaeoclimatology, Palaeoecology_ **2018**,
+#' _490_, 70-83.
+#'   \url{http://dx.doi.org/10.1016/j.palaeo.2017.09.034}
 #' @examples
 #' # Set parameters
 #' G_amp <- 20

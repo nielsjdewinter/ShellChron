@@ -39,6 +39,12 @@
 #' @references package dependencies: ggplot2 3.2.1
 #' function dependencies: temperature_curve, d18O_model, growth_rate_curve,
 #' mc_err_orth
+#' 
+#' Judd, E.J., Wilkinson, B.H., Ivany, L.C. The life and time of clams:
+#' Derivation of intra-annual growth rates from high-resolution oxygen isotope
+#' profiles, _Palaeogeography, Palaeoclimatology, Palaeoecology_ **2018**,
+#' _490_, 70-83.
+#'   \url{http://dx.doi.org/10.1016/j.palaeo.2017.09.034}
 #' @examples
 #' # Set parameters
 #' G_amp <- 20
