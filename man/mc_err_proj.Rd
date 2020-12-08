@@ -4,7 +4,7 @@
 \alias{mc_err_proj}
 \title{Function that propagates measurement uncertainty through model results}
 \usage{
-mc_err_proj(x, x_err, y, y_err, X, Y, MC)
+mc_err_proj(x, x_err, y, y_err, X, Y, MC = 1000)
 }
 \arguments{
 \item{x}{Vector of \code{x} values of input data}

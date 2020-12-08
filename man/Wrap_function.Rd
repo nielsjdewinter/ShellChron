@@ -5,7 +5,7 @@
 \title{Full ShellChron workflow wrapped in a single function}
 \usage{
 wrap_function(
-  path,
+  path = getwd(),
   file_name,
   transfer_function = "KimONeil97",
   t_int = 1,
@@ -16,7 +16,7 @@ wrap_function(
   plot = TRUE,
   plot_export = TRUE,
   export_raw = FALSE,
-  export_path
+  export_path = getwd()
 )
 }
 \arguments{

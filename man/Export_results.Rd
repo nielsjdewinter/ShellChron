@@ -5,11 +5,11 @@
 \title{Function to merge and export the results of the ShellChron model}
 \usage{
 export_results(
-  path,
+  path = getwd(),
   dat,
   resultarray,
   parmat,
-  MC,
+  MC = 1000,
   dynwindow,
   plot = FALSE,
   plot_export = TRUE,

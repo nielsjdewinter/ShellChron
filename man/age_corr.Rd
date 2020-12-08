@@ -4,7 +4,7 @@
 \alias{age_corr}
 \title{Function that corrects chronologies for sudden jumps in time}
 \usage{
-age_corr(resultarray, T_per, plot, agecorrection)
+age_corr(resultarray, T_per = 365, plot = TRUE, agecorrection = TRUE)
 }
 \arguments{
 \item{resultarray}{Array containing the full results of

@@ -31,6 +31,10 @@ result <- peakid(x, y, w = 20)
 }
 \references{
 package dependencies: zoo 1.8.7
+
+Huber, W.A., Data Smoothing and Peak Detection, \emph{Rpubs},
+Last accessed: December 8th, 2020.
+\url{https://rpubs.com/mengxu/peak_detection}
 }
 \seealso{
 https://rpubs.com/mengxu/peak_detection

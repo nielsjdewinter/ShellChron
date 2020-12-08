@@ -4,7 +4,12 @@
 \alias{cumulative_day}
 \title{Function to detect year transitions and calculate cumulative age of model results}
 \usage{
-cumulative_day(resultarray, plotyearmarkers, export_peakid, path = tempdir())
+cumulative_day(
+  resultarray,
+  plotyearmarkers = TRUE,
+  export_peakid = TRUE,
+  path = tempdir()
+)
 }
 \arguments{
 \item{resultarray}{Array containing the full results of

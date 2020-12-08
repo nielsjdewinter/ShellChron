@@ -5,7 +5,7 @@
 \title{Function to detect year transitions and calculate cumulative age
 of model results}
 \usage{
-cumdy(resultarray, threshold = 5, plotyearmarkers)
+cumdy(resultarray, threshold = 5, plotyearmarkers = TRUE)
 }
 \arguments{
 \item{resultarray}{Array containing the full results of

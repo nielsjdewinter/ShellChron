@@ -37,3 +37,12 @@ SST <- cbind(t, T)
 # Run d18O model function
 d18O <- d18O_model(SST, 0, "KimONeil97")
 }
+\references{
+Kim, S., O'Niel, J.R., Equilibrium and nonequilibrium oxygen
+isotope effects in synthetic carbonates, \emph{Geochimica et Cosmochimica Acta}
+\strong{1997}, \emph{61.16}, 3461-3475.
+\url{http://dx.doi.org/10.1016/S0016-7037(97)00169-5}
+Grossman, E.L., Ku, T., Oxygen and carbon isotope fractionation in biogenic
+aragonite: temperature effects, \emph{Chemical Geology} \strong{1986}, \emph{59.1}, 59-74.
+\url{http://dx.doi.org/10.1016/0168-9622(86)90057-6}
+}
