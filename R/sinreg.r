@@ -9,6 +9,9 @@
 #' 
 #' @param x Vector of \code{x} values of input data
 #' @param y Vector of \code{y} values of input data
+#' @param fixed_period Optional variable for fixing the period of the sinusoid 
+#' in the depth domain. Defaults to \code{NA}, period is not fixed. Supply a 
+#' single value to fix the period.
 #' @param plot Should the fitting result be plotted? \code{TRUE/FALSE}
 #' @return A list containing a vector of parameters of the fitted sinusoid
 #' and the fitted values belonging to each \code{x} value.
@@ -27,13 +30,20 @@
 #' @export
 sinreg <- function(x, # Function to perform sinusoid regression meant to estimate the starting parameters for fitting growth and temperature sinusoids
     y,
+    fixed_period = NA, # Option to fix the period in depth domain. Default = NA (Period not fixed)
     plot = FALSE # Plot results?
     ){
 
-    Ots <- ts(y) # Turn y into a time series
-    ssp <- spectrum(Ots, plot = FALSE) # Create periodogram of y
-    Nper <- 1/ssp$freq[ssp$spec==max(ssp$spec)] # Estimate period in terms of sample number
-    Dper <- Nper * diff(range(x))/length(x) # Convert period to depth domain
+    if(is.na(fixed_period)){ # If period is not fixed, run simple periodogram to find the most likely period
+        Ots <- ts(y) # Turn y into a time series
+        ssp <- spectrum(Ots, plot = FALSE) # Create periodogram of y
+        Nper <- 1/ssp$freq[ssp$spec==max(ssp$spec)] # Estimate period in terms of sample number
+        Dper <- Nper * diff(range(x))/length(x) # Convert period to depth domain
+    }else if(is.numeric(fixed_period) & length(fixed_period) == 1){ # Check if a valid entry is provided for Dper
+        Dper <- fixed_period
+    }else{
+        stop("ERROR: Supplied value for fixed period is not recognized")
+    }
 
     sinlm <- lm(y ~ sin(2*pi/Dper*x)+cos(2*pi/Dper*x)) # Run linear model, cutting up d18O = Asin(2*pi*D) into d18O = asin(D)+bcos(D)
     sinm<-sinlm$fitted # Extract model result

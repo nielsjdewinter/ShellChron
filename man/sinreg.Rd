@@ -4,12 +4,16 @@
 \alias{sinreg}
 \title{Function that carries out a sinusoidal regression}
 \usage{
-sinreg(x, y, plot = FALSE)
+sinreg(x, y, fixed_period = NA, plot = FALSE)
 }
 \arguments{
 \item{x}{Vector of \code{x} values of input data}
 
 \item{y}{Vector of \code{y} values of input data}
+
+\item{fixed_period}{Optional variable for fixing the period of the sinusoid
+in the depth domain. Defaults to \code{NA}, period is not fixed. Supply a
+single value to fix the period.}
 
 \item{plot}{Should the fitting result be plotted? \code{TRUE/FALSE}}
 }
