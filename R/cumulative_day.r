@@ -74,18 +74,27 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
     for(m in 1:(length(yearpos) - 1)){ # Loop through positions of yearmarkers
         if(m %in% 2:(length(yearpos) - 2)){
             maxpos <- which(dat[yearpos[m] : (yearpos[m + 1] - 1), 2] == max(dat[yearpos[m] : (yearpos[m + 1] - 1), 2])) + yearpos[m] - 1 # Find the position of the maximum value in the d18O data in that year
+            if(length(maxpos) > 1){
+                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+            }
             days <- seq(1, yearpos[m + 1] - yearpos[m], 1) * 365 / (yearpos[m + 1] - yearpos[m]) # Define sequence of "days" values with length = number of datapoints in the year
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
             sinusoid[which(days > ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) + 0.5) * 365 | days < ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid) # add sinusoid values to running vector
         }else if(m == 1){
             maxpos <- which(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2] == max(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2])) + yearpos[m + 1] - 1 # Find the position of the maximum value in the d18O data of the next year (the first year that is complete)
+            if(length(maxpos) > 1){
+                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+            }
             days <- seq(yearpos[m] - yearpos[m + 1] + 1, yearpos[m + 2] - yearpos[m + 1], 1) * 365 / (yearpos[m + 2] - yearpos[m + 1]) # Define sequence of "days" values
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
             sinusoid[which(days > ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) + 0.5) * 365 | days < ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid[1:(yearpos[m + 1] - yearpos[m])]) # Add sinusoid values for first bit of record to the vector
         }else if(m == (length(yearpos) - 1)){
             maxpos <- which(dat[yearpos[m - 1] : (yearpos[m] - 1), 2] == max(dat[yearpos[m - 1] : (yearpos[m] - 1), 2])) + yearpos[m - 1] - 1 # Find the position of the maximum value in the d18O data of the previous year (the last year that is complete)
+            if(length(maxpos) > 1){
+                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+            }
             days <- seq(1, yearpos[m + 1] - yearpos[m - 1], 1) * 365 / (yearpos[m] - yearpos[m - 1]) # Define sequence of "days" values
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m - 1]) / (yearpos[m] - yearpos[m - 1]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
             sinusoid[which(days > ((maxpos - yearpos[m - 1]) / (yearpos[m] - yearpos[m - 1]) + 0.5) * 365 | days < ((maxpos - yearpos[m - 1]) / (yearpos[m] - yearpos[m - 1]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
@@ -155,8 +164,10 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         }
         if(length(which(diff(window) < 0)) > 0){ # Check if year transitions occur within the simulation
             for(i in which(diff(window) < 0)){
-                if(i < which(dat[, 1] == peaks$x[peakx])){
-                    window[1:i] <- window[1:i] - 365 # If the transition happens before the reference point (peakx), subtract a year's worth of days from the values before to prevent adding a year twice.
+                if(length(peakx) > 0){ # Check if global year transitions occur within the window
+                    if(i < which(dat[, 1] == peaks$x[peakx])){
+                        window[1:i] <- window[1:i] - 365 # If the transition happens before the reference point (peakx), subtract a year's worth of days from the values before to prevent adding a year twice.
+                    }
                 }else{
                     window[(i + 1):length(window)] <- window[(i + 1):length(window)] + 365 # Add one year's worth of days to simulations after each transition
                 }
