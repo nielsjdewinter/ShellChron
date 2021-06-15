@@ -21,6 +21,10 @@
 #' @param t_int Time interval (in days; default = 1)
 #' @param t_maxtemp Timing of the warmest day of the year (in julian day; 
 #' default = 182.5, or May 26th halfway through the year)
+#' @param SCEUApar Parameters for SCEUA optimization (iniflg, ngs, maxn, kstop
+#' pcento, peps)
+#' @param sinfit Apply sinusoidal fitting to guess initial parameters for SCEUA
+#' optimization? \code{TRUE/FALSE}
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
 #' Default = 1000
 #' @param plot Should results of modelling be plotted? \code{TRUE/FALSE}
@@ -70,6 +74,8 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     G_per = 365, # Growth sinusoid parameters
     t_int = 1, # Default time interval = 1 day
     t_maxtemp = 182.5, # Default time (day) at which maximum temperature is reached is 182.5 (exactly halfway through the year, or 1st of June)
+    SCEUApar = c(1, 25, 10000, 5, 0.01, 0.01), # Set parameters for SCEUA optimization (iniflg, ngs, maxn, kstop, pcento, peps)
+    sinfit = TRUE, # Apply sinusoidal fitting to guess initial parameters for SCEUA optimization? (TRUE/FALSE)
     MC = 1000, # If errors = TRUE, give the number of iterations for Monte Carlo simulation used in error propagation (default = 1000, if MC = 0 no eror propagation is done)
     plot = FALSE # Should the progress of model fitting be plotted?
     ){
@@ -141,12 +147,12 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     )
     
     # Set parameters for SCEUA optimization
-    iniflg = 1 # Flag for initial parameter array (1 = included)
-    ngs = 25 # Number of complexes (sub-populations)
-    maxn = 10000 # Maximum number of function evaluations allowed during optimization
-    kstop = 5 # Maximum number of evolution loops before convergency
-    pcento = 0.01 # Percentage change allowed in function value criterion before stop
-    peps = 0.01 # Convergence level for parameter set (difference between parameters required for stop)
+    iniflg = SCEUApar[1] # Flag for initial parameter array (default = 1; included)
+    ngs = SCEUApar[2] # Number of complexes (sub-populations, default = 25)
+    maxn = SCEUApar[3] # Maximum number of function evaluations allowed during optimization (default = 10000)
+    kstop = SCEUApar[4] # Maximum number of evolution loops before convergency (default = 5)
+    pcento = SCEUApar[5] # Percentage change allowed in function value criterion before stop (default = 0.01)
+    peps = SCEUApar[6] # Convergence level for parameter set (difference between parameters required for stop; default = 0.01)
 
     # Run the model on all windows
 
@@ -165,11 +171,15 @@ run_model <- function(dat, # Core function to run the entire model on the data (
             MC <- 0
         }
 
-        sinlist <- sinreg(Dsam, Osam) # Run sinusoidal regression to find initial parameter values
-
-        # Estimate starting parameters from regression results
-        O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
-        O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
+        if(sinfit){ # If sinusoidal fitting is enabled
+            sinlist <- sinreg(Dsam, Osam) # Run sinusoidal regression to find initial parameter values
+            # Estimate starting parameters from regression results
+            O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
+            O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
+        }else{
+            O_av_start <- mean(Osam) # Estimate starting value for annual d18O average by mean of d18O in record
+            O_amp_start <- diff(range(Osam)) / 2 # Estimate starting value for d18O amplitude by half the difference between minimum and maximum d18Oc
+        }
 
         if(transfer_function == "KimONeil97"){
             T_av_start <- 18.03 * 1000 / (1000 * log((O_av_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15  # Estimate mean temperature. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)

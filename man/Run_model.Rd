@@ -13,6 +13,8 @@ run_model(
   G_per = 365,
   t_int = 1,
   t_maxtemp = 182.5,
+  SCEUApar = c(1, 25, 10000, 5, 0.01, 0.01),
+  sinfit = TRUE,
   MC = 1000,
   plot = FALSE
 )
@@ -39,6 +41,12 @@ about seasonality in d18Ow. Defaults to constant d18Ow of 0 permille VSMOW
 
 \item{t_maxtemp}{Timing of the warmest day of the year (in julian day;
 default = 182.5, or May 26th halfway through the year)}
+
+\item{SCEUApar}{Parameters for SCEUA optimization (iniflg, ngs, maxn, kstop
+pcento, peps)}
+
+\item{sinfit}{Apply sinusoidal fitting to guess initial parameters for SCEUA
+optimization? \code{TRUE/FALSE}}
 
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}

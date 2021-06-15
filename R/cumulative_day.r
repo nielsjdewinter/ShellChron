@@ -18,6 +18,7 @@
 #' @references package dependencies: zoo 1.8.7; scales 1.1.0; graphics
 #' function dependencies: peakid
 #' @importFrom graphics plot
+#' @importFrom stats median
 #' @examples
 #' testarray <- array(NA, dim = c(40, 36, 9)) # Create empty array
 #' # with correct third dimension
@@ -75,7 +76,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         if(m %in% 2:(length(yearpos) - 2)){
             maxpos <- which(dat[yearpos[m] : (yearpos[m + 1] - 1), 2] == max(dat[yearpos[m] : (yearpos[m + 1] - 1), 2])) + yearpos[m] - 1 # Find the position of the maximum value in the d18O data in that year
             if(length(maxpos) > 1){
-                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+                maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
             days <- seq(1, yearpos[m + 1] - yearpos[m], 1) * 365 / (yearpos[m + 1] - yearpos[m]) # Define sequence of "days" values with length = number of datapoints in the year
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
@@ -84,7 +85,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         }else if(m == 1){
             maxpos <- which(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2] == max(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2])) + yearpos[m + 1] - 1 # Find the position of the maximum value in the d18O data of the next year (the first year that is complete)
             if(length(maxpos) > 1){
-                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+                maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
             days <- seq(yearpos[m] - yearpos[m + 1] + 1, yearpos[m + 2] - yearpos[m + 1], 1) * 365 / (yearpos[m + 2] - yearpos[m + 1]) # Define sequence of "days" values
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
@@ -93,7 +94,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         }else if(m == (length(yearpos) - 1)){
             maxpos <- which(dat[yearpos[m - 1] : (yearpos[m] - 1), 2] == max(dat[yearpos[m - 1] : (yearpos[m] - 1), 2])) + yearpos[m - 1] - 1 # Find the position of the maximum value in the d18O data of the previous year (the last year that is complete)
             if(length(maxpos) > 1){
-                maxpos = round(median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
+                maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
             days <- seq(1, yearpos[m + 1] - yearpos[m - 1], 1) * 365 / (yearpos[m] - yearpos[m - 1]) # Define sequence of "days" values
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m - 1]) / (yearpos[m] - yearpos[m - 1]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
