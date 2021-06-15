@@ -176,9 +176,13 @@ run_model <- function(dat, # Core function to run the entire model on the data (
             # Estimate starting parameters from regression results
             O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
             O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
+            O_pha_start <- sinlist[[1]][4] %% sinlist[[1]][3] # Estimate position (in depth of the first peak in d18O)
+            O_per_start <- sinlist[[1]][3] # Export starting value for period in distance domain
         }else{
             O_av_start <- mean(Osam) # Estimate starting value for annual d18O average by mean of d18O in record
             O_amp_start <- diff(range(Osam)) / 2 # Estimate starting value for d18O amplitude by half the difference between minimum and maximum d18Oc
+            O_per_start <- diff(range(Dsam)) # Estimate starting period as thickness of isolated year
+            O_pha_start <- 0.25 * O_per_start # Set starting phase to one quarter of a cycle if it cannot be estimated from sinusoidal regression 
         }
 
         if(transfer_function == "KimONeil97"){
@@ -191,9 +195,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
             print("ERROR: Supplied transfer function is not recognized")
         }
 
-        O_pha_start <- sinlist[[1]][4] %% sinlist[[1]][3] # Estimate position (in depth of the first peak in d18O)
         O_peak <- O_pha_start + Dsam[1] # Find position of d18O peak in distance domain
-        O_per_start <- sinlist[[1]][3] # Export starting value for period in distance domain
         T_pha_start <- ((O_pha_start - 0.5 * O_per_start) %% O_per_start) / O_per_start * T_per # Estimate position of first peak in temperature (low in d18O) relative to annual cycle (days)
         G_av_start <- O_per_start / G_per # Estimate average growth rate in distance/day
 

@@ -71,6 +71,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
 
     # Method four: Use maxima in d18Oc in original data
     yearpos <- c(1, which(JDends[, 2] == 1), length(JDends$Depth)) # Extract positions of yearmarkers and include start and end of record
+    yearpos <- unique(yearpos) # Remove duplicates in yearpos due to yearmarkers on beginning and/or end of record
     YE18O <- vector() # Create vector for the position of the maximum d18O value
     for(m in 1:(length(yearpos) - 1)){ # Loop through positions of yearmarkers
         if(m %in% 2:(length(yearpos) - 2)){
