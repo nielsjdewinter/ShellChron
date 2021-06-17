@@ -22,7 +22,7 @@
 #' (in julian day; default = 182.5, or May 26th halfway
 #' through the year)
 #' @param SCEUApar Parameters for SCEUA optimization (iniflg, ngs, maxn, kstop
-#' pcento, peps)
+#' pcento, peps) For details, refer to Duan et al. (1992) in references
 #' @param sinfit Apply sinusoidal fitting to guess initial parameters for SCEUA
 #' optimization? \code{TRUE/FALSE}
 #' @param MC Number of Monte Carlo simulations to apply for

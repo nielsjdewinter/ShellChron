@@ -46,7 +46,7 @@ seasonality in d18Ow. Defaults to constant d18Ow of
 through the year)}
 
 \item{SCEUApar}{Parameters for SCEUA optimization (iniflg, ngs, maxn, kstop
-pcento, peps)}
+pcento, peps) For details, refer to Duan et al. (1992) in references}
 
 \item{sinfit}{Apply sinusoidal fitting to guess initial parameters for SCEUA
 optimization? \code{TRUE/FALSE}}

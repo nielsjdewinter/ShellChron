@@ -22,7 +22,7 @@
 #' @param t_maxtemp Timing of the warmest day of the year (in julian day; 
 #' default = 182.5, or May 26th halfway through the year)
 #' @param SCEUApar Parameters for SCEUA optimization (iniflg, ngs, maxn, kstop
-#' pcento, peps)
+#' pcento, peps). For details, refer to Duan et al. (1992) in references
 #' @param sinfit Apply sinusoidal fitting to guess initial parameters for SCEUA
 #' optimization? \code{TRUE/FALSE}
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
@@ -109,8 +109,9 @@ run_model <- function(dat, # Core function to run the entire model on the data (
         plot(fitplot)
     }
 
-    # Estimate growth rate variability and round up to nearest multiple of 100 for conservative boundary
-    GRavmax <- ceiling(max(diff(dat[dat$YEARMARKER == 1,1])) / 365 / 100) * 100
+    # Estimate growth rate variability and round up to nearest higher magnitude of 10 for conservative boundary
+    GRavest <- max(diff(dat[dat$YEARMARKER == 1,1])) / 365 # Estimate maximum growth rate from yearmarkers
+    GRavmax <- 10 ^ (ceiling(log(GRavest, 10))) # Round up to nearest higher magnitude of 10
 
     # Find tailored range of temperatures from data
     d18Oc_range <- range(dat$d18Oc) # Find d18Oc range in data
@@ -199,7 +200,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
         T_pha_start <- ((O_pha_start - 0.5 * O_per_start) %% O_per_start) / O_per_start * T_per # Estimate position of first peak in temperature (low in d18O) relative to annual cycle (days)
         G_av_start <- O_per_start / G_per # Estimate average growth rate in distance/day
 
-        years <- ceiling((diff(range(Dsam)) / O_per_start - 1) / 2) * 2 + 1 # Find next odd number to expand the number of simulated years to cover full window
+        years <- 3 # Set default number of years to 3
 
         # Collate starting parameters
         par0 <- c(

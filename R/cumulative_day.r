@@ -48,12 +48,12 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
     
     # Recognition of the boundaries between years.
     # Method one: Apply sinusoidal function to the julian day simulations
-    JDdat <- round(resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3]) # Isolate julian day simulations
+    JDdat <- resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
     JDdat <- matrix(sin(2 * pi * (JDdat + 365/4) / 365), ncol = ncol(JDdat)) # Convert julian day to sinusoidal value (end and start of year = 1)
     JDends <- data.frame(Depth = dat[, 1],
         Yearmarker = dat[, 3],
         YEsin = scales::rescale(rowSums(JDdat, na.rm = TRUE), c(0, 1)) # Create depth series of positions which most likely represent a year end, rescale to a scale from 0 to 1
-        )  
+    )
     
     # Method two: Give weight to the first and final days in reconstructions
     weightvector <- c(seq(10, 1, -1), rep(0, 346), seq(1, 10, 1)) # Create vector of weights to be given to days near the start and end of the year
@@ -74,7 +74,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
     yearpos <- unique(yearpos) # Remove duplicates in yearpos due to yearmarkers on beginning and/or end of record
     YE18O <- vector() # Create vector for the position of the maximum d18O value
     for(m in 1:(length(yearpos) - 1)){ # Loop through positions of yearmarkers
-        if(m %in% 2:(length(yearpos) - 2)){
+        if(m %in% 2:(length(yearpos) - 2)){ # central part of the record
             maxpos <- which(dat[yearpos[m] : (yearpos[m + 1] - 1), 2] == max(dat[yearpos[m] : (yearpos[m + 1] - 1), 2])) + yearpos[m] - 1 # Find the position of the maximum value in the d18O data in that year
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
@@ -83,7 +83,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
             sinusoid[which(days > ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) + 0.5) * 365 | days < ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid) # add sinusoid values to running vector
-        }else if(m == 1){
+        }else if(m == 1){ # beginning of the record
             maxpos <- which(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2] == max(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2])) + yearpos[m + 1] - 1 # Find the position of the maximum value in the d18O data of the next year (the first year that is complete)
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
@@ -92,7 +92,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
             sinusoid <- sin(2 * pi * (days - rep((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) * 365 - 365 / 4, length(days))) / 365) # Create sinusoid with peak at peak in d18Oc
             sinusoid[which(days > ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) + 0.5) * 365 | days < ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid[1:(yearpos[m + 1] - yearpos[m])]) # Add sinusoid values for first bit of record to the vector
-        }else if(m == (length(yearpos) - 1)){
+        }else if(m == (length(yearpos) - 1)){ # end of the record
             maxpos <- which(dat[yearpos[m - 1] : (yearpos[m] - 1), 2] == max(dat[yearpos[m - 1] : (yearpos[m] - 1), 2])) + yearpos[m - 1] - 1 # Find the position of the maximum value in the d18O data of the previous year (the last year that is complete)
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
@@ -169,9 +169,11 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
                 if(length(peakx) > 0){ # Check if global year transitions occur within the window
                     if(i < which(dat[, 1] == peaks$x[peakx])){
                         window[1:i] <- window[1:i] - 365 # If the transition happens before the reference point (peakx), subtract a year's worth of days from the values before to prevent adding a year twice.
+                    }else{
+                        window[(i + 1):length(window)] <- window[(i + 1):length(window)] + 365 # If the transition happens on or after the reference point (peakx), add one year's worth of days to simulations after each transition
                     }
                 }else{
-                    window[(i + 1):length(window)] <- window[(i + 1):length(window)] + 365 # Add one year's worth of days to simulations after each transition
+                    window[(i + 1):length(window)] <- window[(i + 1):length(window)] + 365 # If no global transitions occur within the window, add one year's worth of days to simulations after each local transition
                 }
             }
         }
