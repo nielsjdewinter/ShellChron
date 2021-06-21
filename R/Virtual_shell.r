@@ -5,10 +5,10 @@
 #'
 #' @format A data frame with 80 rows and 5 variables:
 #' \describe{
-#'   \item{D}{Depth, in mm along the virtual record}
+#'   \item{D}{Depth, in \eqn{\mu}m along the virtual record}
 #'   \item{d18Oc}{stable oxygen isotope value, in permille VPDB}
 #'   \item{YEARMARKER}{"1" marking year transitions}
-#'   \item{D_err}{Depth uncertainty, in mm}
+#'   \item{D_err}{Depth uncertainty, in \eqn{\mu}m}
 #'   \item{d18Oc_err}{stable oxygen isotope value uncertainty, in permille VPDB}
 #'   ...
 #' }

@@ -7,7 +7,10 @@
 data_import(file_name)
 }
 \arguments{
-\item{file_name}{Name of the file that contains d18O data}
+\item{file_name}{Name of the file that contains sampling distance and d18O
+data. Note that sampling distance should be given in micrometers, because the
+SCEUA model underperforms when the growth rate figures are very small
+(<0.1 mm/day).}
 }
 \value{
 A list containing an object with the original data and details on

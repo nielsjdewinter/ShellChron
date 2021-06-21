@@ -61,6 +61,24 @@ this previous model in several key ways:
 ![Figure 3: Timing of whole model run at various data
 resolutions](man/figures/README-Timing.png)
 
+**NOTE**: To run optimally, ShellChron requires sampling distance data
+to be provided in micrometers (see “data\_import()” function). The
+optimal structure of the input CSV should be as follows (see slao in
+“Virtual\_shell” example):
+
+**column 1: D** Sampling distance, in micrometers along the virtual
+record.
+
+**column 2: d18Oc** stable oxygen isotope value, in permille VPDB.
+
+**column 3: YEARMARKER** Vector of zeroes with “1” marking year
+transitions.
+
+**column 4: D\_err** Sampling distance uncertainty, in micrometers.
+
+**column 5: d18Oc\_err** stable oxygen isotope value uncertainty, in
+permille.
+
 ## Installation
 
 You can install the released version of ShellChron from

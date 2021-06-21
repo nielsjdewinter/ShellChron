@@ -70,8 +70,16 @@ d18Osw <- rnorm(length(Ty), rep(0, length(Ty)), DSD) # Set d18Osw to 0 permille 
 
 SR <- 0.75 # Set uneven sampling resolutions
 
+# Create vector for all samples along entire shell length by applying constant sampling resolution
+D <- seq(SR, sum(GR), SR)
+
 # Calculate virtual data
 Virtual_shell <- as.data.frame(shellmodel(Ty, SST, GR, d18Osw, D, AV = TRUE))
-Vritual_shell$D_err <- rep(0.1, length(Virtual_shell[, 1])) # Add uncertainties on D (in mm)
-Vritual_shell$d18Oc_err <- rep(0.1, length(Virtual_shell[, 1])) # Add uncertainties on d18Oc (in permille)
-# D47 data is removed and YEARMARKER column is added manually by user identification of the year transitions
+Virtual_shell$D <- Virtual_shell$D * 1000 # Convert to micrometers
+Virtual_shell$D_err <- rep(100, length(Virtual_shell[, 1])) # Add uncertainties on D (in mm)
+Virtual_shell$d18Oc_err <- rep(0.1, length(Virtual_shell[, 1])) # Add uncertainties on d18Oc (in permille)
+Virtual_shell$D47 <- NULL # D47 data is removed
+
+# Add YEARMARKER column based on user identification of the year transitions
+Virtual_shell$YEARMARKER <- rep(0, nrow(Virtual_shell))
+Virtual_shell$YEARMARKER[c(10, 23, 37, 50, 64, 77)] <- 1

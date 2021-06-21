@@ -7,7 +7,10 @@
 #' that windows are not too short and by default contain at least one year of
 #' growth for modelling.
 #' 
-#' @param file_name Name of the file that contains d18O data
+#' @param file_name Name of the file that contains sampling distance and d18O
+#' data. Note that sampling distance should be given in micrometers, because the
+#' SCEUA model underperforms when the growth rate figures are very small
+#' (<0.1 mm/day).
 #' @return A list containing an object with the original data and details on
 #' the position and length of modelling windows
 #' @examples
