@@ -153,8 +153,13 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         peakx <- head(which(peaks$x %in% dat[which(!is.na(window)), 1]), 1) # Find position of the first year end in the window column
         if(length(peakx) == 0){
             if(peaks$x[1] < dat[head(which(!is.na(window)), 1), 1]){ # If no global year transitions fall within the window, check if there are global year transitions before the window and find the last year transition before the first value in the window
-                peakx <- max(which(peaks$x < dat[head(which(!is.na(window)), 1), 1])) 
-                window <- window + peakx * 365 # And add the number of years associated with this last transition to all window values
+                peakx <- max(which(peaks$x < dat[head(which(!is.na(window)), 1), 1])) # Find number of years before start of window
+                JDpeak <- window[head(which(!is.na(window)), 1)] # Find the day of year of the first simulated value
+                if(JDpeak < 182.5){
+                    window <- window + peakx * 365 # If first simulated value co-occurs with first half of the year, add all years before the window
+                }else{
+                    window <- window + (peakx - 1) * 365 # If year first simulated value co-occurs with last half of the year, simulated values are assumed to belong to the previous year
+                }
             } # If all year transitions happen after the window, no year number needs to be added to the window values
         }else{
             JDpeak <- JDdat[tail(which(dat[, 1] == peaks$x[peakx] & !is.na(window)), 1), col] # Find JD simulation belonging to the first year transition
@@ -179,6 +184,17 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         }
         JDdat[, col] <- window # Update the julian day data with the new cumulative day simulations
     }
+
+    # Screen for extreme outliers in JD due to very bad simulations based on first and last modelled values
+    firstval <- apply(JDdat, 2, min, na.rm = TRUE) # find first values of all modelling windows
+    lastval <- apply(JDdat, 2, max, na.rm = TRUE) # find last values of all modelling windows
+    badwindow <- rep(FALSE, ncol(JDdat)) # Vector indicating if window simulation is bad
+    for(i in 2:(ncol(JDdat) - 1)){
+        if(((abs(firstval[i] - firstval[i - 1]) > 365) & (abs(firstval[i + 1] - firstval[i])) > 365) | ((abs(lastval[i] - lastval[i - 1]) > 365) & (abs(lastval[i + 1] - lastval[i])))){ # Find windows with large (> 1 year) jumps in either first or last value
+            badwindow[i] <- TRUE # Label these windows as bad
+        }
+    }
+    JDdat[, badwindow] <- rep(NA, nrow(JDdat)) # Remove values from bad windows to prevent messing up the age model
 
     result <- resultarray[, , 3]
     result[, 6:length(result[1, ])] <- JDdat # Add the updated cumulative julian day results to the resultarray and export
