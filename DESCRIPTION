@@ -25,7 +25,8 @@ Imports:
 	tidyr (>= 1.1.1),
 	scales (>= 1.1.0),
 	dplyr,
-	magrittr
+	magrittr,
+	stats
 License: GPL-3
 URL: https://github.com/nielsjdewinter/ShellChron
 BugReports: https://github.com/nielsjdewinter/ShellChron/issues
