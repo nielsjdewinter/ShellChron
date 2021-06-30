@@ -101,7 +101,7 @@ Function dependencies: sinreg, d18O_model, growth_model
 Duan, Q., Sorooshian, S., Gupta, V. Effective and efficient global
 optimization for conceptual rainfall‐runoff models, \emph{Water Resources
 Research} \strong{1992}, \emph{28.4}, 1015-1031.
-\url{http://dx.doi.org/10.1029/91WR02985}
+\doi{10.1029/91WR02985}
 }
 \seealso{
 Duan, Qingyun, Soroosh Sorooshian, and Vijai Gupta. "Effective and

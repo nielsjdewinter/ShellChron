@@ -41,7 +41,7 @@
 #' Duan, Q., Sorooshian, S., Gupta, V. Effective and efficient global
 #' optimization for conceptual rainfall‐runoff models, _Water Resources
 #' Research_ **1992**, _28.4_, 1015-1031.
-#'   \url{http://dx.doi.org/10.1029/91WR02985}
+#'   \doi{10.1029/91WR02985}
 #' @examples
 #' # Create dummy input data column by column
 #' dat <- as.data.frame(seq(1000, 40000, 1000))

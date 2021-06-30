@@ -110,5 +110,5 @@ Judd, E.J., Wilkinson, B.H., Ivany, L.C. The life and time of clams:
 Derivation of intra-annual growth rates from high-resolution oxygen isotope
 profiles, \emph{Palaeogeography, Palaeoclimatology, Palaeoecology} \strong{2018},
 \emph{490}, 70-83.
-\url{http://dx.doi.org/10.1016/j.palaeo.2017.09.034}
+\doi{10.1016/j.palaeo.2017.09.034}
 }

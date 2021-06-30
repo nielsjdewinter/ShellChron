@@ -1,6 +1,6 @@
 Package: ShellChron
 Title: Builds Chronologies from Oxygen Isotope Profiles in Shells
-Version: 0.3.5.9000
+Version: 0.3.6.9000
 Authors@R: 
     person(given = "Niels",
            family = "de Winter",
@@ -22,7 +22,6 @@ Imports:
 	zoo (>= 1.8.7),
 	ggplot2 (>= 3.2.1),
 	ggpubr (>= 0.4.0),
-	tidyverse (>= 1.3.0),
 	tidyr (>= 1.1.1),
 	scales (>= 1.1.0),
 	dplyr,

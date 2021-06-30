@@ -44,7 +44,7 @@
 #' Derivation of intra-annual growth rates from high-resolution oxygen isotope
 #' profiles, _Palaeogeography, Palaeoclimatology, Palaeoecology_ **2018**,
 #' _490_, 70-83.
-#'   \url{http://dx.doi.org/10.1016/j.palaeo.2017.09.034}
+#'   \doi{10.1016/j.palaeo.2017.09.034}
 #' @examples
 #' # Set parameters
 #' G_amp <- 20
