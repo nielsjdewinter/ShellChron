@@ -55,14 +55,16 @@
 #' colnames(dynwindow) <- "x"
 #' dynwindow$y <- rep(12, 15)
 #' # Run model function
-#' \donttest{resultlist <- run_model(dat,
-#'     dynwindow,
-#'     "KimONeil97",
+#' \donttest{resultlist <- run_model(dat = dat,
+#'     dynwindow = dynwindow,
+#'     transfer_function = "KimONeil97",
 #'     d18Ow = 0,
 #'     T_per = 365,
 #'     G_per = 365,
 #'     t_int = 1,
 #'     t_maxtemp = 182.5,
+#'     SCEUApar = c(1, 25, 10000, 5, 0.01, 0.01),
+#'     sinfit = TRUE,
 #'     MC = 1000,
 #'     plot = FALSE)}
 #' @export
