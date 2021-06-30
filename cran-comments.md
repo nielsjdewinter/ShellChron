@@ -1,8 +1,8 @@
 ## Resubmission
-This is a resubmission. In this version I have made the following changes:
-* Updated the DESCRIPTION file to refer to a source for more details about
-the package's methodology
-* Updated wrap_function.r to prevent it changing the WD (using on.exit)
+This is a resubmission. In this version I have made the following changes (details in NEWS):
+* Updated run_model function to prevent "flat lines" in d18Oc models
+* Updated run_model and wrap_function function to allow more flexibility on model parameters
+* Updated cumulative_day function to prevent glitches when adding time to windows to put them on cumulative timescale, causing jumps in time
 
 ## Test environments
 * local Win 10 Pro install, R 4.0.2
