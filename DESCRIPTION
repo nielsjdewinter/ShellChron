@@ -1,6 +1,6 @@
 Package: ShellChron
 Title: Builds Chronologies from Oxygen Isotope Profiles in Shells
-Version: 0.3.6.9000
+Version: 0.3.7.9000
 Authors@R: 
     person(given = "Niels",
            family = "de Winter",
@@ -25,8 +25,7 @@ Imports:
 	tidyr (>= 1.1.1),
 	scales (>= 1.1.0),
 	dplyr,
-	magrittr,
-	stats
+	magrittr
 License: GPL-3
 URL: https://github.com/nielsjdewinter/ShellChron
 BugReports: https://github.com/nielsjdewinter/ShellChron/issues
