@@ -21,7 +21,7 @@
 #' \code{Dper} = the period of the sinusoid in \code{x} domain
 #' \code{peak} = the location of the peak in the sinusoid
 #' \code{R2adj} = the adjusted \code{R^2} value of the fit
-#' \code{p} = the p-value of the fit
+#' \code{p} = the p–value of the fit
 #' @examples
 #' # Create dummy data
 #' x <- seq(1000, 11000, 1000)

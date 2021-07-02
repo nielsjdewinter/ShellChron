@@ -16,15 +16,15 @@ A data frame with 80 rows and 5 variables:
 }
 }
 \source{
-See code to generate data in \code{data-raw}
-Modified after virtual data described in de Winter et al., 2020
-\url{https://cp.copernicus.org/preprints/cp-2020-118/}
+See code to generate data in \code{data–raw}
+Modified after virtual data described in de Winter et al., 2021
+\url{https://doi.org/gk98}
 }
 \usage{
 Virtual_shell
 }
 \description{
 A dataset containing data used to test the ShellChron functions.
-Generated using the code in "Generate_Virtual_shell.r" in \code{data-raw}
+Generated using the code in "Generate_Virtual_shell.r" in \code{data–raw}
 }
 \keyword{datasets}

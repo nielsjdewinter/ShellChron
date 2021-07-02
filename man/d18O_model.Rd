@@ -39,18 +39,18 @@ d18O <- d18O_model(SST, 0, "KimONeil97")
 }
 \references{
 Grossman, E.L., Ku, T., Oxygen and carbon isotope fractionation in biogenic
-aragonite: temperature effects, \emph{Chemical Geology} \strong{1986}, \emph{59.1}, 59-74.
-\doi{10.1016/0168-9622(86)90057-6}
+aragonite: temperature effects, \emph{Chemical Geology} \strong{1986}, \emph{59.1}, 59–74.
+\doi{10.1016/0168–9622(86)90057–6}
 Kim, S., O'Niel, J.R., Equilibrium and nonequilibrium oxygen
 isotope effects in synthetic carbonates, \emph{Geochimica et Cosmochimica Acta}
-\strong{1997}, \emph{61.16}, 3461-3475.
-\doi{10.1016/S0016-7037(97)00169-5}
+\strong{1997}, \emph{61.16}, 3461–3475.
+\doi{10.1016/S0016–7037(97)00169–5}
 Dettman, D.L., Reische, A.K., Lohmann, K.C., Controls on the stable isotope
-composition of seasonal growth bands in aragonitic fresh-water bivalves
-(Unionidae), \emph{Geochimica et Cosmochimica Acta} \strong{1999}, \emph{63.7-8}, 1049-1057.
-\doi{10.1016/S0016-7037(99)00020-4}
+composition of seasonal growth bands in aragonitic fresh–water bivalves
+(Unionidae), \emph{Geochimica et Cosmochimica Acta} \strong{1999}, \emph{63.7–8}, 1049–1057.
+\doi{10.1016/S0016–7037(99)00020–4}
 Brand, W.A., Coplen, T.B., Vogl, J., Rosner, M., Prohaska, T., Assessment of
-international reference materials for isotope-ratio analysis (IUPAC Technical
-Report), \emph{Pure and Applied Chemistry} \strong{2014}, \emph{86.3}, 425-467.
-\doi{10.1515/pac-2013-1023}
+international reference materials for isotope–ratio analysis (IUPAC Technical
+Report), \emph{Pure and Applied Chemistry} \strong{2014}, \emph{86.3}, 425–467.
+\doi{10.1515/pac–2013–1023}
 }

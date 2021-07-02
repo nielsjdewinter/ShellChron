@@ -2,7 +2,7 @@
 #' 
 #' Function to propagate combined errors on \code{x} (= \code{Dsam}) and
 #' \code{y} (= \code{Osam}) on the modeled X (= \code{D}) and Y 
-#' \code{d18Oc} values by means of orthogonal projection of uncertainty
+#' (= \code{d18Oc}) values by means of orthogonal projection of uncertainty
 #' on \code{x} and \code{y} onto the model curve
 #' @param x Vector of \code{x} values of input data
 #' @param x_err Vector of uncertainties on \code{x} values

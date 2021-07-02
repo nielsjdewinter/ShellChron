@@ -2,11 +2,11 @@
 #' 
 #' Function to propagate combined errors on \code{x} (= \code{Dsam}) and
 #' \code{y} (= \code{Osam}) on the modeled X (= \code{D}) and Y 
-#' \code{d18Oc} values by means of projection of uncertainties
-#' through the modeled \code{X-Y} relationship
+#' (= \code{d18Oc}) values by means of projection of uncertainties
+#' through the modeled \code{X–Y} relationship
 #'
 #' Note: projection leads to large uncertainties on shallow parts of the
-#' \code{X-Y} curve
+#' \code{X–Y} curve
 #' @param x Vector of \code{x} values of input data
 #' @param x_err Vector of uncertainties on \code{x} values
 #' @param y Vector of \code{y} values of input data

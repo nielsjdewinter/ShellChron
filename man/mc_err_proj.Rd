@@ -30,7 +30,7 @@ propagated on all \code{X} values.
 \description{
 Function to propagate combined errors on \code{x} (= \code{Dsam}) and
 \code{y} (= \code{Osam}) on the modeled X (= \code{D}) and Y
-\code{d18Oc} values by means of direct projection of y-uncertainty
+(= \code{d18Oc}) values by means of direct projection of y–uncertainty
 on \code{x} and then combine the errors on both in the \code{x} domain
 }
 \details{
