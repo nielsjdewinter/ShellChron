@@ -23,7 +23,7 @@ estimates replaced by estimates of cumulative age of the record
 in days.
 }
 \description{
-Takes the result of iterative growth modelling and
+Takes the result of iterative growth modeling and
 transforms data from Julian Day (0 - 365) to cumulative
 day of the shell age by detecting where transitions
 from one year to the next occur and adding full years

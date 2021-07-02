@@ -30,7 +30,7 @@ growth_model(
 
 \item{G_per}{Period of growth rate sinusoid (in days; default = 365)}
 
-\item{years}{Number of years to be modelled (default = 1)}
+\item{years}{Number of years to be modeled (default = 1)}
 
 \item{t_int}{Time interval (in days; default = 1)}
 
@@ -50,7 +50,7 @@ throughout model)}
 \item{t_maxtemp}{Timing of the warmest day of the year (in julian day;
 default = 182.5, or May 26th halfway through the year)}
 
-\item{plot}{Should results of modelling be plotted? \code{TRUE/FALSE}}
+\item{plot}{Should results of modeling be plotted? \code{TRUE/FALSE}}
 
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}
@@ -66,14 +66,14 @@ propagated uncertainties (if applicable)}
 \value{
 Depending on the value of the "return" parameter either a single
 value representing the Sum of Squared Residuals ("SSR") as a measure for
-the closeness of the match between modelled d18O and input values, or a
-matrix containing the full result of the modelling including propagated
+the closeness of the match between modeled d18O and input values, or a
+matrix containing the full result of the modeling including propagated
 uncertainties if applicable.
 }
 \description{
 The core function of the ShellChron growth model. Uses growth
 rate and SST (Sea Surface Temperature) sinusoids to model d18O
-data to be matched with the input. In the ShellChron modelling
+data to be matched with the input. In the ShellChron modeling
 routine, this function is optimized using the SCEUA algorithm
 and applied on sliding windows through the dataset to estimate
 the age of each datapoint

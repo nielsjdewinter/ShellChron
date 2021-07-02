@@ -27,7 +27,7 @@
 #' optimization? \code{TRUE/FALSE}
 #' @param MC Number of Monte Carlo simulations to apply for
 #' error propagation. Default = 1000
-#' @param plot Should an overview of the results of modelling
+#' @param plot Should an overview of the results of modeling
 #' be plotted? \code{TRUE/FALSE}
 #' @param plot_export Should the overview plot be exported as
 #' a PDF file? \code{TRUE/FALSE}

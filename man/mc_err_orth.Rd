@@ -15,10 +15,10 @@ mc_err_orth(x, x_err, y, y_err, X, Y, MC = 1000)
 
 \item{y_err}{Vector of uncertainties on \code{y} values}
 
-\item{X}{Vector of modelled \code{X} values on which the uncertainty is
+\item{X}{Vector of modeled \code{X} values on which the uncertainty is
 to be projected}
 
-\item{Y}{Matrix of modelled \code{X} and \code{Y} values}
+\item{Y}{Matrix of modeled \code{X} and \code{Y} values}
 
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}
@@ -29,7 +29,7 @@ propagated on all \code{X} values.
 }
 \description{
 Function to propagate combined errors on \code{x} (= \code{Dsam}) and
-\code{y} (= \code{Osam}) on the modelled X (= \code{D}) and Y
+\code{y} (= \code{Osam}) on the modeled X (= \code{D}) and Y
 \code{d18Oc} values by means of orthogonal projection of uncertainty
 on \code{x} and \code{y} onto the model curve
 }

@@ -7,7 +7,7 @@
 #' The skewness factor (\code{G_skw}) determines whether the sinusoid is skewed
 #' towards the front (\code{G_skw < 50}) or the back of the annual peak in
 #' growth rate (\code{G_skw > 50}).
-#' Used as intermediate step during iterative modelling.
+#' Used as intermediate step during iterative modeling.
 #' 
 #' @param G_par List of four parameters describing (in order) amplitude
 #' (\code{G_amp}; in micrometer/day), period (\code{G_per}; in days), phase

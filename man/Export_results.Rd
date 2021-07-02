@@ -32,9 +32,9 @@ window}
 error propagation. Default = 1000}
 
 \item{dynwindow}{Information on the position and length
-of modelling windows}
+of modeling windows}
 
-\item{plot}{Should an overview of the results of modelling
+\item{plot}{Should an overview of the results of modeling
 be plotted? \code{TRUE/FALSE}}
 
 \item{plot_export}{Should the overview plot be exported as
@@ -54,7 +54,7 @@ and shell age for each datapoint for easy plotting.
 This final function also combines uncertainties in the
 model result arising from uncertainties in input data
 (provided by the user) and uncertainties of the model
-(from overlapping modelling windows).
+(from overlapping modeling windows).
 Includes some optional plotting options.
 }
 \examples{
@@ -115,15 +115,15 @@ dynwindow$y <- rep(10, 31)
 dimnames(testarray) <- list(
     paste("sample", 1:length(testarray[, 1, 3])),
     c(colnames(dat), paste("window", 1:length(dynwindow$x))),
-    c("Modelled_d18O",
+    c("Modeled_d18O",
         "d18O_residuals",
         "Time_of_year",
         "Instantaneous_growth_rate",
-        "Modelled temperature",
-        "Modelled_d18O_SD",
+        "Modeled temperature",
+        "Modeled_d18O_SD",
         "Time_of_Year_SD",
         "Instantaneous_growth_rate_SD",
-        "Modelled_temperature_SD")
+        "Modeled_temperature_SD")
 )
 
 # Set parameters

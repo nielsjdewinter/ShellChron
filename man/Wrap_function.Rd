@@ -54,7 +54,7 @@ optimization? \code{TRUE/FALSE}}
 \item{MC}{Number of Monte Carlo simulations to apply for
 error propagation. Default = 1000}
 
-\item{plot}{Should an overview of the results of modelling
+\item{plot}{Should an overview of the results of modeling
 be plotted? \code{TRUE/FALSE}}
 
 \item{plot_export}{Should the overview plot be exported as

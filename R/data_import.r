@@ -5,14 +5,14 @@
 #' function also reads the user-provided yearmarkers in the file and uses them
 #' as a basis for the length of windows used throughout the model. This ensures
 #' that windows are not too short and by default contain at least one year of
-#' growth for modelling.
+#' growth for modeling.
 #' 
 #' @param file_name Name of the file that contains sampling distance and d18O
 #' data. Note that sampling distance should be given in micrometers, because the
 #' SCEUA model underperforms when the growth rate figures are very small
 #' (<0.1 mm/day).
 #' @return A list containing an object with the original data and details on
-#' the position and length of modelling windows
+#' the position and length of modeling windows
 #' @examples
 #' importlist <- data_import(file_name = system.file("extdata",
 #'     "Virtual_shell.csv", package = "ShellChron")) # Run function on attached
@@ -54,10 +54,10 @@ data_import <- function(file_name){
     YEARMARKER <- which(dat$YEARMARKER == 1) # Read position of yearmarkers in data.
     yearwindow <- diff(which(dat$YEARMARKER == 1)) # Calculate the number of datapoints in each year between consecutive year markers
     if(length(yearwindow) > 1){
-        dynwindow <- approx( # Interpolate between the numbers of annual datapoints to create list of starting positions of growth windows and their size for age modelling
+        dynwindow <- approx( # Interpolate between the numbers of annual datapoints to create list of starting positions of growth windows and their size for age modeling
             x = YEARMARKER[-length(YEARMARKER)],
             y = yearwindow,
-            xout = 1:(length(dat$D) - yearwindow[length(yearwindow)] + 1), # X indicates starting positions of windows used for age modelling
+            xout = 1:(length(dat$D) - yearwindow[length(yearwindow)] + 1), # X indicates starting positions of windows used for age modeling
             method = "linear",
             rule = 2 # Window sizes for beginning given as NA's, for end equal to last value
         )

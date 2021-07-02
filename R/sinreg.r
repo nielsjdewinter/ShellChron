@@ -3,8 +3,8 @@
 #' Fits a sinusoid through data provided as an \code{x} and \code{y} 
 #' vector and returns a list containing both the fitted curve and the
 #' parameters of that curve.
-#' Used to produce initial values for modelling data windows and later
-#' to find peaks in modelled julian day values to align the result to
+#' Used to produce initial values for modeling data windows and later
+#' to find peaks in modeled julian day values to align the result to
 #' a cumulative age timeline.
 #' 
 #' @param x Vector of \code{x} values of input data

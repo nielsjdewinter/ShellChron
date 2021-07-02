@@ -8,7 +8,7 @@
 #' the optimal input parameters to the growth rate and Sea Surface
 #' Temperature (SST) sinusoids to simulate d18O data.
 #' @param dat Matrix containing the input data
-#' @param dynwindow Information on the position and length of modelling
+#' @param dynwindow Information on the position and length of modeling
 #' windows
 #' @param transfer_function Transfer function used to convert d18Oc to temperature
 #' data.
@@ -27,7 +27,7 @@
 #' optimization? \code{TRUE/FALSE}
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
 #' Default = 1000
-#' @param plot Should results of modelling be plotted? \code{TRUE/FALSE}
+#' @param plot Should results of modeling be plotted? \code{TRUE/FALSE}
 #' @return A list containing the \code{resultarray} which contains the full
 #' result of all simulations on each data window and the \code{parmat} listing
 #' all optimized growth rate and SST parameters used to model d18O in each data
@@ -84,13 +84,13 @@ run_model <- function(dat, # Core function to run the entire model on the data (
 
     d18Oc <- d18Oc_err <- Omod <- NULL # Predefine variables to circumvent global variable binding error
 
-    # Prepare data arrays for storage of modelling results
-    resultarray <- array( # Create array to contain all modelling results of overlapping windows
+    # Prepare data arrays for storage of modeling results
+    resultarray <- array( # Create array to contain all modeling results of overlapping windows
         rep(as.matrix(cbind(dat, matrix(NA, ncol = length(dynwindow$x), nrow = length(dat$D)))), 9), # Replicate matrix of dat + extra columns to contain all variables
-        dim = c(length(dat$D), length(dynwindow$x) + length(dat[1,]), 9) # Six variables, being: Modelled d18O, residuals, Day of the Year, Growth between datapoints, Instantaneous growth rate at datapoint and Modelled temperature
+        dim = c(length(dat$D), length(dynwindow$x) + length(dat[1,]), 9) # Six variables, being: Modeled d18O, residuals, Day of the Year, Growth between datapoints, Instantaneous growth rate at datapoint and Modeled temperature
     )
 
-    parmat <- matrix(NA, nrow = 7, ncol = length(dynwindow$x)) # Matrix in which to store the modelling parameters
+    parmat <- matrix(NA, nrow = 7, ncol = length(dynwindow$x)) # Matrix in which to store the modeling parameters
     colnames(parmat) <- dynwindow$x
     rownames(parmat) <- c("T_amp", "T_pha", "T_av", "G_amp", "G_pha", "G_av", "G_skw")
     
@@ -260,7 +260,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     dimnames(resultarray) <- list(
         paste("sample", 1:length(resultarray[, 1, 3])),
         c(colnames(dat), paste("window", 1:length(dynwindow$x))),
-        c("Modelled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modelled temperature", "Modelled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modelled_temperature_SD")
+        c("Modeled_d18O", "d18O_residuals", "Time_of_year", "Instantaneous_growth_rate", "Modeled temperature", "Modeled_d18O_SD", "Time_of_Year_SD", "Instantaneous_growth_rate_SD", "Modeled_temperature_SD")
     )
 
     colnames(parmat) <- paste("window", 1:length(parmat[1,]))

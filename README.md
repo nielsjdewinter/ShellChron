@@ -17,7 +17,7 @@ model for the archive.
 In short, ShellChron feeds a temperature sinusoid (Figure 1; see details
 in “temperature\_curve()” function) and a skewed growth rate sinusoid
 (Figure 2; see details in “growth\_rate\_curve()” function) to a d18O
-model (see details in “d18O\_model()” function). The resulting modelled
+model (see details in “d18O\_model()” function). The resulting modeled
 d18O is then compared with the user-provided d18O data and the
 parameters of the temperature and growth rate functions are optimized
 using the SCEUA algorithm (see [Duan et
@@ -48,11 +48,11 @@ this previous model in several key ways:
     providing compatibility with records consisting of various
     mineralogies (e.g. calcite and aragonite).
 4.  ShellChron offers more dynamic input options for data on the
-    variable that is not modelled (usually d18O of precipitation fluid),
+    variable that is not modeled (usually d18O of precipitation fluid),
     circumventing the (often false) assumption that this variable
     remains constant throughout the year and preventing fixed values for
     this variable hardcoded in the model.
-5.  ShellChron achieves more efficient SCEUA modelling by pre-guessing
+5.  ShellChron achieves more efficient SCEUA modeling by pre-guessing
     the parameters of temperature and growth rate sinusoids using a
     sinusoidal regression (see “sinreg()” formula). This is an essential
     feature that allows ShellChron to process more optimization windows
@@ -63,8 +63,8 @@ resolutions](man/figures/README-Timing.png)
 
 **NOTE**: To run optimally, ShellChron requires sampling distance data
 to be provided in micrometers (see “data\_import()” function). The
-optimal structure of the input CSV should be as follows (see slao in
-“Virtual\_shell” example):
+optimal structure of the input CSV should be as follows (see description
+in “Virtual\_shell” example):
 
 **column 1: D** Sampling distance, in micrometers along the virtual
 record.

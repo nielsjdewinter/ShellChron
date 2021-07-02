@@ -14,7 +14,7 @@ SCEUA model underperforms when the growth rate figures are very small
 }
 \value{
 A list containing an object with the original data and details on
-the position and length of modelling windows
+the position and length of modeling windows
 }
 \description{
 Takes the name of a file that is formatted according to the standard format
@@ -22,7 +22,7 @@ and converts it to an object to be used later in the model. In doing so, the
 function also reads the user-provided yearmarkers in the file and uses them
 as a basis for the length of windows used throughout the model. This ensures
 that windows are not too short and by default contain at least one year of
-growth for modelling.
+growth for modeling.
 }
 \examples{
 importlist <- data_import(file_name = system.file("extdata",

@@ -1,9 +1,9 @@
 #' Function that propagates measurement uncertainty through model results
 #' 
 #' Function to propagate combined errors on \code{x} (= \code{Dsam}) and
-#' \code{y} (= \code{Osam}) on the modelled X (= \code{D}) and Y 
+#' \code{y} (= \code{Osam}) on the modeled X (= \code{D}) and Y 
 #' \code{d18Oc} values by means of projection of uncertainties
-#' through the modelled \code{X-Y} relationship
+#' through the modeled \code{X-Y} relationship
 #'
 #' Note: projection leads to large uncertainties on shallow parts of the
 #' \code{X-Y} curve
@@ -11,9 +11,9 @@
 #' @param x_err Vector of uncertainties on \code{x} values
 #' @param y Vector of \code{y} values of input data
 #' @param y_err Vector of uncertainties on \code{y} values
-#' @param X Vector of modelled \code{X} values on which the uncertainty is
+#' @param X Vector of modeled \code{X} values on which the uncertainty is
 #' to be projected
-#' @param Y Matrix of modelled x and \code{Y} values
+#' @param Y Matrix of modeled x and \code{Y} values
 #' @param MC Number of Monte Carlo simulations to apply for error propagation
 #' Default = 1000
 #' @return A vector listing the standard deviations of propagated errors 

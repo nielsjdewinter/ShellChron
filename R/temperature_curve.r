@@ -4,7 +4,7 @@
 #' Takes the specified parameters for amplitude, period, phase and average value
 #' as well as the number of years specified and the time interval. It then 
 #' creates a sinusoid based on the boundary conditions. Used as intermediate
-#' step during iterative modelling.
+#' step during iterative modeling.
 #' 
 #' @param T_par List of four parameters describing (in order) amplitude
 #' (\code{T_amp}; in degrees C), period (\code{T_per}; in days), phase

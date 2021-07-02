@@ -22,7 +22,7 @@ run_model(
 \arguments{
 \item{dat}{Matrix containing the input data}
 
-\item{dynwindow}{Information on the position and length of modelling
+\item{dynwindow}{Information on the position and length of modeling
 windows}
 
 \item{transfer_function}{Transfer function used to convert d18Oc to temperature
@@ -51,7 +51,7 @@ optimization? \code{TRUE/FALSE}}
 \item{MC}{Number of Monte Carlo simulations to apply for error propagation
 Default = 1000}
 
-\item{plot}{Should results of modelling be plotted? \code{TRUE/FALSE}}
+\item{plot}{Should results of modeling be plotted? \code{TRUE/FALSE}}
 }
 \value{
 A list containing the \code{resultarray} which contains the full

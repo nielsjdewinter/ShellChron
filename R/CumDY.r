@@ -1,7 +1,7 @@
 #' Function to detect year transitions and calculate cumulative age
 #' of model results
 #' 
-#' Takes the result of iterative growth modelling and
+#' Takes the result of iterative growth modeling and
 #' transforms data from Julian Day (0 - 365) to cumulative
 #' day of the shell age by detecting where transitions
 #' from one year to the next occur and adding full years
@@ -31,7 +31,7 @@
 #' # dummy /code{D} column.
 #' testarray2 <- cumdy(testarray, 3, FALSE) # Apply function on array
 #' @export
-cumdy <- function(resultarray, # Align Day of year results from modelling in different windows to a common time axis
+cumdy <- function(resultarray, # Align Day of year results from modeling in different windows to a common time axis
     threshold = 5, # Threshold for separating peaks in year changes for marking the transitions between years
     plotyearmarkers = TRUE
     ){ 
@@ -43,11 +43,11 @@ cumdy <- function(resultarray, # Align Day of year results from modelling in dif
     if(!all(Tyearmarkers[, 3] < (3 / threshold))){Tyearmarkers[which(Tyearmarkers[, 3] < (3 / threshold)), 3] <- 0} # Remove small numbers consisting of averages of 1 or 2 yearends in windows except in cases with very low resolution
 
     pks <- which(diff(sign(diff(Tyearmarkers[, 3], na.pad = FALSE)), na.pad = FALSE) < 0) + 2 # Find peaks in the number of yearmarkers by taking the second derivative
-    Tyearmarkers <- cbind(Tyearmarkers, rep(0, length(Tyearmarkers[, 3]))) # Add column to store yearmarkers based on age modelling
+    Tyearmarkers <- cbind(Tyearmarkers, rep(0, length(Tyearmarkers[, 3]))) # Add column to store yearmarkers based on age modeling
     for(i in 1:(length(which(diff(pks) > threshold)) + 1)){ # Loop through the instances where peaks are far enough apart to be taken as separate (as judged through the threshold)
         Tyearmarkers[mean(pks[(c(0, which(diff(pks) > threshold), length(pks))[i] + 1) : c(0, which(diff(pks) > threshold), length(pks))[i + 1]]), 4] <- 1 # Combine peaks that cluster together and add markers to the mean positions where windows record the end of the year
     }
-    Tyearends <- cbind(seq(1, sum(Tyearmarkers[, 4]), 1), Tyearmarkers[which(Tyearmarkers[, 4] == 1), 1]) # Find numbers and positions of mean yearmarkers in record based on age modelling
+    Tyearends <- cbind(seq(1, sum(Tyearmarkers[, 4]), 1), Tyearmarkers[which(Tyearmarkers[, 4] == 1), 1]) # Find numbers and positions of mean yearmarkers in record based on age modeling
 
     if(plotyearmarkers == TRUE){
         dev.new()
@@ -58,7 +58,7 @@ cumdy <- function(resultarray, # Align Day of year results from modelling in dif
     Yearends[which(Yearends == TRUE)] <- apply(abs(outer(Tyearends[, 2], Tyearmarkers[which(Yearends == TRUE) %% nrow(Yearends), 1], "-")), 2, which.min)  # Find distance values for year ends in all windows and replace the positions of the year ends with the number of years along the records based on the nearest peak in yearends found earlier
 
     for(col in 1:ncol(Yearends)){ # Loop through columns and create matrix of the cumulative year in which the datapoints of all models are set.
-        Yearends[min(which(!is.na(Yearends[, col]))) - 1, col] <- 0 # Replace the last NA before the modelled values start with a zero to compensate for the missing first value due to diff() function above (first line of function)
+        Yearends[min(which(!is.na(Yearends[, col]))) - 1, col] <- 0 # Replace the last NA before the modeled values start with a zero to compensate for the missing first value due to diff() function above (first line of function)
         if(length(Yearends[which(Yearends[, col] > 0), col]) > 0){ # Check if there are year ends in the column
             X <- Yearends[which(Yearends[, col] > 0), col] # Find values associated with the year ends
             row <- which(Yearends[, col] %in% X) # Find rows in which these year end values are contained

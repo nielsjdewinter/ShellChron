@@ -6,7 +6,7 @@
 #' This final function also combines uncertainties in the
 #' model result arising from uncertainties in input data
 #' (provided by the user) and uncertainties of the model
-#' (from overlapping modelling windows).
+#' (from overlapping modeling windows).
 #' Includes some optional plotting options.
 #' @param path Path where result files are exported
 #' @param dat Matrix containing the input data
@@ -18,8 +18,8 @@
 #' @param MC Number of Monte Carlo simulations to apply for
 #' error propagation. Default = 1000
 #' @param dynwindow Information on the position and length 
-#' of modelling windows
-#' @param plot Should an overview of the results of modelling
+#' of modeling windows
+#' @param plot Should an overview of the results of modeling
 #' be plotted? \code{TRUE/FALSE}
 #' @param plot_export Should the overview plot be exported as
 #' a PDF file? \code{TRUE/FALSE}
@@ -87,15 +87,15 @@
 #' dimnames(testarray) <- list(
 #'     paste("sample", 1:length(testarray[, 1, 3])),
 #'     c(colnames(dat), paste("window", 1:length(dynwindow$x))),
-#'     c("Modelled_d18O",
+#'     c("Modeled_d18O",
 #'         "d18O_residuals",
 #'         "Time_of_year",
 #'         "Instantaneous_growth_rate",
-#'         "Modelled temperature",
-#'         "Modelled_d18O_SD",
+#'         "Modeled temperature",
+#'         "Modeled_d18O_SD",
 #'         "Time_of_Year_SD",
 #'         "Instantaneous_growth_rate_SD",
-#'         "Modelled_temperature_SD")
+#'         "Modeled_temperature_SD")
 #' )
 #' 
 #' # Set parameters
@@ -142,7 +142,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         par_value <- stdev <- se.pars <- SD <- d18Oc <- mean.day <- CL95.day <-
         mean.d18O_mod <- CL95.d18O_mod <- mean.GR <- CL95.GR <- NULL # Predefine variables to circumvent global variable binding error
     
-    # Define weights to give more priority to datapoints in the center of the modelling window than those on the edge
+    # Define weights to give more priority to datapoints in the center of the modeling window than those on the edge
     weights <- matrix(NA, ncol = length(dynwindow$x), nrow = length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1) # Create template matrix
     for(i in 1:length(dynwindow$x)){ # Loop through matrix and add weights for each position in the resultarray that contains a value
         weights[dynwindow$x[[i]]:(dynwindow$x[[i]] + dynwindow$y[[i]] - 1), i] <- dynwindow$y[[i]] / 2 - abs(dynwindow$x[[i]]:(dynwindow$x[[i]] + dynwindow$y[[i]] - 1) - (dynwindow$x[[i]] + (dynwindow$y[[i]] - 1) / 2))
@@ -150,57 +150,57 @@ export_results <- function(path = getwd(), # Path where result files are exporte
     weights <- cbind(resultarray[, 1:5, 3], weights)
     weightstidy <- tidyr::gather(as.data.frame(weights), "window", "weight", (length(dat[1, ]) + 1):ncol(weights), factor_key = TRUE) # Convert weights to Tidy data for plotting
 
-    JDtidy <- tidyr::gather(as.data.frame(resultarray[, , 3]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modelled time results to Tidy data for plotting
+    JDtidy <- tidyr::gather(as.data.frame(resultarray[, , 3]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled time results to Tidy data for plotting
     JDtidy$weights <- weightstidy$weight # Add weights to JDtidy
 
-    JDstats <- JDtidy %>% # Summarize modelled time statistics
+    JDstats <- JDtidy %>% # Summarize modeled time statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             mean.day = mean(Day, na.rm = TRUE),  # Calculate means per sample
             sd.day = sd_wt(Day, weights, na.rm = TRUE),  # Calculate stdevs per sample
-            N = dplyr::n_distinct(Day, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
+            N = dplyr::n_distinct(Day, na.rm = TRUE), # Calculate the number of modeled values, excluding NA's
             se.day = sd.day / sqrt(N), # Calculate the standard error
             CL95.day = qt(0.95, N) * se.day # Calculate the 95% confidence level
         )
     JDstats$sd.day[which(JDstats$N == 1)] <- NaN
 
-    d18Otidy <- tidyr::gather(as.data.frame(resultarray[, , 1]), "window", "d18O_mod", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modelled d18O results to Tidy data for plotting
+    d18Otidy <- tidyr::gather(as.data.frame(resultarray[, , 1]), "window", "d18O_mod", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled d18O results to Tidy data for plotting
     d18Otidy$weights <- weightstidy$weight # Add weights to d18Otidy
 
-    d18Ostats <- d18Otidy %>% # Summarize modelled d18O statistics
+    d18Ostats <- d18Otidy %>% # Summarize modeled d18O statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             mean.d18O_mod = mean(d18O_mod, na.rm = TRUE),  # Calculate means per sample
             sd.d18O_mod = sd_wt(d18O_mod, weights, na.rm = TRUE),  # Calculate stdevs per sample
-            N = dplyr::n_distinct(d18O_mod, na.rm = TRUE), # Calculate the number of modelled values, excluding NA's
+            N = dplyr::n_distinct(d18O_mod, na.rm = TRUE), # Calculate the number of modeled values, excluding NA's
             se.d18O_mod = sd.d18O_mod / sqrt(N), # Calculate the standard error
             CL95.d18O_mod = qt(0.95, N) * se.d18O_mod # Calculate the 95% confidence level
         )
     d18Ostats$sd.d18O_mod[which(d18Ostats$N == 1)] <- NaN
 
-    GRtidy <- tidyr::gather(as.data.frame(resultarray[, , 4]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modelled growth rate results to Tidy data for plotting
+    GRtidy <- tidyr::gather(as.data.frame(resultarray[, , 4]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled growth rate results to Tidy data for plotting
     GRtidy$weights <- weightstidy$weight # Add weights to GRtidy
 
-    GRstats <- GRtidy %>% # Summarize modelled growth rate statistics
+    GRstats <- GRtidy %>% # Summarize modeled growth rate statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             mean.GR = mean(GR[GR>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where growth rate is near-zero
             sd.GR = sd_wt(GR[GR>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where growth rate is near-zero
-            N = dplyr::n_distinct(GR[GR>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where growth rate is near-zero
+            N = dplyr::n_distinct(GR[GR>0.1], na.rm = TRUE), # Calculate the number of modeled values, excluding NA's and instances where growth rate is near-zero
             se.GR = sd.GR / sqrt(N), # Calculate the standard error
             CL95.GR = qt(0.95, N) * se.GR # Calculate the 95% confidence level
         )
     GRstats$sd.GR[which(GRstats$N == 1)] <- NaN
 
-    Ttidy <- tidyr::gather(as.data.frame(resultarray[, , 5]), "window", "SST", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modelled temperature results to Tidy data for plotting
+    Ttidy <- tidyr::gather(as.data.frame(resultarray[, , 5]), "window", "SST", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled temperature results to Tidy data for plotting
     Ttidy$weights <- weightstidy$weight # Add weights to Ttidy
 
-    Tstats <- Ttidy %>% # Summarize modelled growth rate statistics
+    Tstats <- Ttidy %>% # Summarize modeled growth rate statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             mean.SST = weighted.mean(SST[SST>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where SSTowth rate is near-zero
             sd.SST = sd_wt(SST[SST>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where SSTowth rate is near-zero
-            N = dplyr::n_distinct(SST[SST>0.1], na.rm = TRUE), # Calculate the number of modelled values, excluding NA's and instances where SSTowth rate is near-zero
+            N = dplyr::n_distinct(SST[SST>0.1], na.rm = TRUE), # Calculate the number of modeled values, excluding NA's and instances where SSTowth rate is near-zero
             se.SST = sd.SST / sqrt(N), # Calculate the standard error
             CL95.SST = qt(0.95, N) * se.SST # Calculate the 95% confidence level
         )
@@ -215,7 +215,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         dplyr::summarize(
             means = mean(par_value), # Calculate means per parameter
             stdev = sd(par_value), # Calculate standard deviation per parameter
-            N = dplyr::n(), # Count number of modelled values per parameter (= equal to number of windows)
+            N = dplyr::n(), # Count number of modeled values per parameter (= equal to number of windows)
             se.pars = stdev / sqrt(N), # Calculate standard error
             CL95 = qt(0.95, N) * se.pars
         )
@@ -224,14 +224,14 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         print("Recalculating export statistics by including propagated uncertainties")
         # Include errors propagated from those on D and d18Oc data into the statistics
 
-        # Propagate errors on modelled d18O
+        # Propagate errors on modeled d18O
         d18Otidy_err <- d18Otidy
-        d18Otidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 6]), "window", "d18O", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$d18O # Convert modelled time errors to Tidy data for plotting
+        d18Otidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 6]), "window", "d18O", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$d18O # Convert modeled time errors to Tidy data for plotting
         d18Otidy_err$N <- dynwindow$y[as.numeric(d18Otidy$window)] # Add window size for calculating pooled SD
         d18Otidy_err <- d18Otidy_err[-which(is.na(d18Otidy_err$d18O_mod)), ] # Remove empty cells in matrix
         d18Otidy_err$SD[which(d18Otidy_err$SD == 0)] <- min(d18Otidy_err$SD[which(d18Otidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
 
-        d18Ostats2 <- d18Otidy_err %>% # Summarize modelled d18O statistics
+        d18Ostats2 <- d18Otidy_err %>% # Summarize modeled d18O statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.d18O = weighted.mean(d18O_mod, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
@@ -247,12 +247,12 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # Propagate errors on Time of Day calculations
         JDtidy_err <- JDtidy
-        JDtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 7]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$Day # Convert modelled time errors to Tidy data for plotting
+        JDtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 7]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$Day # Convert modeled time errors to Tidy data for plotting
         JDtidy_err$N <- dynwindow$y[as.numeric(JDtidy$window)] # Add window size for calculating pooled SD
         JDtidy_err <- JDtidy_err[-which(is.na(JDtidy_err$Day)), ] # Remove empty cells in matrix
         JDtidy_err$SD[which(JDtidy_err$SD == 0)] <- min(JDtidy_err$SD[which(JDtidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
 
-        JDstats2 <- JDtidy_err %>% # Summarize modelled JD statistics
+        JDstats2 <- JDtidy_err %>% # Summarize modeled JD statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.day = weighted.mean(Day, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
@@ -266,14 +266,14 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         JDstats$CL95.day <- qt(0.95, JDstats$N) * JDstats$se.day # Propagate new errors onto confidence interval
 
 
-        # Propagate errors on modelled growth rate
+        # Propagate errors on modeled growth rate
         GRtidy_err <- GRtidy
-        GRtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 8]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$GR # Convert modelled time errors to Tidy data for plotting
+        GRtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 8]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$GR # Convert modeled time errors to Tidy data for plotting
         GRtidy_err$N <- dynwindow$y[as.numeric(GRtidy$window)] # Add window size for calculating pooled SD
         GRtidy_err <- GRtidy_err[-which(is.na(GRtidy_err$GR)), ] # Remove empty cells in matrix
         GRtidy_err$SD[which(GRtidy_err$SD == 0)] <- min(GRtidy_err$SD[which(GRtidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
 
-        GRstats2 <- GRtidy_err %>% # Summarize modelled GR statistics
+        GRstats2 <- GRtidy_err %>% # Summarize modeled GR statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.GR = weighted.mean(GR, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
@@ -287,14 +287,14 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         GRstats$CL95.GR <- qt(0.95, GRstats$N) * GRstats$se.GR # Propagate new errors onto confidence interval
 
 
-        # Propagate errors on modelled temperature
+        # Propagate errors on modeled temperature
         Ttidy_err <- Ttidy
-        Ttidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 9]), "window", "T", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$T # Convert modelled time errors to Tidy data for plotting
+        Ttidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 9]), "window", "T", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$T # Convert modeled time errors to Tidy data for plotting
         Ttidy_err$N <- dynwindow$y[as.numeric(Ttidy$window)] # Add window size for calculating pooled SD
         Ttidy_err <- Ttidy_err[-which(is.na(Ttidy_err$SST)), ] # Remove empty cells in matrix
         Ttidy_err$SD[which(Ttidy_err$SD == 0)] <- min(Ttidy_err$SD[which(Ttidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
 
-        Tstats2 <- Ttidy_err %>% # Summarize modelled T statistics
+        Tstats2 <- Ttidy_err %>% # Summarize modeled T statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
             weighted.mean.SST = weighted.mean(SST, 1 / SD ^ 2 * weights, na.rm = TRUE),  # Calculate weighted means per sample
@@ -327,7 +327,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
             ggplot2::geom_line(data = d18Ostats, ggplot2::aes(D, mean.d18O_mod), size = 1) +
             ggplot2::geom_line(data = d18Ostats, ggplot2::aes(D, mean.d18O_mod + CL95.d18O_mod, alpha = 0.5, col = "darkblue"), size = 1) +
             ggplot2::geom_line(data = d18Ostats, ggplot2::aes(D, mean.d18O_mod - CL95.d18O_mod, alpha = 0.5, col = "darkred"), size = 1) +
-            ggplot2::ggtitle("Plot of measured and modelled d18O vs. Record Length") +
+            ggplot2::ggtitle("Plot of measured and modeled d18O vs. Record Length") +
             ggplot2::xlab("Record length") +
             ggplot2::ylab("d18O_carbonate") +
             ggplot2::theme(legend.position = "none") # Remove legend
@@ -340,7 +340,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
             ggplot2::geom_line(data = GRstats, ggplot2::aes(D, mean.GR), size = 1) +
             ggplot2::geom_line(data = GRstats, ggplot2::aes(D, mean.GR + CL95.GR, alpha = 0.5), size = 1) +
             ggplot2::geom_line(data = GRstats, ggplot2::aes(D, mean.GR - CL95.GR, alpha = 0.5), size = 1) +
-            ggplot2::ggtitle("Plot of modelled growth rate vs Record Length") +
+            ggplot2::ggtitle("Plot of modeled growth rate vs Record Length") +
             ggplot2::xlab("Record length") +
             ggplot2::ylab("Growth rate") +
             ggplot2::theme(legend.position = "none") # Remove legend
@@ -360,8 +360,8 @@ export_results <- function(path = getwd(), # Path where result files are exporte
     }
     print("Start exporting files to directory")
     if(export_raw == TRUE){
-    # Write away all raw results of modelling
-        d18Oraw_p <- file.path(path, "modelled_d18O_raw.csv")
+    # Write away all raw results of modeling
+        d18Oraw_p <- file.path(path, "modeled_d18O_raw.csv")
         write.csv(resultarray[, , 1], d18Oraw_p)
         resraw_p <- file.path(path, "residuals_raw.csv")
         write.csv(resultarray[, , 2], resraw_p)
@@ -371,7 +371,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         write.csv(resultarray[, , 4], IGRraw_p)
         SSTraw_p <- file.path(path, "SST_raw.csv")
         write.csv(resultarray[, , 5], SSTraw_p)
-        d18OSDraw_p <- file.path(path, "Modelled_d18O_SD_raw.csv")
+        d18OSDraw_p <- file.path(path, "Modeled_d18O_SD_raw.csv")
         write.csv(resultarray[, , 6], d18OSDraw_p)
         JDSDraw_p <- file.path(path, "Day_of_Year_SD_raw.csv")
         write.csv(resultarray[, , 7], JDSDraw_p)
@@ -379,11 +379,11 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         write.csv(resultarray[, , 8], IGRSDraw_p)
         SSTSDraw_p <- file.path(path, "SST_SD_raw.csv")
         write.csv(resultarray[, , 9], SSTSDraw_p)
-        parraw_p <- file.path(path, "modelled_parameters_raw.csv")
+        parraw_p <- file.path(path, "modeled_parameters_raw.csv")
         write.csv(parmat, parraw_p)
     }
 
-    # Write avay summary statistics of modelling
+    # Write avay summary statistics of modeling
     AMR_p <- file.path(path, "Age_model_results.csv")
     write.csv(JDstats, AMR_p)
     d18OR_p <- file.path(path, "d18O_model_results.csv")

@@ -1,6 +1,6 @@
 #' Function to detect year transitions and calculate cumulative age of model results
 #' 
-#' Takes the result of iterative growth modelling and
+#' Takes the result of iterative growth modeling and
 #' transforms data from Julian Day (0 - 365) to cumulative
 #' day of the shell age by detecting where transitions
 #' from one year to the next occur and adding full years
@@ -38,7 +38,7 @@
 #' testarray2 <- suppressWarnings(cumulative_day(testarray, FALSE, FALSE, tempdir()))
 #' # Apply function on array
 #' @export
-cumulative_day <- function(resultarray, # Align Day of year results from modelling in different windows to a common time axis
+cumulative_day <- function(resultarray, # Align Day of year results from modeling in different windows to a common time axis
     plotyearmarkers = TRUE, # Plot peak fitting?
     export_peakid = TRUE, # Export data on how the boundaries between years were found?
     path = tempdir()
@@ -185,9 +185,9 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelli
         JDdat[, col] <- window # Update the julian day data with the new cumulative day simulations
     }
 
-    # Screen for extreme outliers in JD due to very bad simulations based on first and last modelled values
-    firstval <- apply(JDdat, 2, min, na.rm = TRUE) # find first values of all modelling windows
-    lastval <- apply(JDdat, 2, max, na.rm = TRUE) # find last values of all modelling windows
+    # Screen for extreme outliers in JD due to very bad simulations based on first and last modeled values
+    firstval <- apply(JDdat, 2, min, na.rm = TRUE) # find first values of all modeling windows
+    lastval <- apply(JDdat, 2, max, na.rm = TRUE) # find last values of all modeling windows
     badwindow <- rep(FALSE, ncol(JDdat)) # Vector indicating if window simulation is bad
     for(i in 2:(ncol(JDdat) - 1)){
         if(((abs(firstval[i] - firstval[i - 1]) > 365) & (abs(firstval[i + 1] - firstval[i])) > 365) | ((abs(lastval[i] - lastval[i - 1]) > 365) & (abs(lastval[i + 1] - lastval[i])))){ # Find windows with large (> 1 year) jumps in either first or last value
