@@ -7,7 +7,7 @@ This is a resubmission. In this version I have made the following changes (detai
 ## Test environments
 * local Win 10 Pro install, R 4.0.2
 * Ubuntu 16.04 (on travis ci) R 4.0.2
-* OS X 10.13 (on travis ci) R 4.0.3
+* OS X 11.3 (on travis ci) R 4.1.0
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs
