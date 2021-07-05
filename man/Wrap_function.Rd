@@ -28,7 +28,7 @@ that contains the input data.}
 \item{file_name}{Name of the file that contains d18O data}
 
 \item{transfer_function}{String containing the name of the
-transfer function. Defaults to Kim and O'Neil, 997.}
+transfer function. Defaults to Kim and O'Neil, 1997.}
 
 \item{t_int}{Time interval (in days; default = 1)}
 

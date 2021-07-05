@@ -1,7 +1,7 @@
 #' Function to detect year transitions and calculate cumulative age of model results
 #' 
 #' Takes the result of iterative growth modeling and
-#' transforms data from Julian Day (0 – 365) to cumulative
+#' transforms data from Julian Day (0 - 365) to cumulative
 #' day of the shell age by detecting where transitions
 #' from one year to the next occur and adding full years
 #' (365 days) to simulations in later years.

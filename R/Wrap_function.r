@@ -9,7 +9,7 @@
 #' that contains the input data.
 #' @param file_name Name of the file that contains d18O data
 #' @param transfer_function String containing the name of the 
-#' transfer function. Defaults to Kim and O'Neil, 997.
+#' transfer function. Defaults to Kim and O'Neil, 1997.
 #' @param t_int Time interval (in days; default = 1)
 #' @param T_per Period of SST sinusoid (in days;
 #' default = 365)

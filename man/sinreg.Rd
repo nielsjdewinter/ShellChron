@@ -26,7 +26,7 @@ Fitting parameters:
 \code{Dper} = the period of the sinusoid in \code{x} domain
 \code{peak} = the location of the peak in the sinusoid
 \code{R2adj} = the adjusted \code{R^2} value of the fit
-\code{p} = the p–value of the fit
+\code{p} = the p-value of the fit
 }
 \description{
 Fits a sinusoid through data provided as an \code{x} and \code{y}

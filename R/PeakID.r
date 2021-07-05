@@ -10,7 +10,7 @@
 #' @seealso https://rpubs.com/mengxu/peak_detection
 #' @references package dependencies: zoo 1.8.7
 #' 
-#' Huber, W.A., Data Smoothing and Peak Detection, _Rpubs_,
+#' Huber, W.A., Data Smoothing and Peak Detection, Rpubs,
 #' Last accessed: December 8th, 2020.
 #'    \url{https://rpubs.com/mengxu/peak_detection}
 #' @examples
