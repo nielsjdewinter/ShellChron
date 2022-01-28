@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the following scientific paper."
+authors:
+- family-names: "de Winter"
+  given-names: "Niels Jonathan"  
+  orcid: "https://orcid.org/0000-0002-1453-5407"
+title: "ShellChron"
+version: 0.4.0
+date-released: 2021-07-02
+url: "https://github.com/nielsjdewinter/ShellChron"
+preferred-citation:
+  type: article
+  authors:
+- family-names: "de Winter"
+  given-names: "Niels Jonathan"  
+  orcid: "https://orcid.org/0000-0002-1453-5407"
+  journal: "Geoscientific Model Development"
+  month: 6
+  title: "ShellChron 0.4.0: A new tool for constructing chronologies in accretionary carbonate archives from stable oxygen isotope profiles"
+  volume: 16
+  year: 2022
