@@ -17,3 +17,7 @@ Previous versions of ShellChron underestimated the seasonal d18Oc range and retu
 2. Constant d18Oc solutions in modeling windows were often a result of the number of years of d18Oc that were modeled within a window. If the window contained more time than expected the samples outside the d18Oc curve were assigned a constant value, resulting in a flat d18Oc
 profile. This issue also explained why the mean modeled d18Oc values underestimated the true d18Oc variability in the record.
 3. Slight modifications were made to the cumulative_day function that aligns results from individual modeling windows to a common time axis. The previous version of ShellChron added too many or too little days to the age results in modeling windows in which either none or multiple year transitions occur. This resulted in sudden jumps in time in the age-distance relationship.
+
+## 0.4.0
+Added citation data of the now-published paper
+Slightly modified d18O_model.r to update the function for VPDB to VSMOW conversion

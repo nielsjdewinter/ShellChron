@@ -31,6 +31,10 @@
 #' international reference materials for isotope-ratio analysis (IUPAC Technical
 #' Report), _Pure and Applied Chemistry_ **2014**, _86.3_, 425-467.
 #'     \doi{10.1515/pac-2013-1023}
+#' Kim, S.-T., Coplen, T. B., and Horita, J.: Normalization of stable
+#' isotope data for carbonate minerals: Implementation of IUPAC
+#' guidelines, Geochim. Cosmochim. Ac. **2015** 158, 276-289.
+#'     \doi{10.1016/j.gca.2015.02.011}
 #' @examples
 #' # Create dummy SST data
 #' t <- seq(1, 40, 1)
@@ -52,7 +56,7 @@ d18O_model <- function(SST, # Function that converts SST values into d18O
         d18Ow <- c(0, rep(d18Ow, length(SST[,1])/length(d18Ow))) # If d18Ow is a vector with more than one value, multiply it to reach the same length of SST (multiply by "years")
     }
     if(transfer_function == "KimONeil97"){
-        d18Oc <- cbind(SST[,1], (exp((18.03 * 1000 / (SST[,2] + 273.15) - 32.42) / 1000) - 1) * 1000 + (0.97002 * d18Ow - 29.98)) # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+        d18Oc <- cbind(SST[,1], (exp((18.03 * 1000 / (SST[,2] + 273.15) - 32.42) / 1000) - 1) * 1000 + (0.97001 * d18Ow - 29.99)) # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014) and Kim et al. (2015)
     }else if(transfer_function == "GrossmanKu86"){
         d18Oc <- cbind(SST[,1], (20.6 - SST[,2]) / 4.34 + d18Ow + 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
     }else{

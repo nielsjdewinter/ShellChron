@@ -51,6 +51,9 @@ The model builds on previous work by [Judd et al. 2018](https://doi.org/10.1016/
 
 **column 5: d18Oc_err** stable oxygen isotope value uncertainty, in permille.
 
+When you use ShellChron, please cite [de Winter, 2022](https://gmd.copernicus.org/articles/15/1247/2022/):
+
+**de Winter, N.J. (2022) "ShellChron 0.4.0: a new tool for constructing chronologies in accretionary carbonate archives from stable oxygen isotope profiles" Geoscientific Model Development 15, 1247-1267, DOI: 10.5194/gmd-15-1247-2022**
 
 ## Installation
 

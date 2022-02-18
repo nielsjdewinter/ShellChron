@@ -53,4 +53,8 @@ Brand, W.A., Coplen, T.B., Vogl, J., Rosner, M., Prohaska, T., Assessment of
 international reference materials for isotope-ratio analysis (IUPAC Technical
 Report), \emph{Pure and Applied Chemistry} \strong{2014}, \emph{86.3}, 425-467.
 \doi{10.1515/pac-2013-1023}
+Kim, S.-T., Coplen, T. B., and Horita, J.: Normalization of stable
+isotope data for carbonate minerals: Implementation of IUPAC
+guidelines, Geochim. Cosmochim. Ac. \strong{2015} 158, 276-289.
+\doi{10.1016/j.gca.2015.02.011}
 }

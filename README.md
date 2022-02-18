@@ -20,11 +20,11 @@ in “temperature\_curve()” function) and a skewed growth rate sinusoid
 model (see details in “d18O\_model()” function). The resulting modeled
 d18O is then compared with the user-provided d18O data and the
 parameters of the temperature and growth rate functions are optimized
-using the SCEUA algorithm (see [Duan et
-al., 1992](https://doi.org/10.1029/91WR02985)) to match the d18O data.
-As a result, the timing of each data point with reference to the
-seasonal cycle is exported, from which an age model for the entire
-record can be constructed.
+using the SCEUA algorithm (see [Duan et al.,
+1992](https://doi.org/10.1029/91WR02985)) to match the d18O data. As a
+result, the timing of each data point with reference to the seasonal
+cycle is exported, from which an age model for the entire record can be
+constructed.
 
 ![Figure 1: Temperature sinusoid](man/figures/README-SSTcurve.png)
 ![Figure 2: Growth rate sinusoid](man/figures/README-GRcurve.png)
@@ -35,8 +35,8 @@ this previous model in several key ways:
 
 1.  ShellChron allows SCEUA optimization to be carried out in a sliding
     window through the data and recognizes year transitions (see
-    “cumulative\_day()” formula) to produce seamless age models
-    through multiple years. Overlapping windows are used to estimate the
+    “cumulative\_day()” formula) to produce seamless age models through
+    multiple years. Overlapping windows are used to estimate the
     reproducibility of model results.
 2.  ShellChron provides the option to take uncertainties on the input
     data (“D\_err” and “d18Oc\_err”) into account in error estimation
@@ -78,6 +78,14 @@ transitions.
 
 **column 5: d18Oc\_err** stable oxygen isotope value uncertainty, in
 permille.
+
+When you use ShellChron, please cite [de Winter,
+2022](https://gmd.copernicus.org/articles/15/1247/2022/):
+
+**de Winter, N.J. (2022) “ShellChron 0.4.0: a new tool for constructing
+chronologies in accretionary carbonate archives from stable oxygen
+isotope profiles” Geoscientific Model Development 15, 1247-1267, DOI:
+10.5194/gmd-15-1247-2022**
 
 ## Installation
 

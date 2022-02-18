@@ -1,0 +1,15 @@
+citHeader("To cite ShellChron in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "ShellChron 0.4.0: a new tool for constructing chronologies in accretionary carbonate archives from stable oxygen isotope profiles",
+  author   = person("Niels J.", "de Winter"),
+  journal  = "Geoscientific Model Development",
+  year     = "2022",
+  volume   = "15",
+  pages    = "1247-1267",
+  url      = "https://gmd.copernicus.org/articles/15/1247/2022/",
+  textVersion = paste(
+  "de Winter, N.J. (2022) ShellChron 0.4.0: a new tool for constructing chronologies in accretionary carbonate archives from stable oxygen isotope profiles. Geoscientific Model Development 15, 1247-1267, DOI: 10.5194/gmd-15-1247-2022"
+  )
+)
