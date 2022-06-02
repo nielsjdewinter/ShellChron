@@ -96,7 +96,7 @@ wrap_function <- function(path = getwd(), # Wrapping function for the entire mod
     resultarray <- resultlist[[1]]
     parmat <- resultlist[[2]]
     
-    # STEP 3: Align model results to cumulative timescale
+    # STEP 3: Align model resultis s to cumulative timescale
     print("Calculating cumulative day of the year results...")
     suppressWarnings(resultarray[, , 3] <- cumulative_day(resultarray, TRUE, TRUE, export_path)) # Calculate cumulative day of the year for all model runs and replace matrix in result array
     

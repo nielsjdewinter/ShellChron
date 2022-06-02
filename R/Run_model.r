@@ -76,7 +76,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     SCEUApar = c(1, 25, 10000, 5, 0.01, 0.01), # Set parameters for SCEUA optimization (iniflg, ngs, maxn, kstop, pcento, peps)
     sinfit = TRUE, # Apply sinusoidal fitting to guess initial parameters for SCEUA optimization? (TRUE/FALSE)
     MC = 1000, # If errors = TRUE, give the number of iterations for Monte Carlo simulation used in error propagation (default = 1000, if MC = 0 no eror propagation is done)
-    plot = FALSE # Should the progress of model fitting be plotted?
+    plot = TRUE # Should the progress of model fitting be plotted?
     ){
 
     d18Oc <- d18Oc_err <- Omod <- NULL # Predefine variables to circumvent global variable binding error
@@ -170,48 +170,51 @@ run_model <- function(dat, # Core function to run the entire model on the data (
             O_err <- rep(0, dynwindow$y)
             MC <- 0
         }
+        if(i == 1){ # Estimate starting parameters for first data window
+            if(sinfit){ # If sinusoidal fitting is enabled
+                sinlist <- sinreg(Dsam, Osam) # Run sinusoidal regression to find initial parameter values
+                # Estimate starting parameters from regression results
+                O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
+                O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
+                O_pha_start <- sinlist[[1]][4] %% sinlist[[1]][3] # Estimate position (in depth of the first peak in d18O)
+                O_per_start <- sinlist[[1]][3] # Export starting value for period in distance domain
+            }else{
+                O_av_start <- mean(Osam) # Estimate starting value for annual d18O average by mean of d18O in record
+                O_amp_start <- diff(range(Osam)) / 2 # Estimate starting value for d18O amplitude by half the difference between minimum and maximum d18Oc
+                O_per_start <- diff(range(Dsam)) # Estimate starting period as thickness of isolated year
+                O_pha_start <- 0.25 * O_per_start # Set starting phase to one quarter of a cycle if it cannot be estimated from sinusoidal regression 
+            }
 
-        if(sinfit){ # If sinusoidal fitting is enabled
-            sinlist <- sinreg(Dsam, Osam) # Run sinusoidal regression to find initial parameter values
-            # Estimate starting parameters from regression results
-            O_av_start <- sinlist[[1]][1] # Export starting value for annual d18O average
-            O_amp_start <- sinlist[[1]][2] # Export starting value for d18O amplitude
-            O_pha_start <- sinlist[[1]][4] %% sinlist[[1]][3] # Estimate position (in depth of the first peak in d18O)
-            O_per_start <- sinlist[[1]][3] # Export starting value for period in distance domain
+            if(transfer_function == "KimONeil97"){
+                T_av_start <- 18.03 * 1000 / (1000 * log((O_av_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15  # Estimate mean temperature. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+                T_amp_start <- 18.03 * 1000 / (1000 * log((O_av_start - O_amp_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15 - T_av_start # Estimate temperature amplitude. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+            }else if(transfer_function == "GrossmanKu86"){
+                T_av_start <- 20.6 - 4.34 * (O_av_start - mean(d18Ow) - 0.2) # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
+                T_amp_start <- 20.6 - 4.34 * (O_av_start - O_amp_start - mean(d18Ow) - 0.2) - T_av_start # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
+            }else{
+                print("ERROR: Supplied transfer function is not recognized")
+            }
+
+            O_peak <- O_pha_start + Dsam[1] # Find position of d18O peak in distance domain
+            T_pha_start <- ((O_pha_start - 0.5 * O_per_start) %% O_per_start) / O_per_start * T_per # Estimate position of first peak in temperature (low in d18O) relative to annual cycle (days)
+            G_av_start <- O_per_start / G_per # Estimate average growth rate in distance/day
+
+            # Collate starting parameters
+            par0 <- c(
+                T_amp = T_amp_start,
+                T_pha = T_pha_start,
+                T_av = T_av_start,
+
+                G_amp = G_av_start / 2, # Start by estimating growth rate changes by half the average
+                G_pha = T_pha_start, # Start by estimating that the peak in growth rate coincides with the peak in temperature
+                G_av = G_av_start,
+                G_skw = 50 # Start with a no skew
+            )
         }else{
-            O_av_start <- mean(Osam) # Estimate starting value for annual d18O average by mean of d18O in record
-            O_amp_start <- diff(range(Osam)) / 2 # Estimate starting value for d18O amplitude by half the difference between minimum and maximum d18Oc
-            O_per_start <- diff(range(Dsam)) # Estimate starting period as thickness of isolated year
-            O_pha_start <- 0.25 * O_per_start # Set starting phase to one quarter of a cycle if it cannot be estimated from sinusoidal regression 
+            par0 <- par1 # For remaining data windows, the starting parameters are based on the modelled parameters of the previous window
         }
-
-        if(transfer_function == "KimONeil97"){
-            T_av_start <- 18.03 * 1000 / (1000 * log((O_av_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15  # Estimate mean temperature. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
-            T_amp_start <- 18.03 * 1000 / (1000 * log((O_av_start - O_amp_start - (0.97002 * mean(d18Ow) - 29.98)) / 1000 + 1) + 32.42) - 273.15 - T_av_start # Estimate temperature amplitude. Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
-        }else if(transfer_function == "GrossmanKu86"){
-            T_av_start <- 20.6 - 4.34 * (O_av_start - mean(d18Ow) - 0.2) # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
-            T_amp_start <- 20.6 - 4.34 * (O_av_start - O_amp_start - mean(d18Ow) - 0.2) - T_av_start # Estimate mean temperature. Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
-        }else{
-            print("ERROR: Supplied transfer function is not recognized")
-        }
-
-        O_peak <- O_pha_start + Dsam[1] # Find position of d18O peak in distance domain
-        T_pha_start <- ((O_pha_start - 0.5 * O_per_start) %% O_per_start) / O_per_start * T_per # Estimate position of first peak in temperature (low in d18O) relative to annual cycle (days)
-        G_av_start <- O_per_start / G_per # Estimate average growth rate in distance/day
 
         years <- 3 # Set default number of years to 3
-
-        # Collate starting parameters
-        par0 <- c(
-            T_amp = T_amp_start,
-            T_pha = T_pha_start,
-            T_av = T_av_start,
-
-            G_amp = G_av_start / 2, # Start by estimating growth rate changes by half the average
-            G_pha = T_pha_start, # Start by estimating that the peak in growth rate coincides with the peak in temperature
-            G_av = G_av_start,
-            G_skw = 50 # Start with a no skew
-        )
 
         invisible(capture.output( # Suppress the details on converging SCEUA
             sceua_list <- rtop::sceua(growth_model,

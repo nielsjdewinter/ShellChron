@@ -50,6 +50,12 @@ data_import <- function(file_name){
         return("ERROR: Input data does not match the default input data format")
     }
 
+    # Check for duplicate depth values
+    if(TRUE %in% duplicated(dat$D)){
+        dat <- dat[-which(duplicated(dat$D) == TRUE), ] # Remove duplicated depth values
+        print("WARNING: Duplicated depth values were found and removed")
+    }
+
     # Define sliding window based on indicated year markers
     YEARMARKER <- which(dat$YEARMARKER == 1) # Read position of yearmarkers in data.
     yearwindow <- diff(which(dat$YEARMARKER == 1)) # Calculate the number of datapoints in each year between consecutive year markers
