@@ -8,6 +8,9 @@
 #' @param path String containing the path to the directory
 #' that contains the input data.
 #' @param file_name Name of the file that contains d18O data
+#' @param input_from_file Should input be loaded from a file (default = TRUE)
+#' @param object_name Name of the object containing input
+#' (only if input_from_file = FALSE)
 #' @param transfer_function String containing the name of the 
 #' transfer function. Defaults to Kim and O'Neil, 1997.
 #' @param t_int Time interval (in days; default = 1)
@@ -64,6 +67,8 @@
 #' @export
 wrap_function <- function(path = getwd(), # Wrapping function for the entire model package
     file_name, # Give file name (don't forget to add the extention, should be in CSV format)
+    input_from_file = TRUE, # Should input be read from a file?
+    object_name, # Name of object with input (only if input_from_file = FALSE)
     transfer_function = "KimONeil97", # Set transfer function of the record, default is Kim and O'Neil 1997.
     t_int = 1, # Set time interval in days
     T_per = 365, # Set annual time period in days (default = 365)
@@ -82,8 +87,12 @@ wrap_function <- function(path = getwd(), # Wrapping function for the entire mod
     on.exit(setwd(oldwd))
     
     # STEP 1: Import data
-    setwd(path)
-    importlist <- data_import(file_name)
+    if(input_from_file){
+        setwd(path)
+        importlist <- data_import(file_name)
+    }else{
+        importlist <- data_import_object(object_name)
+    }
     if(length(importlist) != 2){ # Catch errors in the input data
         return("ERROR: Input data does not match the default input data format")
     }

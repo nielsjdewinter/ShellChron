@@ -7,6 +7,8 @@
 wrap_function(
   path = getwd(),
   file_name,
+  input_from_file = TRUE,
+  object_name,
   transfer_function = "KimONeil97",
   t_int = 1,
   T_per = 365,
@@ -26,6 +28,11 @@ wrap_function(
 that contains the input data.}
 
 \item{file_name}{Name of the file that contains d18O data}
+
+\item{input_from_file}{Should input be loaded from a file (default = TRUE)}
+
+\item{object_name}{Name of the object containing input
+(only if input_from_file = FALSE)}
 
 \item{transfer_function}{String containing the name of the
 transfer function. Defaults to Kim and O'Neil, 1997.}

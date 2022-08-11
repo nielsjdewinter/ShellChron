@@ -57,7 +57,7 @@ data_import_object <- function(object_name){
     object_name <- object_name[order(object_name$D), ] # Order data by D
 
     # Check for duplicate depth values
-    if(TRUE %in% duplicated(dat$D)){
+    if(TRUE %in% duplicated(object_name$D)){
         object_name <- object_name[-which(duplicated(object_name$D) == TRUE), ] # Remove duplicated depth values
         print("WARNING: Duplicated depth values were found and removed")
     }
