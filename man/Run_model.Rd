@@ -16,7 +16,7 @@ run_model(
   SCEUApar = c(1, 25, 10000, 5, 0.01, 0.01),
   sinfit = TRUE,
   MC = 1000,
-  plot = FALSE
+  plot = TRUE
 )
 }
 \arguments{
