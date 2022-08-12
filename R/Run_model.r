@@ -84,7 +84,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     # Prepare data arrays for storage of modeling results
     resultarray <- array( # Create array to contain all modeling results of overlapping windows
         rep(as.matrix(cbind(dat, matrix(NA, ncol = length(dynwindow$x), nrow = length(dat$D)))), 9), # Replicate matrix of dat + extra columns to contain all variables
-        dim = c(length(dat$D), length(dynwindow$x) + length(dat[1,]), 9) # Six variables, being: Modeled d18O, residuals, Day of the Year, Growth between datapoints, Instantaneous growth rate at datapoint and Modeled temperature
+        dim = c(length(dat$D), length(dynwindow$x) + length(dat[1, ]), 9) # Six variables, being: Modeled d18O, residuals, Day of the Year, Growth between datapoints, Instantaneous growth rate at datapoint and Modeled temperature
     )
 
     parmat <- matrix(NA, nrow = 7, ncol = length(dynwindow$x)) # Matrix in which to store the modeling parameters
@@ -109,7 +109,7 @@ run_model <- function(dat, # Core function to run the entire model on the data (
     }
 
     # Estimate growth rate variability and round up to nearest higher magnitude of 10 for conservative boundary
-    GRavest <- max(diff(dat[dat$YEARMARKER == 1,1])) / 365 # Estimate maximum growth rate from yearmarkers
+    GRavest <- max(diff(dat$D[dat$YEARMARKER == 1])) / 365 # Estimate maximum growth rate from yearmarkers
     GRavmax <- 10 ^ (ceiling(log(GRavest, 10))) # Round up to nearest higher magnitude of 10
 
     # Find tailored range of temperatures from data
@@ -160,11 +160,11 @@ run_model <- function(dat, # Core function to run the entire model on the data (
         print(paste("Processing Datawindow:", i, "of", length(dynwindow$x))) # Keep track of progress
         
         # Isolate year of d18O data based on window data
-        Dsam <- dat[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1), 1]
-        Osam <- dat[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1), 2]
+        Dsam <- dat$D[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1)]
+        Osam <- dat$d18Oc[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1)]
         if(MC > 0){
-            D_err <- dat[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1), 4] # Optional: include error on D
-            O_err <- dat[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1), 5] # Optional: include error on d18Oc
+            D_err <- dat$D_err[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1)] # Optional: include error on D
+            O_err <- dat$d18Oc_err[dynwindow$x[i]:(dynwindow$x[i] + dynwindow$y[i] - 1)] # Optional: include error on d18Oc
         }else{
             D_err <- rep(0, dynwindow$y)
             O_err <- rep(0, dynwindow$y)

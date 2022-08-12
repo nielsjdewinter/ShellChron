@@ -17,10 +17,16 @@
 #' @export
 sd_wt<-function(x, w, na.rm = FALSE){ # Formula for weighted standard deviation
     if(na.rm == TRUE){ # Remove NA containing x/w pairs
-        x<-x[!(is.na(x) | is.na(w))]
-        w<-w[!(is.na(x) | is.na(w))]
+        x <- x[!(is.na(x) | is.na(w))]
+        w <- w[!(is.na(x) | is.na(w))]
     }
-    mean.wt <- mean(x * w, na.rm = TRUE) / mean(w) # Calculate weighted mean
-    stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) * sum(w)))
+    if(length(x) == 1){ # Catch instances where x and w are equal to one
+        mean.wt <- x
+        stdev <- NA
+        print("WARNING: only one x and/or weight value found, so no standard deviation could be calculated")
+    }else{
+        mean.wt <- mean(x * w, na.rm = TRUE) / mean(w) # Calculate weighted mean
+        stdev <- sqrt(sum(w * (x - mean.wt) ^ 2) / ((length(w) - 1) / length(w) * sum(w))) # Calculate weighted STDEV
+    }
     return(stdev)
 }

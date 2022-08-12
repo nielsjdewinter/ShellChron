@@ -31,29 +31,45 @@ data_import <- function(file_name){
     # WARNING: It is important that the columns in the datafile have the same meaning as defined here.
     # If one of the error terms (e.g. the error on the depth measurement: "D_err") is missing, it can also be added to the datafile as a column filled with zeroes (indicating the error is 0)
     
-    dat <- dat[order(dat[, 1]),] # Order data by D
-
-    # Check the structure of the import dataframe
-    if(ncol(dat) == 5){ # If the number of columns checks out
-        # Check the column names, and rename them if necessary
-        if(!all(colnames(dat) == c("D", "d18Oc", "YEARMARKER", "D_err", "d18Oc_err"))){
-            colnames(dat) <- c("D", "d18Oc", "YEARMARKER", "D_err", "d18Oc_err")
+    # Check the structure and names of the import dataframe
+    # Check if all 5 used columns are present
+    if(!all(c("D", "d18Oc", "YEARMARKER", "D_err", "d18Oc_err") %in% colnames(dat))){
+        # Check if the three basic columns (without the SDs) are present
+        if(!all(c("D", "d18Oc", "YEARMARKER") %in% colnames(dat))){
+            return(paste("ERROR: Input data lacks columns:", # If the three minimum requisite columns are not present, break operation
+                    c("D", "d18Oc", "YEARMARKER")[
+                        which(!(c("D", "d18Oc", "YEARMARKER") %in% colnames(dat)))
+                    ]
+                )
+            )
+        }else{
+            # If three basic columns are present, but error columns are missing, set errors to zero
+            if(!("D_err" %in% colnames(dat))){
+                dat$D_err <- rep(0, nrow(dat))
+                print("WARNING: D error not found, set to zero")
+            }
+            if(!("d18Oc_err" %in% colnames(dat))){
+                dat$d18Oc_err <- rep(0, nrow(dat))
+                print("WARNING: d18Oc error not found, set to zero")
+            }
         }
-    }else if(ncol(dat) == 3){ # If SD columns are omitted
-        # Check the names of provided columns, and rename them if necessary
-        if(!all(colnames(dat) == c("D", "d18Oc", "YEARMARKER"))){
-            colnames(dat) <- c("D", "d18Oc", "YEARMARKER")
-        }
-        dat$D_err <- rep(0, nrow(dat))
-        dat$d18Oc_err <- rep(0, nrow(dat))
-    }else{
-        return("ERROR: Input data does not match the default input data format")
-    }
+    } # No action is required if all columns are present
+    
+    dat <- dat[order(dat$D), ] # Order data by D
 
-    # Check for duplicate depth values
+    # Check for duplicate depth values and average them out
     if(TRUE %in% duplicated(dat$D)){
-        dat <- dat[-which(duplicated(dat$D) == TRUE), ] # Remove duplicated depth values
-        print("WARNING: Duplicated depth values were found and removed")
+        dat <- dat %>%
+            group_by(D) %>%
+            summarize(
+                N = n(),
+                D = median(D, na.rm = TRUE),
+                d18Oc = median(d18Oc, na.rm = TRUE),
+                YEARMARKER = max(YEARMARKER, na.rm = TRUE),
+                d18Oc_err = sqrt(sum(d18Oc_err ^ 2, na.rm = TRUE)),
+                D_err = sqrt(sum(D_err ^ 2, na.rm = TRUE)) / N
+            )
+        print("WARNING: Duplicated depth values were found and the median values were used")
     }
 
     # Define sliding window based on indicated year markers
@@ -69,11 +85,11 @@ data_import <- function(file_name){
         )
         dynwindow$y <- round(dynwindow$y) # Round off window sizes to integers
         dynwindow$y[dynwindow$y < 10] <- 10 # Eliminate small window sizes to lend confidence to the sinusoidal fit
-        overshoot<-which(dynwindow$x + dynwindow$y > length(dat[,1])) # Find windows that overshoot the length of dat
+        overshoot<-which(dynwindow$x + dynwindow$y > length(dat$D)) # Find windows that overshoot the length of dat
         dynwindow$x <- dynwindow$x[-overshoot] # Remove overshooting windows
         dynwindow$y <- dynwindow$y[-overshoot] # Remove overshooting windows
-        if((length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1) < length(dat[, 1])){ # Increase length of the final window in case samples at the end are missed due to jumps in window size
-            dynwindow$y[length(dynwindow$y)] <- dynwindow$y[length(dynwindow$y)] + (length(dat[, 1]) - (length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1))
+        if((length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1) < length(dat$D)){ # Increase length of the final window in case samples at the end are missed due to jumps in window size
+            dynwindow$y[length(dynwindow$y)] <- dynwindow$y[length(dynwindow$y)] + (length(dat$D) - (length(dynwindow$x) + dynwindow$y[length(dynwindow$x)] - 1))
         }
     }else if(length(yearwindow) == 1){ # Catch exception of datasets with only two yearmarkers
         dynwindow <- data.frame(

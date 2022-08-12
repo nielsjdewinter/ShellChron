@@ -5,10 +5,10 @@
 \title{Function to prepare d18O data from a preexisting object
 and process yearmarkers and calculation windows}
 \usage{
-data_import_object(object_name)
+data_import_object(input_object)
 }
 \arguments{
-\item{object_name}{Name of the object that contains sampling distance and
+\item{input_object}{Name of the object that contains sampling distance and
 d18O data. Note that sampling distance should be given in micrometers,
 because the SCEUA model underperforms when the growth rate figures are very
 small (<0.1 mm/day).}
@@ -31,12 +31,12 @@ dat$d18Oc <- sin((2 * pi * (seq(1, 40, 1) - 8 + 7 / 4)) / 7)
 dat$YEARMARKER <- c(0, rep(c(0, 0, 0, 0, 0, 0, 1), 5), 0, 0, 0, 0)
 dat$D_err <- rep(100, 40)
 dat$d18Oc_err <- rep(0.1, 40)
-importlist <- data_import_object(object_name = dat) # Run function on 
+importlist <- data_import_object(input_object = dat) # Run function on 
 # attached dummy data
 
 # Create bad data file lacking YEARMARKER column
 bad_dat <- as.data.frame(seq(1000, 40000, 1000))
 colnames(bad_dat) <- "D"
 bad_dat$d18Oc <- sin((2 * pi * (seq(1, 40, 1) - 8 + 7 / 4)) / 7)
-\dontrun{importlist <- data_import_object(object_name = bad_dat)}
+\dontrun{importlist <- data_import_object(input_object = bad_dat)}
 }
