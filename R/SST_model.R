@@ -38,7 +38,7 @@
 #' val <- sin((0.5 * pi * (dist)) / 5)+1 # d18Os
 #' d18O <- cbind(dist, val)
 #' # Run SST model function
-#' SST <- SST_model(d18O, 0, "calcite")
+#' SST <- SST_model(d18O, 0, "KimONeil97")
 #' @export
 SST_model <- function(d18O, # Function that converts d18Os values into SST
                        d18Ow = 0, # Information on the d18O of seawater (d18Ow), should be either one single number (constant) or a vector of length identical to the length of d18Os values.
