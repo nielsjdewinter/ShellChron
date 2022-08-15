@@ -20,7 +20,7 @@ about seasonality in d18Ow. Defaults to constant d18Ow of 0 permille VSMOW
 Kim and O'Neil (1997).}
 }
 \value{
-A vector containing d18O values for each SST value in \code{"SST"}
+A vector containing d18Oc values for each SST value in \code{"SST"}
 }
 \description{
 Takes a matrix of SST data (in degrees C) against time (in days), information

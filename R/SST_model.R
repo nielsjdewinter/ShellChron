@@ -7,7 +7,7 @@
 #' Kim and O'Neil, 1997 or Grossman and Ku, 1986). Converts the d18O data to SST
 #' data (in degrees Celsius) using the supplied empirical transfer function.
 #'
-#' @param d18Os Matrix with a distance column (values in any unit) and an d18Os column
+#' @param d18Oc Matrix with a distance column (values in any unit) and an d18Oc column
 #' (values in permille VPDB)
 #' @param d18Ow Either a single value (constant d18Ow) or a vector of length
 #' equal to the number of d18O values
@@ -16,7 +16,7 @@
 #' @param transfer_function String containing the name of the transfer function
 #' (for example: \code{"KimONeil97"} or \code{"GrossmanKu86"}). Defaults to
 #' Kim and O'Neil (1997).
-#' @return A vector containing SST values for each d18Os value in \code{"SST"}
+#' @return A vector containing SST values for each d18Os value in \code{"d18Oc"}
 #' @references Grossman, E.L., Ku, T., Oxygen and carbon isotope fractionation in biogenic
 #' aragonite: temperature effects, _Chemical Geology_ **1986**, _59.1_, 59-74.
 #'     \doi{10.1016/0168-9622(86)90057-6}
@@ -40,22 +40,22 @@
 #' # Run SST model function
 #' SST <- SST_model(d18O, 0, "KimONeil97")
 #' @export
-SST_model <- function(d18O, # Function that converts d18Os values into SST
+SST_model <- function(d18Oc, # Function that converts d18Os values into SST
                        d18Ow = 0, # Information on the d18O of seawater (d18Ow), should be either one single number (constant) or a vector of length identical to the length of d18Os values.
                        transfer_function = "KimONeil97" # Supply transfer function. Current options are: Kim and O'Neil (calcite calibration; 1997; "KimONeil97") or Grossman and Ku (aragonite calibration; 1986; "GrossmanKu86")
 ){
 
   if(!is.numeric(d18Ow)){
-    d18Ow <- rep(0, length(d18O[,1])) # Set default d18Ow vector to constant at d18Ow = 0
+    d18Ow <- rep(0, length(d18Oc[, 1])) # Set default d18Ow vector to constant at d18Ow = 0
   }else if(length(d18Ow) == 1){
-    d18Ow <- rep(d18Ow, length(d18O[,1])) # Create constant d18Ow vector if only one number is given
+    d18Ow <- rep(d18Ow, length(d18Oc[, 1])) # Create constant d18Ow vector if only one number is given
   }else{
-    d18Ow <- c(0, rep(d18Ow, length(d18O[,1])/length(d18Ow))) # If d18Ow is a vector with more than one value, multiply it to reach the same length of SST (multiply by "years")
+    d18Ow <- c(0, rep(d18Ow, length(d18Oc[, 1])/length(d18Ow))) # If d18Ow is a vector with more than one value, multiply it to reach the same length of SST (multiply by "years")
   }
   if(transfer_function == "KimONeil97"){
-    SST <- cbind(d18O[,1], (-1)*((273150*log((d18O[,2]-0.97002*d18Ow+29.98)/1000+1)-9174.477)/(32.42+1000*log(1+(29.98+d18O[,2]-0.97002*d18Ow)/1000)))) # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014)
+    SST <- cbind(d18Oc[, 1], (18.03 * 1000) / (log((d18Oc / 1000 + 1) / (((d18Ow - 30.92) / 1.03092) / 1000 + 1)) * 1000 + 32.42) - 273.15)
   }else if(transfer_function == "GrossmanKu86"){
-    SST <- cbind(d18O[,1], -4.34*d18O[,2]+4.34*d18Ow+21.468) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
+    SST <- cbind(d18Oc[, 1], -4.34 * d18Oc[, 2] + 4.34 * d18Ow + 21.468) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
   }else{
     return("ERROR: Supplied transfer function is not recognized")
   }
