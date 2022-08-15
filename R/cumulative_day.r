@@ -44,38 +44,38 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
     path = tempdir()
     ){
     
-    dat <- resultarray[, 1:5, 3] # isolate original data
+    dat <- as.data.frame(resultarray[, -grep("window", colnames(resultarray[, , 3])), 3]) # isolate original data
     
     # Recognition of the boundaries between years.
     # Method one: Apply sinusoidal function to the julian day simulations
-    JDdat <- resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
-    JDdat <- matrix(sin(2 * pi * (JDdat + 365/4) / 365), ncol = ncol(JDdat)) # Convert julian day to sinusoidal value (end and start of year = 1)
-    JDends <- data.frame(Depth = dat[, 1],
-        Yearmarker = dat[, 3],
+    JDdat <- resultarray[, (ncol(dat) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
+    JDdat <- matrix(sin(2 * pi * (JDdat + 365 / 4) / 365), ncol = ncol(JDdat)) # Convert julian day to sinusoidal value (end and start of year = 1)
+    JDends <- data.frame(Depth = dat$D,
+        Yearmarker = dat$YEARMARKER,
         YEsin = scales::rescale(rowSums(JDdat, na.rm = TRUE), c(0, 1)) # Create depth series of positions which most likely represent a year end, rescale to a scale from 0 to 1
     )
     
     # Method two: Give weight to the first and final days in reconstructions
     weightvector <- c(seq(10, 1, -1), rep(0, 346), seq(1, 10, 1)) # Create vector of weights to be given to days near the start and end of the year
-    JDdat <- round(resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3]) # Isolate julian day simulations
+    JDdat <- round(resultarray[, (ncol(dat) + 1):length(resultarray[1, , 1]), 3]) # Isolate julian day simulations
     JDdat <- matrix(weightvector[JDdat + 1], ncol = ncol(JDdat)) # Apply weighting to starts and ends of the year
     JDends$YEweight <- scales::rescale(rowSums(JDdat, na.rm = TRUE), c(0, 1)) # Add normalized results to depth series
 
     # Method three: Use instances within the window simulations where the end of year is recorded
-    JDdat <- resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
+    JDdat <- resultarray[, (ncol(dat) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
     JDdat <- rbind(rep(NA, length(JDdat[1, ])), diff(JDdat) < 0) # Matrix of positions in individual windows where end of year (day 365) is recorded
     YEcount <- rowSums(JDdat, na.rm = TRUE) / max(rowSums(JDdat, na.rm = TRUE), na.rm = TRUE) # Aggregate the counted ends of years in simulations
-    smoothfactor <- min(diff(which(JDends[, 2] == 1))) # Define smoothing factor for year end counts based on yearmarkers (take thickness of year with least growth to be conservative)
+    smoothfactor <- min(diff(which(JDends$Yearmarker == 1))) # Define smoothing factor for year end counts based on yearmarkers (take thickness of year with least growth to be conservative)
     YEcount <- c(rep(0, floor(smoothfactor / 2)), zoo::rollmean(YEcount, smoothfactor, align = "center"), rep(0, smoothfactor - floor(smoothfactor / 2) - 1)) # Smooth record of year end counts and pad with zeroes 
     JDends$YEcount <- scales::rescale(YEcount, c(0, 1)) # Add normalized results to depth series
 
     # Method four: Use maxima in d18Oc in original data
-    yearpos <- c(1, which(JDends[, 2] == 1), length(JDends$Depth)) # Extract positions of yearmarkers and include start and end of record
+    yearpos <- c(1, which(JDends$Yearmarker == 1), length(JDends$Depth)) # Extract positions of yearmarkers and include start and end of record
     yearpos <- unique(yearpos) # Remove duplicates in yearpos due to yearmarkers on beginning and/or end of record
     YE18O <- vector() # Create vector for the position of the maximum d18O value
     for(m in 1:(length(yearpos) - 1)){ # Loop through positions of yearmarkers
         if(m %in% 2:(length(yearpos) - 2)){ # central part of the record
-            maxpos <- which(dat[yearpos[m] : (yearpos[m + 1] - 1), 2] == max(dat[yearpos[m] : (yearpos[m + 1] - 1), 2])) + yearpos[m] - 1 # Find the position of the maximum value in the d18O data in that year
+            maxpos <- which(dat$d18Oc[yearpos[m] : (yearpos[m + 1] - 1)] == max(dat$d18Oc[yearpos[m] : (yearpos[m + 1] - 1)])) + yearpos[m] - 1 # Find the position of the maximum value in the d18O data in that year
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
@@ -84,7 +84,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
             sinusoid[which(days > ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) + 0.5) * 365 | days < ((maxpos - yearpos[m]) / (yearpos[m + 1] - yearpos[m]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid) # add sinusoid values to running vector
         }else if(m == 1){ # beginning of the record
-            maxpos <- which(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2] == max(dat[yearpos[m + 1] : (yearpos[m + 2] - 1), 2])) + yearpos[m + 1] - 1 # Find the position of the maximum value in the d18O data of the next year (the first year that is complete)
+            maxpos <- which(dat$d18Oc[yearpos[m + 1] : (yearpos[m + 2] - 1)] == max(dat$d18Oc[yearpos[m + 1] : (yearpos[m + 2] - 1)])) + yearpos[m + 1] - 1 # Find the position of the maximum value in the d18O data of the next year (the first year that is complete)
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
@@ -93,7 +93,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
             sinusoid[which(days > ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) + 0.5) * 365 | days < ((maxpos - yearpos[m + 1]) / (yearpos[m + 2] - yearpos[m + 1]) - 0.5) * 365)] <- -1 # Assign lowest value (-1) to all datapoints more than 1/2 period away from the maximum to prevent false peaks
             YE18O <- append(YE18O, sinusoid[1:(yearpos[m + 1] - yearpos[m])]) # Add sinusoid values for first bit of record to the vector
         }else if(m == (length(yearpos) - 1)){ # end of the record
-            maxpos <- which(dat[yearpos[m - 1] : (yearpos[m] - 1), 2] == max(dat[yearpos[m - 1] : (yearpos[m] - 1), 2])) + yearpos[m - 1] - 1 # Find the position of the maximum value in the d18O data of the previous year (the last year that is complete)
+            maxpos <- which(dat$d18Oc[yearpos[m - 1] : (yearpos[m] - 1)] == max(dat$d18Oc[yearpos[m - 1] : (yearpos[m] - 1)])) + yearpos[m - 1] - 1 # Find the position of the maximum value in the d18O data of the previous year (the last year that is complete)
             if(length(maxpos) > 1){
                 maxpos = round(stats::median(maxpos)) # Prevent multiple values in maxpos (gives errors further in the calculations)
             }
@@ -104,12 +104,12 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
         }
     }
     JDends$YE18O <- scales::rescale(YE18O, c(0, 1)) # Add normalized results to depth series
-    JDends$YEcombined <- scales::rescale(rowSums(JDends[, -c(1,2)]), c(0, 1)) # Combine all four methods of peak recognition into one vector
+    JDends$YEcombined <- scales::rescale(rowSums(JDends[, -c(1, 2)]), c(0, 1)) # Combine all four methods of peak recognition into one vector
 
     # Use peak ID algorhythm to find peaks in the combined vector of year end indicators to use as basis for cumulative day counting in the model results
-    wmin <- round(min(diff(which(JDends[,2] == 1))) / 4) # Define starting window for peak recognition as one forth the minimum width of a year
-    wmax <- round(min(diff(which(JDends[,2] == 1))) / 2) # Define maximum window for peak recognition as half the minimum width of a year
-    YM <- length(which(JDends[,2] == 1)) # Extract number of years in record
+    wmin <- round(min(diff(which(JDends$Yearmarker == 1))) / 4) # Define starting window for peak recognition as one forth the minimum width of a year
+    wmax <- round(min(diff(which(JDends$Yearmarker == 1))) / 2) # Define maximum window for peak recognition as half the minimum width of a year
+    YM <- length(which(JDends$Yearmarker == 1)) # Extract number of years in record
     X <- list(w = vector(), p = vector()) # List for storing results
     w <- wmin # Start at minimum window size
     repeat{
@@ -128,7 +128,29 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
             break
         }
     }
-    JDends$peakid <- rep(0, length(JDends[,1])) # Add column for peakid results
+    if(length(peaks$x) != YM){
+        # If peak algorithm fails (it often does for small datasets), try again with a larger span
+        YM <- length(which(JDends$Yearmarker == 1)) # Extract number of years in record
+        X <- list(w = vector(), p = vector()) # List for storing results
+        w <- wmin # Start at minimum window size
+        repeat{
+            peaks <- peakid(JDends$Depth, JDends$YEcombined, w = w, span = 0.1) # Identify peaks based on current threshold
+            if(length(peaks$x) == YM){ # Check if the number of years is correct and break loop if it is
+                break
+            }else if(w < wmax){ # Check if maximum window is reached
+                X$w <- append(X$w, w) # Store window size
+                X$p <- append(X$p, length(peaks$x)) # Store peak number
+                w <- w + 1 # Increment window size
+            }else{
+                X$w <- append(X$w, w) # Store window size
+                X$p <- append(X$p, length(peaks$x)) # Store peak number
+                w <- max(X$w[which(abs(X$p - YM) == min(abs(X$p - YM)))]) # If no windows give the exact number of years, take the window that comes closer (prioritize larger windows in case of a tie)
+                peaks <- peakid(JDends$Depth, JDends$YEcombined, w = w, span = 0.1) # Recalculate peak positions with the final chosen window size before breaking the loop
+                break
+            }
+        }
+    }
+    JDends$peakid <- rep(0, length(JDends$Depth)) # Add column for peakid results
     JDends$peakid[peaks$i] <- 1 # Mark the location of peaks found in the time series
 
     if(plotyearmarkers == TRUE){
@@ -147,13 +169,13 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
     }
 
     # Apply calculation of years in the model on the simulation results
-    JDdat <- resultarray[, (length(dat[1, ]) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
+    JDdat <- resultarray[, (ncol(dat) + 1):length(resultarray[1, , 1]), 3] # Isolate julian day simulations
     for(col in 1:length(JDdat[1, ])){ # Loop through all simulation windows
         window <- JDdat[, col] # Isolate simulation window
-        peakx <- head(which(peaks$x %in% dat[which(!is.na(window)), 1]), 1) # Find position of the first year end in the window column
+        peakx <- head(which(peaks$x %in% dat$D[which(!is.na(window))]), 1) # Find position of the first year end in the window column
         if(length(peakx) == 0){
-            if(peaks$x[1] < dat[head(which(!is.na(window)), 1), 1]){ # If no global year transitions fall within the window, check if there are global year transitions before the window and find the last year transition before the first value in the window
-                peakx <- max(which(peaks$x < dat[head(which(!is.na(window)), 1), 1])) # Find number of years before start of window
+            if(peaks$x[1] < dat$D[head(which(!is.na(window)), 1)]){ # If no global year transitions fall within the window, check if there are global year transitions before the window and find the last year transition before the first value in the window
+                peakx <- max(which(peaks$x < dat$D[head(which(!is.na(window)), 1)])) # Find number of years before start of window
                 JDpeak <- window[head(which(!is.na(window)), 1)] # Find the day of year of the first simulated value
                 if(JDpeak < 182.5){
                     window <- window + peakx * 365 # If first simulated value co-occurs with first half of the year, add all years before the window
@@ -162,7 +184,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
                 }
             } # If all year transitions happen after the window, no year number needs to be added to the window values
         }else{
-            JDpeak <- JDdat[tail(which(dat[, 1] == peaks$x[peakx] & !is.na(window)), 1), col] # Find JD simulation belonging to the first year transition
+            JDpeak <- JDdat[tail(which(dat$D == peaks$x[peakx] & !is.na(window)), 1), col] # Find JD simulation belonging to the first year transition
             if(JDpeak < 182.5){ 
                 window <- window + peakx * 365 # If year transition co-occurs with first half of the simulated year, all simulated values are assumed to belong to the next year
             }else{
@@ -172,7 +194,7 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
         if(length(which(diff(window) < 0)) > 0){ # Check if year transitions occur within the simulation
             for(i in which(diff(window) < 0)){
                 if(length(peakx) > 0){ # Check if global year transitions occur within the window
-                    if(i < which(dat[, 1] == peaks$x[peakx])){
+                    if(i < which(dat$D == peaks$x[peakx])){
                         window[1:i] <- window[1:i] - 365 # If the transition happens before the reference point (peakx), subtract a year's worth of days from the values before to prevent adding a year twice.
                     }else{
                         window[(i + 1):length(window)] <- window[(i + 1):length(window)] + 365 # If the transition happens on or after the reference point (peakx), add one year's worth of days to simulations after each transition
@@ -197,6 +219,6 @@ cumulative_day <- function(resultarray, # Align Day of year results from modelin
     JDdat[, badwindow] <- rep(NA, nrow(JDdat)) # Remove values from bad windows to prevent messing up the age model
 
     result <- resultarray[, , 3]
-    result[, 6:length(result[1, ])] <- JDdat # Add the updated cumulative julian day results to the resultarray and export
+    result[, (ncol(dat) + 1):length(result[1, ])] <- JDdat # Add the updated cumulative julian day results to the resultarray and export
     return(result)
 }

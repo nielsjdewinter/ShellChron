@@ -77,7 +77,7 @@
 #' tab[which(!is.na(tab))] <- 1
 #' testarray[, , 9] <- tab # dummy temperature SD
 #' darray <- array(rep(as.matrix(dat), 9), dim = c(40, 5, 9))
-#' testarray[, 1:5, ] <- darray
+#' testarray[, -grep("window", colnames(resultarray[, , 3])), ] <- darray
 #' 
 #' # Create dummy dynwindow data
 #' dynwindow <- as.data.frame(seq(1, 31, 1))
@@ -137,6 +137,11 @@ export_results <- function(path = getwd(), # Path where result files are exporte
     export_raw = FALSE # Export all the raw results of the model (of individual windows)?
     ){
     
+    # Set export path
+    oldwd <- getwd()
+    on.exit(setwd(oldwd))
+    setwd(path)
+
     Day <- sd.day <- N <- se.day <- d18O_mod <- sd.d18O_mod <- se.d18O_mod <-
         GR <- sd.GR <- se.GR <- SST <- sd.SST <- se.SST <- parameter <- 
         par_value <- stdev <- se.pars <- SD <- d18Oc <- mean.day <- CL95.day <-
@@ -147,10 +152,10 @@ export_results <- function(path = getwd(), # Path where result files are exporte
     for(i in 1:length(dynwindow$x)){ # Loop through matrix and add weights for each position in the resultarray that contains a value
         weights[dynwindow$x[[i]]:(dynwindow$x[[i]] + dynwindow$y[[i]] - 1), i] <- dynwindow$y[[i]] / 2 - abs(dynwindow$x[[i]]:(dynwindow$x[[i]] + dynwindow$y[[i]] - 1) - (dynwindow$x[[i]] + (dynwindow$y[[i]] - 1) / 2))
     }
-    weights <- cbind(resultarray[, 1:5, 3], weights)
-    weightstidy <- tidyr::gather(as.data.frame(weights), "window", "weight", (length(dat[1, ]) + 1):ncol(weights), factor_key = TRUE) # Convert weights to Tidy data for plotting
+    weights <- cbind(resultarray[, -grep("window", colnames(resultarray[, , 3])), 3], weights)
+    weightstidy <- tidyr::gather(as.data.frame(weights), "window", "weight", (ncol(dat) + 1):ncol(weights), factor_key = TRUE) # Convert weights to Tidy data for plotting
 
-    JDtidy <- tidyr::gather(as.data.frame(resultarray[, , 3]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled time results to Tidy data for plotting
+    JDtidy <- tidyr::gather(as.data.frame(resultarray[, , 3]), "window", "Day", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled time results to Tidy data for plotting
     JDtidy$weights <- weightstidy$weight # Add weights to JDtidy
 
     JDstats <- JDtidy %>% # Summarize modeled time statistics
@@ -164,43 +169,43 @@ export_results <- function(path = getwd(), # Path where result files are exporte
         )
     JDstats$sd.day[which(JDstats$N == 1)] <- NaN
 
-    d18Otidy <- tidyr::gather(as.data.frame(resultarray[, , 1]), "window", "d18O_mod", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled d18O results to Tidy data for plotting
+    d18Otidy <- tidyr::gather(as.data.frame(resultarray[, , 1]), "window", "d18O_mod", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled d18O results to Tidy data for plotting
     d18Otidy$weights <- weightstidy$weight # Add weights to d18Otidy
 
     d18Ostats <- d18Otidy %>% # Summarize modeled d18O statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
-            mean.d18O_mod = mean(d18O_mod, na.rm = TRUE),  # Calculate means per sample
-            sd.d18O_mod = sd_wt(d18O_mod, weights, na.rm = TRUE),  # Calculate stdevs per sample
+            mean.d18O_mod = mean(d18O_mod, na.rm = TRUE),  # Calculate means per sample, excluding NA's
+            sd.d18O_mod = sd_wt(d18O_mod, weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's
             N = dplyr::n_distinct(d18O_mod, na.rm = TRUE), # Calculate the number of modeled values, excluding NA's
             se.d18O_mod = sd.d18O_mod / sqrt(N), # Calculate the standard error
             CL95.d18O_mod = qt(0.95, N) * se.d18O_mod # Calculate the 95% confidence level
         )
     d18Ostats$sd.d18O_mod[which(d18Ostats$N == 1)] <- NaN
 
-    GRtidy <- tidyr::gather(as.data.frame(resultarray[, , 4]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled growth rate results to Tidy data for plotting
+    GRtidy <- tidyr::gather(as.data.frame(resultarray[, , 4]), "window", "GR", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled growth rate results to Tidy data for plotting
     GRtidy$weights <- weightstidy$weight # Add weights to GRtidy
 
     GRstats <- GRtidy %>% # Summarize modeled growth rate statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
-            mean.GR = mean(GR[GR>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where growth rate is near-zero
-            sd.GR = sd_wt(GR[GR>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where growth rate is near-zero
-            N = dplyr::n_distinct(GR[GR>0.1], na.rm = TRUE), # Calculate the number of modeled values, excluding NA's and instances where growth rate is near-zero
+            mean.GR = mean(GR[GR > 0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where growth rate is near-zero
+            sd.GR = sd_wt(GR[GR > 0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where growth rate is near-zero
+            N = dplyr::n_distinct(GR[GR > 0.1], na.rm = TRUE), # Calculate the number of modeled values, excluding NA's and instances where growth rate is near-zero
             se.GR = sd.GR / sqrt(N), # Calculate the standard error
             CL95.GR = qt(0.95, N) * se.GR # Calculate the 95% confidence level
         )
     GRstats$sd.GR[which(GRstats$N == 1)] <- NaN
 
-    Ttidy <- tidyr::gather(as.data.frame(resultarray[, , 5]), "window", "SST", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled temperature results to Tidy data for plotting
+    Ttidy <- tidyr::gather(as.data.frame(resultarray[, , 5]), "window", "SST", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE) # Convert modeled temperature results to Tidy data for plotting
     Ttidy$weights <- weightstidy$weight # Add weights to Ttidy
 
     Tstats <- Ttidy %>% # Summarize modeled growth rate statistics
         ggpubr::group_by(D) %>%
         dplyr::summarize(
-            mean.SST = weighted.mean(SST[SST>0.1], na.rm = TRUE),  # Calculate means per sample, excluding NA's and instances where SSTowth rate is near-zero
-            sd.SST = sd_wt(SST[SST>0.1], weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's and instances where SSTowth rate is near-zero
-            N = dplyr::n_distinct(SST[SST>0.1], na.rm = TRUE), # Calculate the number of modeled values, excluding NA's and instances where SSTowth rate is near-zero
+            mean.SST = weighted.mean(SST, na.rm = TRUE),  # Calculate means per sample, excluding NA's
+            sd.SST = sd_wt(SST, weights, na.rm = TRUE),  # Calculate stdevs per sample, excluding NA's
+            N = dplyr::n_distinct(SST, na.rm = TRUE), # Calculate the number of modeled values, excluding NA's
             se.SST = sd.SST / sqrt(N), # Calculate the standard error
             CL95.SST = qt(0.95, N) * se.SST # Calculate the 95% confidence level
         )
@@ -208,7 +213,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
     parmat2 <- data.frame(rownames(parmat), parmat)
     colnames(parmat2)[1] <- "parameter"
-    partidy <- tidyr::gather(parmat2, "window", "par_value", 2:length(parmat2[1,]), factor_key = TRUE)
+    partidy <- tidyr::gather(parmat2, "window", "par_value", 2:ncol(parmat2), factor_key = TRUE)
 
     parstats <- partidy %>% # Summarize model parameters
         ggpubr::group_by(parameter) %>%
@@ -226,7 +231,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # Propagate errors on modeled d18O
         d18Otidy_err <- d18Otidy
-        d18Otidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 6]), "window", "d18O", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$d18O # Convert modeled time errors to Tidy data for plotting
+        d18Otidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 6]), "window", "d18O", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$d18O # Convert modeled time errors to Tidy data for plotting
         d18Otidy_err$N <- dynwindow$y[as.numeric(d18Otidy$window)] # Add window size for calculating pooled SD
         d18Otidy_err <- d18Otidy_err[-which(is.na(d18Otidy_err$d18O_mod)), ] # Remove empty cells in matrix
         d18Otidy_err$SD[which(d18Otidy_err$SD == 0)] <- min(d18Otidy_err$SD[which(d18Otidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
@@ -247,7 +252,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # Propagate errors on Time of Day calculations
         JDtidy_err <- JDtidy
-        JDtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 7]), "window", "Day", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$Day # Convert modeled time errors to Tidy data for plotting
+        JDtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 7]), "window", "Day", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$Day # Convert modeled time errors to Tidy data for plotting
         JDtidy_err$N <- dynwindow$y[as.numeric(JDtidy$window)] # Add window size for calculating pooled SD
         JDtidy_err <- JDtidy_err[-which(is.na(JDtidy_err$Day)), ] # Remove empty cells in matrix
         JDtidy_err$SD[which(JDtidy_err$SD == 0)] <- min(JDtidy_err$SD[which(JDtidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
@@ -261,14 +266,14 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # Aggregate propagated errors into statistics matrices
         JDstats$mean.day <- JDstats2$weighted.mean.day # Replace means by weighed means, taking into account the propagated error on individual estimates
-        JDstats$sd.day <- sqrt(JDstats$sd.day ^ 2 + JDstats2$pooled.sd.day ^2) # Combine errors from the model and the errors on input
+        JDstats$sd.day <- sqrt(JDstats$sd.day ^ 2 + JDstats2$pooled.sd.day ^ 2) # Combine errors from the model and the errors on input
         JDstats$se.day <- JDstats$sd.day / sqrt(JDstats$N) # Propagate new errors onto standard error
         JDstats$CL95.day <- qt(0.95, JDstats$N) * JDstats$se.day # Propagate new errors onto confidence interval
 
 
         # Propagate errors on modeled growth rate
         GRtidy_err <- GRtidy
-        GRtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 8]), "window", "GR", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$GR # Convert modeled time errors to Tidy data for plotting
+        GRtidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 8]), "window", "GR", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$GR # Convert modeled time errors to Tidy data for plotting
         GRtidy_err$N <- dynwindow$y[as.numeric(GRtidy$window)] # Add window size for calculating pooled SD
         GRtidy_err <- GRtidy_err[-which(is.na(GRtidy_err$GR)), ] # Remove empty cells in matrix
         GRtidy_err$SD[which(GRtidy_err$SD == 0)] <- min(GRtidy_err$SD[which(GRtidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
@@ -282,14 +287,14 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # Aggregate propagated errors into statistics matrices
         GRstats$mean.GR <- GRstats2$weighted.mean.GR # Replace means by weighed means, taking into account the propagated error on individual estimates
-        GRstats$sd.GR <- sqrt(GRstats$sd.GR ^ 2 + GRstats2$pooled.sd.GR ^2) # Combine errors from the model and the errors on input
+        GRstats$sd.GR <- sqrt(GRstats$sd.GR ^ 2 + GRstats2$pooled.sd.GR ^ 2) # Combine errors from the model and the errors on input
         GRstats$se.GR <- GRstats$sd.GR / sqrt(GRstats$N) # Propagate new errors onto standard error
         GRstats$CL95.GR <- qt(0.95, GRstats$N) * GRstats$se.GR # Propagate new errors onto confidence interval
 
 
         # Propagate errors on modeled temperature
         Ttidy_err <- Ttidy
-        Ttidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 9]), "window", "T", (length(dat[1, ]) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$T # Convert modeled time errors to Tidy data for plotting
+        Ttidy_err$SD <- tidyr::gather(as.data.frame(resultarray[, , 9]), "window", "T", (ncol(dat) + 1):length(resultarray[1, , 1]), factor_key = TRUE)$T # Convert modeled time errors to Tidy data for plotting
         Ttidy_err$N <- dynwindow$y[as.numeric(Ttidy$window)] # Add window size for calculating pooled SD
         Ttidy_err <- Ttidy_err[-which(is.na(Ttidy_err$SST)), ] # Remove empty cells in matrix
         Ttidy_err$SD[which(Ttidy_err$SD == 0)] <- min(Ttidy_err$SD[which(Ttidy_err$SD > 0)]) # Replace zeroes with smallest SD to prevent division by zero
@@ -303,7 +308,7 @@ export_results <- function(path = getwd(), # Path where result files are exporte
 
         # AgTegate propagated errors into statistics matrices
         Tstats$mean.SST <- Tstats2$weighted.mean.SST # Replace means by weighed means, taking into account the propagated error on individual estimates
-        Tstats$sd.SST <- sqrt(Tstats$sd.SST ^ 2 + Tstats2$pooled.sd.SST ^2) # Combine errors from the model and the errors on input
+        Tstats$sd.SST <- sqrt(Tstats$sd.SST ^ 2 + Tstats2$pooled.sd.SST ^ 2) # Combine errors from the model and the errors on input
         Tstats$se.SST <- Tstats$sd.SST / sqrt(Tstats$N) # Propagate new errors onto standard error
         Tstats$CL95.SST <- qt(0.95, Tstats$N) * Tstats$se.SST # Propagate new errors onto confidence interval
         print("Preparing plots")

@@ -105,7 +105,7 @@ testarray[, , 8] <- tab # dummy GR SD
 tab[which(!is.na(tab))] <- 1
 testarray[, , 9] <- tab # dummy temperature SD
 darray <- array(rep(as.matrix(dat), 9), dim = c(40, 5, 9))
-testarray[, 1:5, ] <- darray
+testarray[, -grep("window", colnames(resultarray[, , 3])), ] <- darray
 
 # Create dummy dynwindow data
 dynwindow <- as.data.frame(seq(1, 31, 1))
