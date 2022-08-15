@@ -56,7 +56,7 @@ d18O_model <- function(SST, # Function that converts SST values into d18O
         d18Ow <- c(0, rep(d18Ow, length(SST[,1])/length(d18Ow))) # If d18Ow is a vector with more than one value, multiply it to reach the same length of SST (multiply by "years")
     }
     if(transfer_function == "KimONeil97"){
-        d18Oc <- cbind(SST[,1], (exp((18.03 * 1000 / (SST[,2] + 273.15) - 32.42) / 1000) - 1) * 1000 + (0.97001 * d18Ow - 29.99)) # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014) and Kim et al. (2015)
+        d18Oc <- cbind(SST[,1], ((exp(((18.03 * 10 ^ 3) / (SST[,2] + 273.15) - 32.42) / 1000) * (((d18Ow - 30.92) / 1.03092) / 1000 + 1)) - 1) * 1000) # Use Kim and O'Neil (1997) with conversion between VSMOW and VPDB by Brand et al. (2014) and Kim et al. (2015)
     }else if(transfer_function == "GrossmanKu86"){
         d18Oc <- cbind(SST[,1], (20.6 - SST[,2]) / 4.34 + d18Ow - 0.2) # Use Grossmann and Ku (1986) modified by Dettmann et al. (1999)
     }else{
